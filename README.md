@@ -69,7 +69,9 @@ If you do not specify `allowedTags` or `allowedAttributes` our default list is a
 
 ## Changelog
 
-0.1.0:initial release.
+0.1.1: discard the text of script tags.
+
+0.1.0: initial release.
 
 ## About P'unk Avenue and Apostrophe
 

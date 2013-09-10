@@ -27,8 +27,12 @@ function sanitizeHtml(html, options) {
   });
   var depth = 0;
   var skipMap = {};
+  var skipText = false;
   var parser = new htmlparser.Parser({
     onopentag: function(name, attribs) {
+      if (name === 'script') {
+        skipText = true;
+      }
       var skip = false;
       if (!_.has(allowedTagsMap, name)) {
         skip = true;
@@ -62,9 +66,13 @@ function sanitizeHtml(html, options) {
       }
     },
     ontext: function(text) {
+      if (skipText) {
+        return;
+      }
       result += escapeHtml(text);
     },
     onclosetag: function(name) {
+      skipText = false;
       depth--;
       if (skipMap[depth]) {
         delete skipMap[depth];
