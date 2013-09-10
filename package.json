@@ -1,0 +1,27 @@
+{
+  "name": "sanitize-html",
+  "version": "0.1.0",
+  "description": "Clean up user-submitted HTML, preserving whitelisted elements and whitelisted attributes on a per-element basis",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/punkave/sanitize-html.git"
+  },
+  "keywords": [
+    "html",
+    "parser",
+    "sanitizer",
+    "html",
+    "sanitizer",
+    "apostrophe"
+  ],
+  "author": "P'unk Avenue LLC",
+  "license": "MIT",
+  "dependencies": {
+    "htmlparser": "~3.1.4",
+    "lodash": "~1.3.1"
+  }
+}
