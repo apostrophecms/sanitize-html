@@ -37,5 +37,8 @@ describe('sanitizeHtml', function() {
   it('should preserve entities as such', function() {
     assert.equal(sanitizeHtml('<a name="&lt;silly&gt;">&lt;Kapow!&gt;</a>'), '<a name="&lt;silly&gt;">&lt;Kapow!&gt;</a>');
   });
+  it('should dump comments', function() {
+    assert.equal(sanitizeHtml('<p><!-- Blah blah -->Whee</p>'), '<p>Whee</p>');
+  });
 });
 
