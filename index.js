@@ -54,7 +54,9 @@ function sanitizeHtml(html, options) {
               }
             }
             if (value.length) {
-              result += '="' + escapeHtml(value) + '"';
+              // Values are ALREADY escaped, calling escapeHtml here
+              // results in double escapes
+              result += '="' + value + '"';
             }
           }
         });
@@ -69,7 +71,9 @@ function sanitizeHtml(html, options) {
       if (skipText) {
         return;
       }
-      result += escapeHtml(text);
+      // It is NOT actually raw text, entities are already escaped.
+      // If we call escapeHtml here we wind up double-escaping.
+      result += text;
     },
     onclosetag: function(name) {
       skipText = false;
