@@ -69,6 +69,8 @@ If you do not specify `allowedTags` or `allowedAttributes` our default list is a
 
 ## Changelog
 
+0.1.3: do not double-escape entities in attributes or text. Turns out the "text" provided by htmlparser2 is already escaped.
+
 0.1.2: packaging error meant it wouldn't install properly.
 
 0.1.1: discard the text of script tags.
