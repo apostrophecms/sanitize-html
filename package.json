@@ -1,6 +1,6 @@
 {
   "name": "sanitize-html",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Clean up user-submitted HTML, preserving whitelisted elements and whitelisted attributes on a per-element basis",
   "main": "index.js",
   "scripts": {
