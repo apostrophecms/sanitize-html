@@ -8,7 +8,7 @@
 
 `sanitize-html` allows you to specify the tags you want to permit, and the permitted attributes for each of those tags.
 
-If a tag is not permitted, the contents of the tag are still kept, except for script tags.
+If a tag is not permitted, the contents of the tag are still kept, except for script and style tags.
 
 The syntax of poorly closed `p` and `img` elements is cleaned up.
 
