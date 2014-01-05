@@ -10,6 +10,13 @@ function sanitizeHtml(html, options) {
   } else {
     _.defaults(options, sanitizeHtml.defaults);
   }
+  // Tags that contain something other than HTML. If we are not allowing
+  // these tags, we should drop their content too. For other tags you would
+  // drop the tag but keep its content.
+  var nonTextTagsMap = {
+    script: true,
+    style: true
+  };
   var allowedTagsMap = {};
   _.each(options.allowedTags, function(tag) {
     allowedTagsMap[tag] = true;
@@ -30,12 +37,12 @@ function sanitizeHtml(html, options) {
   var skipText = false;
   var parser = new htmlparser.Parser({
     onopentag: function(name, attribs) {
-      if (name === 'script') {
-        skipText = true;
-      }
       var skip = false;
       if (!_.has(allowedTagsMap, name)) {
         skip = true;
+        if (_.has(nonTextTagsMap, name)) {
+          skipText = true;
+        }
         skipMap[depth] = true;
       }
       depth++;

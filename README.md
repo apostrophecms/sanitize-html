@@ -69,6 +69,10 @@ If you do not specify `allowedTags` or `allowedAttributes` our default list is a
 
 ## Changelog
 
+1.0.0: If the style tag is disallowed, then its content should be dumped, so that it doesn't appear as text. We were already doing this for script tags, however in both cases the content is now preserved if the tag is explicitly allowed.
+
+We're rocking our tests and have been working great in production for months, so: declared 1.0.0 stable.
+
 0.1.3: do not double-escape entities in attributes or text. Turns out the "text" provided by htmlparser2 is already escaped.
 
 0.1.2: packaging error meant it wouldn't install properly.
