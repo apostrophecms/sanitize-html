@@ -69,6 +69,10 @@ If you do not specify `allowedTags` or `allowedAttributes` our default list is a
 
 ## Changelog
 
+1.0.2: fixed a javascript URL attack vector. naughtyHref must entity-decode URLs and also check for mixed-case scheme names. Thanks to pinpickle.
+
+1.0.1: Doc tweaks.
+
 1.0.0: If the style tag is disallowed, then its content should be dumped, so that it doesn't appear as text. We were already doing this for script tags, however in both cases the content is now preserved if the tag is explicitly allowed.
 
 We're rocking our tests and have been working great in production for months, so: declared 1.0.0 stable.

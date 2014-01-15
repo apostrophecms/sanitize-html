@@ -1,5 +1,6 @@
 var htmlparser = require('htmlparser2');
 var _ = require('lodash');
+var ent = require('ent');
 
 module.exports = sanitizeHtml;
 
@@ -111,7 +112,10 @@ function sanitizeHtml(html, options) {
   }
 
   function naughtyHref(href) {
-    var matches = href.match(/^([a-z]+)\:/);
+    // So we don't get faked out by a hex or decimal escaped javascript URL #1
+    href = ent.decode(href);
+    // Case insensitive so we don't get faked out by JAVASCRIPT #1
+    var matches = href.match(/^([a-zA-Z]+)\:/);
     if (!matches) {
       // No scheme = no way to inject js (right?)
       return false;

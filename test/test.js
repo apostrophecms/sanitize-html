@@ -43,5 +43,11 @@ describe('sanitizeHtml', function() {
   it('should dump comments', function() {
     assert.equal(sanitizeHtml('<p><!-- Blah blah -->Whee</p>'), '<p>Whee</p>');
   });
+  it('should dump a sneaky encoded javascript url', function() {
+    assert.equal(sanitizeHtml('<a href="&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;">Hax</a>'), '<a href>Hax</a>');
+  });
+  it('should dump an uppercase javascript url', function() {
+    assert.equal(sanitizeHtml('<a href="JAVASCRIPT:alert(\'foo\')">Hax</a>'), '<a href>Hax</a>');
+  });
 });
 
