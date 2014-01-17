@@ -49,5 +49,17 @@ describe('sanitizeHtml', function() {
   it('should dump an uppercase javascript url', function() {
     assert.equal(sanitizeHtml('<a href="JAVASCRIPT:alert(\'foo\')">Hax</a>'), '<a href>Hax</a>');
   });
+  it('should dump character codes 1-32 before testing scheme', function() {
+    assert.equal(sanitizeHtml('<a href="java\0&#14;\t\r\n script:alert(\'foo\')">Hax</a>'), '<a href>Hax</a>');
+  });
+  it('should dump character codes 1-32 even when escaped with padding rather than trailing ;', function() {
+    assert.equal(sanitizeHtml('<a href="java&#0000000script:alert(\'foo\')">Hax</a>'), '<a href>Hax</a>');
+  });
+  it('should still like nice schemes', function() {
+    assert.equal(sanitizeHtml('<a href="http://google.com/">Hi</a>'), '<a href="http://google.com/">Hi</a>');
+  });
+  it('should still like nice relative URLs', function() {
+    assert.equal(sanitizeHtml('<a href="hello.html">Hi</a>'), '<a href="hello.html">Hi</a>');
+  });
 });
 
