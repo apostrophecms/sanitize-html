@@ -44,7 +44,7 @@ function sanitizeHtml(html, options) {
 
   var depth = 0;
   var skipMap = {};
-  var transofrmMap = {};
+  var transformMap = {};
   var skipText = false;
   var parser = new htmlparser.Parser({
     onopentag: function(name, attribs) {
@@ -55,7 +55,7 @@ function sanitizeHtml(html, options) {
         attribs = transformedTag.attribs;
         if (name !== transformedTag.tagName) {
           name = transformedTag.tagName;
-          transofrmMap[depth] = transformedTag.tagName;
+          transformMap[depth] = transformedTag.tagName;
         }
       }
 
@@ -114,9 +114,9 @@ function sanitizeHtml(html, options) {
         // Already output />
         return;
       }
-      if (transofrmMap[depth]) {
-        name = transofrmMap[depth];
-        delete transofrmMap[depth];
+      if (transformMap[depth]) {
+        name = transformMap[depth];
+        delete transformMap[depth];
       }
       result += "</" + name + ">";
     }
