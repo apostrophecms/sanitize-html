@@ -67,6 +67,51 @@ If you do not specify `allowedTags` or `allowedAttributes` our default list is a
     selfClosing: [ 'img', 'br', 'hr', 'area', 'base',
       'basefont', 'input', 'link', 'meta' ]
 
+### Transformations
+
+What if you want to change or add an attribute? What if you want to add more logic - eg. parsing attributes names or their values? What if you want to transform one tag to another? No problem - we got it, and it's really simple :)
+
+The easiest way (will change all `ol` tags to `ul` tags):
+
+    clean = sanitizeHtml(dirty, {
+      transformTags {
+        'ol': 'ul',
+      }
+    });
+
+The most advanced usage:
+
+    clean = sanitizeHtml(dirty, {
+      transformTags {
+        'ol': function(tagName, attribs) {
+            // magic goes here
+
+            return {
+                tagName: 'ul',
+                attribs: {
+                    class: 'foo'
+                }
+            };
+        }
+      }
+    });
+
+There is also helper function defined which should be enough for most tasks:
+
+    clean = sanitizeHtml(dirty, {
+      transformTags {
+        'ol': sanitizeHtml.simpleTransform('ul', {class: 'foo'}),
+      }
+    });
+
+Helper function `simpleTransform` has 3 parameters:
+
+    simpleTransform(newTag, newAttributes, shouldMerge)
+
+last parameter (`shouldMerge`) by default is set to true - it means it will merge current attributes with new ones (`newAttributes`). false value says that attributes will be replaced with `newAttributes`.
+
+
+
 ## Changelog
 
 1.0.3: fixed several more javascript URL attack vectors after [studying the XSS filter evasion cheat sheet](https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet) to better understand my enemy. Whitespace characters (codes from 0 to 32), which browsers ignore in URLs in certain cases allowing the "javascript" scheme to be snuck in, are now stripped out when checking for naughty URLs. Thanks again to pinpickle.
