@@ -169,7 +169,7 @@ sanitizeHtml.defaults = {
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {
-  merge = merge == undefined ? true : merge;
+  merge = (merge == undefined) ? true : merge;
   newAttribs = newAttribs || {};
 
   return function(tagName, attribs) {
