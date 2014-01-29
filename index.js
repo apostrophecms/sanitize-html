@@ -33,12 +33,32 @@ function sanitizeHtml(html, options) {
       allowedAttributesMap[tag][name] = true;
     });
   });
+  var transformTagsMap = {};
+  _.each(options.transformTags, function(transform, tag){
+    if (typeof transform === 'function') {
+      transformTagsMap[tag] = transform;
+    } else if (typeof transform === "string") {
+      transformTagsMap[tag] = sanitizeHtml.simpleTransform(transform);
+    }
+  });
+
   var depth = 0;
   var skipMap = {};
+  var transformMap = {};
   var skipText = false;
   var parser = new htmlparser.Parser({
     onopentag: function(name, attribs) {
       var skip = false;
+      if (_.has(transformTagsMap, name)) {
+        var transformedTag = transformTagsMap[name](name, attribs);
+
+        attribs = transformedTag.attribs;
+        if (name !== transformedTag.tagName) {
+          name = transformedTag.tagName;
+          transformMap[depth] = transformedTag.tagName;
+        }
+      }
+
       if (!_.has(allowedTagsMap, name)) {
         skip = true;
         if (_.has(nonTextTagsMap, name)) {
@@ -94,6 +114,10 @@ function sanitizeHtml(html, options) {
         // Already output />
         return;
       }
+      if (transformMap[depth]) {
+        name = transformMap[depth];
+        delete transformMap[depth];
+      }
       result += "</" + name + ">";
     }
   });
@@ -142,4 +166,24 @@ sanitizeHtml.defaults = {
   },
   // Lots of these won't come up by default because we don't allow them
   selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ]
+};
+
+sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {
+  merge = merge == undefined ? true : merge;
+  newAttribs = newAttribs || {};
+
+  return function(tagName, attribs) {
+    if (merge) {
+      for (attrib in newAttribs) {
+        attribs[attrib] = newAttribs[attrib];
+      }
+    } else {
+      attribs = newAttribs;
+    }
+
+    return {
+      tagName: newTagName,
+      attribs: attribs
+    }
+  };
 };
