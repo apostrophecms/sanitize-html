@@ -73,7 +73,7 @@ describe('sanitizeHtml', function() {
   it('should replace ol to ul and replace all attributes to class attribute with foo value', function() {
     assert.equal(sanitizeHtml('<ol foo="foo" bar="bar" baz="baz"><li>Hello world</li></ol>', { transformTags: {ol: sanitizeHtml.simpleTransform('ul', {class: 'foo'}, false)}, allowedAttributes: { ul: ['foo', 'bar', 'class'] } }), '<ul class="foo"><li>Hello world</li></ul>');
   });
-  it('should replace ol to ul and add attributte class with foo value and attribute bar with bar value', function() {
+  it('should replace ol to ul and add attribute class with foo value and attribute bar with bar value', function() {
     assert.equal(sanitizeHtml('<ol><li>Hello world</li></ol>', { transformTags: {ol: function(tagName, attribs){
       attribs.class = 'foo';
       attribs.bar = 'bar';
