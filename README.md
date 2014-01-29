@@ -69,12 +69,12 @@ If you do not specify `allowedTags` or `allowedAttributes` our default list is a
 
 ### Transformations
 
-What if you want to change or add an attribute? What if you want to add more logic - eg. parsing attributes names or their values? What if you want to transform one tag to another? No problem - we got it, and it's really simple :)
+What if you want to add or change an attribute? What if you want to transform one tag to another? No problem, it's simple!
 
 The easiest way (will change all `ol` tags to `ul` tags):
 
     clean = sanitizeHtml(dirty, {
-      transformTags {
+      transformTags: {
         'ol': 'ul',
       }
     });
@@ -82,9 +82,9 @@ The easiest way (will change all `ol` tags to `ul` tags):
 The most advanced usage:
 
     clean = sanitizeHtml(dirty, {
-      transformTags {
+      transformTags: {
         'ol': function(tagName, attribs) {
-            // magic goes here
+            // My own custom magic goes here
 
             return {
                 tagName: 'ul',
@@ -96,27 +96,27 @@ The most advanced usage:
       }
     });
 
-There is also helper function defined which should be enough for most tasks:
+There is also a helper method which should be enough for simple cases in which you want to change the tag and/or add some attributes:
 
     clean = sanitizeHtml(dirty, {
-      transformTags {
+      transformTags: {
         'ol': sanitizeHtml.simpleTransform('ul', {class: 'foo'}),
       }
     });
 
-Helper function `simpleTransform` has 3 parameters:
+The `simpleTransform` helper method has 3 parameters:
 
     simpleTransform(newTag, newAttributes, shouldMerge)
 
-last parameter (`shouldMerge`) by default is set to true - it means it will merge current attributes with new ones (`newAttributes`). false value says that attributes will be replaced with `newAttributes`.
-
-
+The last parameter (`shouldMerge`) is set to `true` by default. When `true`, `simpleTransform` will merge the current attributes with the new ones (`newAttributes`). When `false`, all existing attributes are discarded.
 
 ## Changelog
 
-1.0.3: fixed several more javascript URL attack vectors after [studying the XSS filter evasion cheat sheet](https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet) to better understand my enemy. Whitespace characters (codes from 0 to 32), which browsers ignore in URLs in certain cases allowing the "javascript" scheme to be snuck in, are now stripped out when checking for naughty URLs. Thanks again to pinpickle.
+1.1.0: the `transformTags` option was added. Thanks to [kl3ryk](https://github.com/kl3ryk).
 
-1.0.2: fixed a javascript URL attack vector. naughtyHref must entity-decode URLs and also check for mixed-case scheme names. Thanks to pinpickle.
+1.0.3: fixed several more javascript URL attack vectors after [studying the XSS filter evasion cheat sheet](https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet) to better understand my enemy. Whitespace characters (codes from 0 to 32), which browsers ignore in URLs in certain cases allowing the "javascript" scheme to be snuck in, are now stripped out when checking for naughty URLs. Thanks again to [pinpickle](https://github.com/pinpickle).
+
+1.0.2: fixed a javascript URL attack vector. naughtyHref must entity-decode URLs and also check for mixed-case scheme names. Thanks to [pinpickle](https://github.com/pinpickle).
 
 1.0.1: Doc tweaks.
 
