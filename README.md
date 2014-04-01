@@ -112,6 +112,8 @@ The last parameter (`shouldMerge`) is set to `true` by default. When `true`, `si
 
 ## Changelog
 
+1.1.3: moved to lodash. 1.1.2 pointed to the wrong version of lodash.
+
 1.1.0: the `transformTags` option was added. Thanks to [kl3ryk](https://github.com/kl3ryk).
 
 1.0.3: fixed several more javascript URL attack vectors after [studying the XSS filter evasion cheat sheet](https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet) to better understand my enemy. Whitespace characters (codes from 0 to 32), which browsers ignore in URLs in certain cases allowing the "javascript" scheme to be snuck in, are now stripped out when checking for naughty URLs. Thanks again to [pinpickle](https://github.com/pinpickle).
