@@ -114,7 +114,7 @@ The last parameter (`shouldMerge`) is set to `true` by default. When `true`, `si
 
 You can provide a filter function to remove unwanted tags. Let's suppose we need to remove empty `a` tags like 
 ```html
-<a href='page/html'></a>
+<a href="page/html"></a>
 ```
 ```javascript
 sanitizeHtml(
@@ -128,6 +128,7 @@ sanitizeHtml(
 ```
 
 ## Changelog
+1.1.4: custom exclusion filter.
 
 1.1.3: moved to lodash. 1.1.2 pointed to the wrong version of lodash.
 
