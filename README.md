@@ -110,7 +110,25 @@ The `simpleTransform` helper method has 3 parameters:
 
 The last parameter (`shouldMerge`) is set to `true` by default. When `true`, `simpleTransform` will merge the current attributes with the new ones (`newAttributes`). When `false`, all existing attributes are discarded.
 
+### Filters
+
+You can provide a filter function to remove unwanted tags. Let's suppose we need to remove empty `a` tags like 
+```html
+<a href="page/html"></a>
+```
+```javascript
+sanitizeHtml(
+    '<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>',
+    {
+        exclusiveFilter: function(frame) {
+            return frame.tag === 'a' && !frame.text.trim();
+        }
+    }
+);
+```
+
 ## Changelog
+1.1.4: custom exclusion filter.
 
 1.1.3: moved to lodash. 1.1.2 pointed to the wrong version of lodash.
 
