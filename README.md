@@ -112,7 +112,10 @@ The last parameter (`shouldMerge`) is set to `true` by default. When `true`, `si
 
 ### Filters
 
-You can provide a filter function to remove unwanted tags. Let's suppose we need to remove empty `a` tags like `<a href='page/html'></a>`.
+You can provide a filter function to remove unwanted tags. Let's suppose we need to remove empty `a` tags like 
+```html
+<a href='page/html'></a>
+```
 ```javascript
 sanitizeHtml(
     '<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>',
