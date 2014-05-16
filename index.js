@@ -43,11 +43,19 @@ function sanitizeHtml(html, options) {
   });
 
   var depth = 0;
+  var stack = [];
   var skipMap = {};
   var transformMap = {};
   var skipText = false;
   var parser = new htmlparser.Parser({
     onopentag: function(name, attribs) {
+      stack.push({
+          tag: name,
+          attribs: attribs,
+          text: '',
+          tagPosition: result.length
+      });
+
       var skip = false;
       if (_.has(transformTagsMap, name)) {
         var transformedTag = transformTagsMap[name](name, attribs);
@@ -99,11 +107,16 @@ function sanitizeHtml(html, options) {
       if (skipText) {
         return;
       }
+      if (depth) {
+          var frame = stack[depth - 1];
+          frame.text += text;
+      }
       // It is NOT actually raw text, entities are already escaped.
       // If we call escapeHtml here we wind up double-escaping.
       result += text;
     },
     onclosetag: function(name) {
+      var frame = stack.pop();
       skipText = false;
       depth--;
       if (skipMap[depth]) {
@@ -117,6 +130,10 @@ function sanitizeHtml(html, options) {
       if (transformMap[depth]) {
         name = transformMap[depth];
         delete transformMap[depth];
+      }
+      if (options.exclusiveFilter && options.exclusiveFilter(frame)) {
+         result = result.substr(0, frame.tagPosition);
+         return;
       }
       result += "</" + name + ">";
     }

@@ -83,5 +83,16 @@ describe('sanitizeHtml', function() {
       }
     }}, allowedAttributes: { ul: ['bar', 'class'] } }), '<ul class="foo" bar="bar"><li>Hello world</li></ul>');
   });
+  it('should skip empty a', function() {
+        assert.equal(
+            sanitizeHtml('<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>',
+            {
+                exclusiveFilter : function(frame) {
+                    return frame.tag === 'a' && !frame.text.trim();
+                }
+            }),
+            '<p>This is <br />Linux</p>'
+        );
+  });
 });
 
