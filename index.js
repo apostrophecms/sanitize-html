@@ -166,7 +166,7 @@ function sanitizeHtml(html, options) {
       return false;
     }
     var scheme = matches[1].toLowerCase();
-    return (!_.contains(['http', 'https', 'ftp', 'mailto' ], scheme));
+    return (!_.contains(['http', 'https', 'ftp', 'mailto', 'data' ], scheme));
   }
 }
 
