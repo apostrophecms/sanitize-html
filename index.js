@@ -166,7 +166,7 @@ function sanitizeHtml(html, options) {
       return false;
     }
     var scheme = matches[1].toLowerCase();
-    return (!_.contains(['http', 'https', 'ftp', 'mailto' ], scheme));
+    return (!_.contains(options.allowedSchemes, scheme));
   }
 }
 
@@ -182,14 +182,17 @@ sanitizeHtml.defaults = {
     img: [ 'src' ]
   },
   // Lots of these won't come up by default because we don't allow them
-  selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ]
+  selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
+  // URL schemes we permit
+  allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ]
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {
-  merge = (merge == undefined) ? true : merge;
+  merge = (merge === undefined) ? true : merge;
   newAttribs = newAttribs || {};
 
   return function(tagName, attribs) {
+    var attrib;
     if (merge) {
       for (attrib in newAttribs) {
         attribs[attrib] = newAttribs[attrib];
@@ -201,6 +204,6 @@ sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {
     return {
       tagName: newTagName,
       attribs: attribs
-    }
+    };
   };
 };

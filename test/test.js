@@ -84,15 +84,40 @@ describe('sanitizeHtml', function() {
     }}, allowedAttributes: { ul: ['bar', 'class'] } }), '<ul class="foo" bar="bar"><li>Hello world</li></ul>');
   });
   it('should skip empty a', function() {
-        assert.equal(
-            sanitizeHtml('<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>',
-            {
-                exclusiveFilter : function(frame) {
-                    return frame.tag === 'a' && !frame.text.trim();
-                }
-            }),
-            '<p>This is <br />Linux</p>'
-        );
+    assert.equal(
+      sanitizeHtml('<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>',
+      {
+        exclusiveFilter : function(frame) {
+            return frame.tag === 'a' && !frame.text.trim();
+        }
+      }),
+      '<p>This is <br />Linux</p>'
+    );
+  });
+  it('should disallow data URLs with default allowedSchemes', function() {
+    assert.equal(
+      sanitizeHtml(
+        // teeny-tiny valid transparent GIF in a data URL
+        '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />',
+        {
+          allowedTags: [ 'img' ]
+        }
+      ),
+      '<img src />'
+    );
+  });
+  it('should allow data URLs with custom allowedSchemes', function() {
+    assert.equal(
+      sanitizeHtml(
+        // teeny-tiny valid transparent GIF in a data URL
+        '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />',
+        {
+          allowedTags: [ 'img', 'p' ],
+          allowedSchemes: [ 'data', 'http' ]
+        }
+      ),
+      '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />'
+    );
   });
 });
 

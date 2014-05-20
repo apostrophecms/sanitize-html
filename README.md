@@ -51,21 +51,17 @@ If you do not specify `allowedTags` or `allowedAttributes` our default list is a
 
 "What are the default options?"
 
-    allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote',
-    'p', 'a', 'ul', 'ol', 'nl', 'li', 'b', 'i', 'strong',
-    'em', 'strike', 'code', 'hr', 'br', 'div',
-    'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td',
-    'pre' ],
+    allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol', 'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div', 'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre' ],
     allowedAttributes: {
       a: [ 'href', 'name', 'target' ],
       // We don't currently allow img itself by default, but this
       // would make sense if we did
       img: [ 'src' ]
     },
-    // Lots of these won't come up by default because
-    // we don't allow them
-    selfClosing: [ 'img', 'br', 'hr', 'area', 'base',
-      'basefont', 'input', 'link', 'meta' ]
+    // Lots of these won't come up by default because we don't allow them
+    selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
+    // URL schemes we permit
+    allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ]
 
 ### Transformations
 
@@ -112,10 +108,14 @@ The last parameter (`shouldMerge`) is set to `true` by default. When `true`, `si
 
 ### Filters
 
-You can provide a filter function to remove unwanted tags. Let's suppose we need to remove empty `a` tags like 
+You can provide a filter function to remove unwanted tags. Let's suppose we need to remove empty `a` tags like:
+
 ```html
-<a href="page/html"></a>
+<a href="page.html"></a>
 ```
+
+We can do that with the following filter:
+
 ```javascript
 sanitizeHtml(
     '<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>',
@@ -127,7 +127,31 @@ sanitizeHtml(
 );
 ```
 
+### Allowed URL schemes
+
+By default we allow the following URL schemes in cases where `href`, `src`, etc. are allowed:
+
+[ 'http', 'https', 'ftp', 'mailto' ]
+
+You can override this if you want to:
+
+```javascript
+sanitizeHtml(
+  // teeny-tiny valid transparent GIF in a data URL
+  '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />',
+  {
+    allowedTags: [ 'img', 'p' ],
+    allowedSchemes: [ 'data', 'http' ]
+  }
+);
+```
+
 ## Changelog
+
+1.1.6: `allowedSchemes` option for those who want to permit `data` URLs and such.
+
+1.1.5: just a packaging thing.
+
 1.1.4: custom exclusion filter.
 
 1.1.3: moved to lodash. 1.1.2 pointed to the wrong version of lodash.
