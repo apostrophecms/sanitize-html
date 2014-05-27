@@ -21,8 +21,8 @@
   "author": "P'unk Avenue LLC",
   "license": "MIT",
   "dependencies": {
-    "lodash": "2.4.x",
+    "he": "~0.4.1",
     "htmlparser2": "~3.3.0",
-    "ent": "~0.1.0"
+    "lodash": "2.4.x"
   }
 }
