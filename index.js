@@ -1,6 +1,6 @@
 var htmlparser = require('htmlparser2');
 var _ = require('lodash');
-var ent = require('ent');
+var he = require('he');
 
 module.exports = sanitizeHtml;
 
@@ -154,7 +154,7 @@ function sanitizeHtml(html, options) {
 
   function naughtyHref(href) {
     // So we don't get faked out by a hex or decimal escaped javascript URL #1
-    href = ent.decode(href);
+    href = he.decode(href);
     // Browsers ignore character codes of 32 (space) and below in a surprising
     // number of situations. Start reading here:
     // https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Embedded_tab
