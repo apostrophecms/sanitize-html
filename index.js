@@ -71,7 +71,7 @@ function sanitizeHtml(html, options) {
   var skipText = false;
   var parser = new htmlparser.Parser({
     onopentag: function(name, attribs) {
-     var frame = new Frame(name, result);
+     var frame = new Frame(name);
      stack.push(frame);
 
       var skip = false;
