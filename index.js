@@ -140,7 +140,6 @@ function sanitizeHtml(html, options) {
     onclosetag: function(name) {
       var frame = stack.pop();
       frame.updateInnerHtml();
-      frame.text = frame.text.trim();
       skipText = false;
       depth--;
       if (skipMap[depth]) {
@@ -160,6 +159,11 @@ function sanitizeHtml(html, options) {
       if (_.has(selfClosingMap, name)) {
          // Already output />
          return;
+      }
+
+      if (depth) {
+           var parentFrame = stack[stack.length - 1];
+           parentFrame.text += frame.text;
       }
 
       result += "</" + name + ">";

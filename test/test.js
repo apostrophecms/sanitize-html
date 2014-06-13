@@ -97,13 +97,13 @@ describe('sanitizeHtml', function() {
 
     it("Should expose a node's inner text to the filter", function() {
         assert.strictEqual(
-            sanitizeHtml('<p>12<a href="http://www.linux.org"><br/><br></a></p>', {
+            sanitizeHtml('<p>12<a href="http://www.linux.org"><br/>3<br></a>4</p>', {
                 exclusiveFilter : function(frame) {
                     if (frame.tag === 'p') {
-                        assert.strictEqual(frame.text, '12');
+                        assert.strictEqual(frame.text, '124');
                     } else if (frame.tag === 'a') {
-                        assert.strictEqual(frame.text, '');
-                        return !frame.text;
+                        assert.strictEqual(frame.text, '3');
+                        return true;
                     } else if (frame.tag === 'br') {
                         assert.strictEqual(frame.text, '');
                     } else {
@@ -112,7 +112,7 @@ describe('sanitizeHtml', function() {
                     return false;
                 }
             }),
-            '<p>12</p>'
+            '<p>124</p>'
         );
     });
 
