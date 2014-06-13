@@ -97,7 +97,7 @@ describe('sanitizeHtml', function() {
 
     it("Should expose a node's inner text and inner HTML to the filter", function() {
         assert.strictEqual(
-            sanitizeHtml('<p>12<a href="http://www.linux.org"><br/>3<br></a>4</p>', {
+            sanitizeHtml('<p>12<a href="http://www.linux.org"><br/>3<br></a><span>4</span></p>', {
                 exclusiveFilter : function(frame) {
                     if (frame.tag === 'p') {
                         assert.strictEqual(frame.text, '124');
