@@ -148,7 +148,7 @@ sanitizeHtml(
 
 ## Changelog
 
-1.1.7: A node's `innerHtml()` is exposed to filter functions in addition to `text`.
+1.1.7: A frame's `innerHtml()` is exposed to filter functions in addition to `text`.
 
 1.1.6: `allowedSchemes` option for those who want to permit `data` URLs and such.
 
