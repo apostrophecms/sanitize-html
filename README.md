@@ -121,7 +121,7 @@ sanitizeHtml(
     '<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>',
     {
         exclusiveFilter: function(frame) {
-            return frame.tag === 'a' && !frame.innerHtml();
+            return frame.tag === 'a' && !frame.text.trim();
         }
     }
 );
@@ -148,7 +148,7 @@ sanitizeHtml(
 
 ## Changelog
 
-1.1.7: A frame's `innerHtml()` is exposed to filter functions in addition to `text`.
+1.1.7: A frame's `text` now includes child nodes' text and behaves like DOM innerText.
 
 1.1.6: `allowedSchemes` option for those who want to permit `data` URLs and such.
 
