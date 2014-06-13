@@ -95,17 +95,20 @@ describe('sanitizeHtml', function() {
         );
     });
 
-    it("Should expose a node's inner text to the filter", function() {
+    it("Should expose a node's inner text and inner HTML to the filter", function() {
         assert.strictEqual(
             sanitizeHtml('<p>12<a href="http://www.linux.org"><br/>3<br></a>4</p>', {
                 exclusiveFilter : function(frame) {
                     if (frame.tag === 'p') {
                         assert.strictEqual(frame.text, '124');
+                        assert.strictEqual(frame.innerHtml(), '124');
                     } else if (frame.tag === 'a') {
                         assert.strictEqual(frame.text, '3');
+                        assert.strictEqual(frame.innerHtml(), '<br />3<br />');
                         return true;
                     } else if (frame.tag === 'br') {
                         assert.strictEqual(frame.text, '');
+                        assert.strictEqual(frame.innerHtml(), '');
                     } else {
                         assert.fail('p, a, br', frame.tag);
                     }
@@ -120,7 +123,7 @@ describe('sanitizeHtml', function() {
         assert.strictEqual(
             sanitizeHtml('<p><a href="http://www.linux.org"><br/></a></p>', {
                     exclusiveFilter : function(frame) {
-                        return (frame.tag === 'a' || frame.tag === 'p' || frame.tag === 'br') && !frame.innerHtml();
+                        return (frame.tag === 'a' || frame.tag === 'p' ) && !frame.text.trim();
                     }
                 }),
             ''
