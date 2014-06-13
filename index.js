@@ -8,6 +8,7 @@ function sanitizeHtml(html, options) {
   var result = '';
 
   function Frame(tag) {
+    var that = this;
     this.tag = tag;
     this.tagPosition = result.length;
     this.text = ''; // Node inner text
@@ -25,6 +26,13 @@ function sanitizeHtml(html, options) {
 
     this.updateInnerHtml = function () {
         innerHtmlEnd = result.length;
+    };
+
+    this.updateParentNodeText = function() {
+        if (stack.length) {
+            var parentFrame = stack[stack.length - 1];
+            parentFrame.text += that.text;
+        }
     };
 
     this.resetInnerHtml();
@@ -131,8 +139,8 @@ function sanitizeHtml(html, options) {
       // It is NOT actually raw text, entities are already escaped.
       // If we call escapeHtml here we wind up double-escaping.
       result += text;
-      if (depth) {
-           var frame = stack[depth - 1];
+      if (stack.length) {
+           var frame = stack[stack.length - 1];
            frame.updateInnerHtml();
            frame.text += text;
        }
@@ -144,6 +152,7 @@ function sanitizeHtml(html, options) {
       depth--;
       if (skipMap[depth]) {
         delete skipMap[depth];
+        frame.updateParentNodeText();
         return;
       }
 
@@ -156,14 +165,12 @@ function sanitizeHtml(html, options) {
          result = result.substr(0, frame.tagPosition);
          return;
       }
+
+      frame.updateParentNodeText();
+
       if (_.has(selfClosingMap, name)) {
          // Already output />
          return;
-      }
-
-      if (depth) {
-           var parentFrame = stack[stack.length - 1];
-           parentFrame.text += frame.text;
       }
 
       result += "</" + name + ">";
