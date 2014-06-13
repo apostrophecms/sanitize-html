@@ -4,13 +4,16 @@ var he = require('he');
 
 module.exports = sanitizeHtml;
 
-function Frame(tag, result) {
+function sanitizeHtml(html, options) {
+  var result = '';
+
+  function Frame(tag) {
     this.tag = tag;
     this.tagPosition = result.length;
     var innerHtmlStart, innerHtmlEnd;
 
     this.innerHtml = function () {
-        return result.slice(innerHtmlStart, innerHtmlEnd).trim();
+       return result.slice(innerHtmlStart, innerHtmlEnd).trim();
     };
 
     this.resetInnerHtml = function () {
@@ -23,11 +26,9 @@ function Frame(tag, result) {
     };
 
     this.resetInnerHtml();
-}
+  }
 
-function sanitizeHtml(html, options) {
-  var result = '';
-  if (!options) {
+    if (!options) {
     options = sanitizeHtml.defaults;
   } else {
     _.defaults(options, sanitizeHtml.defaults);

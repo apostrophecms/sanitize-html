@@ -105,6 +105,17 @@ describe('sanitizeHtml', function() {
             ''
         );
   });
+  it('Exclusive filter should not affect elements which do not match the filter condition', function () {
+      assert.strictEqual(
+          sanitizeHtml('I love <a href="www.linux.org" target="_hplink">Linux</a> OS',
+              {
+                  exclusiveFilter: function (frame) {
+                      return (frame.tag === 'a') && !frame.innerHtml();
+                  }
+              }),
+          'I love <a href="www.linux.org" target="_hplink">Linux</a> OS'
+      );
+  });
   it('should disallow data URLs with default allowedSchemes', function() {
     assert.equal(
       sanitizeHtml(
