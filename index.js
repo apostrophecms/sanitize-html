@@ -12,21 +12,6 @@ function sanitizeHtml(html, options) {
     this.tag = tag;
     this.tagPosition = result.length;
     this.text = ''; // Node inner text
-    var innerHtmlStart, innerHtmlEnd;
-
-    // Node inner html
-    this.innerHtml = function () {
-       return result.slice(innerHtmlStart, innerHtmlEnd).trim();
-    };
-
-    this.resetInnerHtml = function () {
-        innerHtmlEnd = result.length;
-        innerHtmlStart = result.length;
-    };
-
-    this.updateInnerHtml = function () {
-        innerHtmlEnd = result.length;
-    };
 
     this.updateParentNodeText = function() {
         if (stack.length) {
@@ -35,7 +20,6 @@ function sanitizeHtml(html, options) {
         }
     };
 
-    this.resetInnerHtml();
   }
 
     if (!options) {
@@ -130,7 +114,6 @@ function sanitizeHtml(html, options) {
       } else {
         result += ">";
       }
-      frame.resetInnerHtml();
     },
     ontext: function(text) {
       if (skipText) {
@@ -141,13 +124,11 @@ function sanitizeHtml(html, options) {
       result += text;
       if (stack.length) {
            var frame = stack[stack.length - 1];
-           frame.updateInnerHtml();
            frame.text += text;
-       }
+      }
     },
     onclosetag: function(name) {
       var frame = stack.pop();
-      frame.updateInnerHtml();
       skipText = false;
       depth--;
       if (skipMap[depth]) {

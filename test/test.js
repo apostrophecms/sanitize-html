@@ -88,7 +88,7 @@ describe('sanitizeHtml', function() {
      assert.strictEqual(
      sanitizeHtml('<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>', {
              exclusiveFilter: function (frame) {
-                 return frame.tag === 'a' && !frame.innerHtml();
+                 return frame.tag === 'a' && !frame.text.trim();
              }
          }),
          '<p>This is <br />Linux</p>'
@@ -101,14 +101,11 @@ describe('sanitizeHtml', function() {
                 exclusiveFilter : function(frame) {
                     if (frame.tag === 'p') {
                         assert.strictEqual(frame.text, '124');
-                        assert.strictEqual(frame.innerHtml(), '124');
                     } else if (frame.tag === 'a') {
                         assert.strictEqual(frame.text, '3');
-                        assert.strictEqual(frame.innerHtml(), '<br />3<br />');
                         return true;
                     } else if (frame.tag === 'br') {
                         assert.strictEqual(frame.text, '');
-                        assert.strictEqual(frame.innerHtml(), '');
                     } else {
                         assert.fail('p, a, br', frame.tag);
                     }
@@ -134,7 +131,7 @@ describe('sanitizeHtml', function() {
           sanitizeHtml('I love <a href="www.linux.org" target="_hplink">Linux</a> OS',
               {
                   exclusiveFilter: function (frame) {
-                      return (frame.tag === 'a') && !frame.innerHtml();
+                      return (frame.tag === 'a') && !frame.text.trim();
                   }
               }),
           'I love <a href="www.linux.org" target="_hplink">Linux</a> OS'
