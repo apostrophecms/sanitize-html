@@ -121,7 +121,7 @@ sanitizeHtml(
     '<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>',
     {
         exclusiveFilter: function(frame) {
-            return frame.tag === 'a' && !frame.text.trim();
+            return frame.tag === 'a' && !frame.innerHtml();
         }
     }
 );
