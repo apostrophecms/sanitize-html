@@ -4,6 +4,27 @@ var he = require('he');
 
 module.exports = sanitizeHtml;
 
+function Frame(tag, result) {
+    this.tag = tag;
+    this.tagPosition = result.length;
+    var innerHtmlStart, innerHtmlEnd;
+
+    this.innerHtml = function () {
+        return result.slice(innerHtmlStart, innerHtmlEnd).trim();
+    };
+
+    this.resetInnerHtml = function () {
+        innerHtmlEnd = result.length;
+        innerHtmlStart = result.length;
+    };
+
+    this.updateInnerHtml = function () {
+        innerHtmlEnd = result.length;
+    };
+
+    this.resetInnerHtml();
+}
+
 function sanitizeHtml(html, options) {
   var result = '';
   if (!options) {
@@ -49,12 +70,8 @@ function sanitizeHtml(html, options) {
   var skipText = false;
   var parser = new htmlparser.Parser({
     onopentag: function(name, attribs) {
-      stack.push({
-          tag: name,
-          attribs: attribs,
-          text: '',
-          tagPosition: result.length
-      });
+     var frame = new Frame(name, result);
+     stack.push(frame);
 
       var skip = false;
       if (_.has(transformTagsMap, name)) {
@@ -102,39 +119,44 @@ function sanitizeHtml(html, options) {
       } else {
         result += ">";
       }
+      frame.resetInnerHtml();
     },
     ontext: function(text) {
       if (skipText) {
         return;
       }
-      if (depth) {
-          var frame = stack[depth - 1];
-          frame.text += text;
-      }
       // It is NOT actually raw text, entities are already escaped.
       // If we call escapeHtml here we wind up double-escaping.
       result += text;
+      if (depth) {
+           var frame = stack[depth - 1];
+           frame.updateInnerHtml();
+       }
     },
     onclosetag: function(name) {
       var frame = stack.pop();
+      frame.updateInnerHtml();
       skipText = false;
       depth--;
       if (skipMap[depth]) {
         delete skipMap[depth];
         return;
       }
-      if (_.has(selfClosingMap, name)) {
-        // Already output />
-        return;
-      }
+
       if (transformMap[depth]) {
         name = transformMap[depth];
         delete transformMap[depth];
       }
+
       if (options.exclusiveFilter && options.exclusiveFilter(frame)) {
          result = result.substr(0, frame.tagPosition);
          return;
       }
+      if (_.has(selfClosingMap, name)) {
+         // Already output />
+         return;
+      }
+
       result += "</" + name + ">";
     }
   });

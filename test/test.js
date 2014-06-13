@@ -83,16 +83,27 @@ describe('sanitizeHtml', function() {
       }
     }}, allowedAttributes: { ul: ['bar', 'class'] } }), '<ul class="foo" bar="bar"><li>Hello world</li></ul>');
   });
-  it('should skip empty a', function() {
-    assert.equal(
-      sanitizeHtml('<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>',
-      {
-        exclusiveFilter : function(frame) {
-            return frame.tag === 'a' && !frame.text.trim();
-        }
-      }),
-      '<p>This is <br />Linux</p>'
-    );
+
+  it('should skip an empty link', function() {
+     assert.strictEqual(
+     sanitizeHtml('<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>', {
+             exclusiveFilter: function (frame) {
+                 return frame.tag === 'a' && !frame.innerHtml();
+             }
+         }),
+         '<p>This is <br />Linux</p>'
+        );
+    });
+
+  it('Should collapse nested empty elements', function() {
+        assert.strictEqual(
+            sanitizeHtml('<p><a href="http://www.linux.org"><br/></a></p>', {
+                    exclusiveFilter : function(frame) {
+                        return (frame.tag === 'a' || frame.tag === 'p' || frame.tag === 'br') && !frame.innerHtml();
+                    }
+                }),
+            ''
+        );
   });
   it('should disallow data URLs with default allowedSchemes', function() {
     assert.equal(
