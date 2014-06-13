@@ -10,8 +10,10 @@ function sanitizeHtml(html, options) {
   function Frame(tag) {
     this.tag = tag;
     this.tagPosition = result.length;
+    this.text = ''; // Node inner text
     var innerHtmlStart, innerHtmlEnd;
 
+    // Node inner html
     this.innerHtml = function () {
        return result.slice(innerHtmlStart, innerHtmlEnd).trim();
     };
@@ -132,11 +134,13 @@ function sanitizeHtml(html, options) {
       if (depth) {
            var frame = stack[depth - 1];
            frame.updateInnerHtml();
+           frame.text += text;
        }
     },
     onclosetag: function(name) {
       var frame = stack.pop();
       frame.updateInnerHtml();
+      frame.text = frame.text.trim();
       skipText = false;
       depth--;
       if (skipMap[depth]) {

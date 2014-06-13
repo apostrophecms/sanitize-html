@@ -95,6 +95,27 @@ describe('sanitizeHtml', function() {
         );
     });
 
+    it("Should expose a node's inner text to the filter", function() {
+        assert.strictEqual(
+            sanitizeHtml('<p>12<a href="http://www.linux.org"><br/><br></a></p>', {
+                exclusiveFilter : function(frame) {
+                    if (frame.tag === 'p') {
+                        assert.strictEqual(frame.text, '12');
+                    } else if (frame.tag === 'a') {
+                        assert.strictEqual(frame.text, '');
+                        return !frame.text;
+                    } else if (frame.tag === 'br') {
+                        assert.strictEqual(frame.text, '');
+                    } else {
+                        assert.fail('p, a, br', frame.tag);
+                    }
+                    return false;
+                }
+            }),
+            '<p>12</p>'
+        );
+    });
+
   it('Should collapse nested empty elements', function() {
         assert.strictEqual(
             sanitizeHtml('<p><a href="http://www.linux.org"><br/></a></p>', {
