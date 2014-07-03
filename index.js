@@ -33,6 +33,20 @@ function sanitizeHtml(html, options) {
       allowedAttributesMap[tag][name] = true;
     });
   });
+  var allowedClassesMap = {};
+  _.each(options.allowedClasses, function(classes, tag) {
+    // Implicitly allows the class attribute
+    if (!allowedAttributesMap[tag]) {
+      allowedAttributesMap[tag] = {};
+    }
+    allowedAttributesMap[tag]['class'] = true;
+
+    allowedClassesMap[tag] = {};
+    _.each(classes, function(name) {
+      allowedClassesMap[tag][name] = true;
+    });
+  });
+
   var transformTagsMap = {};
   _.each(options.transformTags, function(transform, tag){
     if (typeof transform === 'function') {
@@ -83,12 +97,18 @@ function sanitizeHtml(html, options) {
       if (_.has(allowedAttributesMap, name)) {
         _.each(attribs, function(value, a) {
           if (_.has(allowedAttributesMap[name], a)) {
-            result += ' ' + a;
             if ((a === 'href') || (a === 'src')) {
               if (naughtyHref(value)) {
                 return;
               }
             }
+            if (a === 'class') {
+              value = filterClasses(value, allowedClassesMap[name]);
+              if (!value.length) {
+                return;
+              }
+            }
+            result += ' ' + a;
             if (value.length) {
               // Values are ALREADY escaped, calling escapeHtml here
               // results in double escapes
@@ -167,6 +187,17 @@ function sanitizeHtml(html, options) {
     }
     var scheme = matches[1].toLowerCase();
     return (!_.contains(options.allowedSchemes, scheme));
+  }
+
+  function filterClasses(classes, allowed) {
+    if (!allowed) {
+      // The class attribute is allowed without filtering on this tag
+      return classes;
+    }
+    classes = classes.split(/\s+/);
+    return _.filter(classes, function(c) {
+      return _.has(allowed, c);
+    }).join(' ');
   }
 }
 

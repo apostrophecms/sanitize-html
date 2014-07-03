@@ -127,6 +127,22 @@ sanitizeHtml(
 );
 ```
 
+### Allowed CSS Classes
+
+If you wish to allow specific CSS classes on a particular element, you can do so with the `allowedClasses` option. Any other CSS classes are discarded.
+
+This implies that the `class` attribute is allowed on that element.
+
+```javascript
+// Allow only a restricted set of CSS classes and only on the p tag
+clean = sanitizeHtml(dirty, {
+  allowedTags: [ 'p', 'em', 'strong' ],
+  allowedClasses: {
+    'p': [ 'fancy', 'simple' ]
+  }
+});
+```
+
 ### Allowed URL schemes
 
 By default we allow the following URL schemes in cases where `href`, `src`, etc. are allowed:
