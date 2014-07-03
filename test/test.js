@@ -83,16 +83,59 @@ describe('sanitizeHtml', function() {
       }
     }}, allowedAttributes: { ul: ['bar', 'class'] } }), '<ul class="foo" bar="bar"><li>Hello world</li></ul>');
   });
-  it('should skip empty a', function() {
-    assert.equal(
-      sanitizeHtml('<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>',
-      {
-        exclusiveFilter : function(frame) {
-            return frame.tag === 'a' && !frame.text.trim();
-        }
-      }),
-      '<p>This is <br />Linux</p>'
-    );
+
+  it('should skip an empty link', function() {
+     assert.strictEqual(
+     sanitizeHtml('<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>', {
+             exclusiveFilter: function (frame) {
+                 return frame.tag === 'a' && !frame.text.trim();
+             }
+         }),
+         '<p>This is <br />Linux</p>'
+        );
+    });
+
+    it("Should expose a node's inner text and inner HTML to the filter", function() {
+        assert.strictEqual(
+            sanitizeHtml('<p>12<a href="http://www.linux.org"><br/>3<br></a><span>4</span></p>', {
+                exclusiveFilter : function(frame) {
+                    if (frame.tag === 'p') {
+                        assert.strictEqual(frame.text, '124');
+                    } else if (frame.tag === 'a') {
+                        assert.strictEqual(frame.text, '3');
+                        return true;
+                    } else if (frame.tag === 'br') {
+                        assert.strictEqual(frame.text, '');
+                    } else {
+                        assert.fail('p, a, br', frame.tag);
+                    }
+                    return false;
+                }
+            }),
+            '<p>124</p>'
+        );
+    });
+
+  it('Should collapse nested empty elements', function() {
+        assert.strictEqual(
+            sanitizeHtml('<p><a href="http://www.linux.org"><br/></a></p>', {
+                    exclusiveFilter : function(frame) {
+                        return (frame.tag === 'a' || frame.tag === 'p' ) && !frame.text.trim();
+                    }
+                }),
+            ''
+        );
+  });
+  it('Exclusive filter should not affect elements which do not match the filter condition', function () {
+      assert.strictEqual(
+          sanitizeHtml('I love <a href="www.linux.org" target="_hplink">Linux</a> OS',
+              {
+                  exclusiveFilter: function (frame) {
+                      return (frame.tag === 'a') && !frame.text.trim();
+                  }
+              }),
+          'I love <a href="www.linux.org" target="_hplink">Linux</a> OS'
+      );
   });
   it('should disallow data URLs with default allowedSchemes', function() {
     assert.equal(
