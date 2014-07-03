@@ -6,7 +6,23 @@ module.exports = sanitizeHtml;
 
 function sanitizeHtml(html, options) {
   var result = '';
-  if (!options) {
+
+  function Frame(tag) {
+    var that = this;
+    this.tag = tag;
+    this.tagPosition = result.length;
+    this.text = ''; // Node inner text
+
+    this.updateParentNodeText = function() {
+        if (stack.length) {
+            var parentFrame = stack[stack.length - 1];
+            parentFrame.text += that.text;
+        }
+    };
+
+  }
+
+    if (!options) {
     options = sanitizeHtml.defaults;
   } else {
     _.defaults(options, sanitizeHtml.defaults);
@@ -63,12 +79,8 @@ function sanitizeHtml(html, options) {
   var skipText = false;
   var parser = new htmlparser.Parser({
     onopentag: function(name, attribs) {
-      stack.push({
-          tag: name,
-          attribs: attribs,
-          text: '',
-          tagPosition: result.length
-      });
+     var frame = new Frame(name);
+     stack.push(frame);
 
       var skip = false;
       if (_.has(transformTagsMap, name)) {
@@ -127,13 +139,13 @@ function sanitizeHtml(html, options) {
       if (skipText) {
         return;
       }
-      if (depth) {
-          var frame = stack[depth - 1];
-          frame.text += text;
-      }
       // It is NOT actually raw text, entities are already escaped.
       // If we call escapeHtml here we wind up double-escaping.
       result += text;
+      if (stack.length) {
+           var frame = stack[stack.length - 1];
+           frame.text += text;
+      }
     },
     onclosetag: function(name) {
       var frame = stack.pop();
@@ -141,20 +153,27 @@ function sanitizeHtml(html, options) {
       depth--;
       if (skipMap[depth]) {
         delete skipMap[depth];
+        frame.updateParentNodeText();
         return;
       }
-      if (_.has(selfClosingMap, name)) {
-        // Already output />
-        return;
-      }
+
       if (transformMap[depth]) {
         name = transformMap[depth];
         delete transformMap[depth];
       }
+
       if (options.exclusiveFilter && options.exclusiveFilter(frame)) {
          result = result.substr(0, frame.tagPosition);
          return;
       }
+
+      frame.updateParentNodeText();
+
+      if (_.has(selfClosingMap, name)) {
+         // Already output />
+         return;
+      }
+
       result += "</" + name + ">";
     }
   });

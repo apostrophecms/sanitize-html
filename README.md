@@ -164,6 +164,14 @@ sanitizeHtml(
 
 ## Changelog
 
+1.2.0:
+
+* The `allowedClasses` option now allows you to permit CSS classes in a fine-grained way.
+
+* Text passed to your `exclusiveFilter` function now includes the text of child elements, making it more useful for identifying elements that truly lack any inner text.
+
+1.1.7: use `he` for entity decoding, because it is more actively maintained.
+
 1.1.6: `allowedSchemes` option for those who want to permit `data` URLs and such.
 
 1.1.5: just a packaging thing.
