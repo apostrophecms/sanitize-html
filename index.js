@@ -149,6 +149,10 @@ function sanitizeHtml(html, options) {
     },
     onclosetag: function(name) {
       var frame = stack.pop();
+      if (!frame) {
+        // Do not crash on bad markup
+        return;
+      }
       skipText = false;
       depth--;
       if (skipMap[depth]) {

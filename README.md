@@ -164,6 +164,8 @@ sanitizeHtml(
 
 ## Changelog
 
+1.2.1: fixed crashing bug when presented with bad markup. The bug was in the `exclusiveFilter` mechanism. Unit test added. Thanks to Ilya Kantor for catching it.
+
 1.2.0:
 
 * The `allowedClasses` option now allows you to permit CSS classes in a fine-grained way.

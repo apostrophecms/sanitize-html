@@ -190,5 +190,13 @@ describe('sanitizeHtml', function() {
       '<p>whee</p>'
     );
   });
+  it('should not crash on bad markup', function() {
+    assert.equal(
+      sanitizeHtml(
+        "<p a"
+      ),
+      ''
+    );
+  });
 });
 
