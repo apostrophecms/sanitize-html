@@ -14,15 +14,14 @@ function sanitizeHtml(html, options) {
     this.text = ''; // Node inner text
 
     this.updateParentNodeText = function() {
-        if (stack.length) {
-            var parentFrame = stack[stack.length - 1];
-            parentFrame.text += that.text;
-        }
+      if (stack.length) {
+          var parentFrame = stack[stack.length - 1];
+          parentFrame.text += that.text;
+      }
     };
-
   }
 
-    if (!options) {
+  if (!options) {
     options = sanitizeHtml.defaults;
   } else {
     _.defaults(options, sanitizeHtml.defaults);
