@@ -49,6 +49,12 @@ describe('sanitizeHtml', function() {
   it('should dump an uppercase javascript url', function() {
     assert.equal(sanitizeHtml('<a href="JAVASCRIPT:alert(\'foo\')">Hax</a>'), '<a>Hax</a>');
   });
+  it('should dump a javascript URL with a comment in the middle (probably only respected by browsers in XML data islands, but just in case someone enables those)', function() {
+    assert.equal(sanitizeHtml('<a href="java<!-- -->script:alert(\'foo\')">Hax</a>'), '<a>Hax</a>');
+  });
+  it('should not mess up a hashcode with a : in it', function() {
+    assert.equal(sanitizeHtml('<a href="awesome.html#this:stuff">Hi</a>'), '<a href="awesome.html#this:stuff">Hi</a>');
+  });
   it('should dump character codes 1-32 before testing scheme', function() {
     assert.equal(sanitizeHtml('<a href="java\0&#14;\t\r\n script:alert(\'foo\')">Hax</a>'), '<a>Hax</a>');
   });
