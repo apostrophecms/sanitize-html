@@ -127,6 +127,12 @@ sanitizeHtml(
 );
 ```
 
+The `frame` object provides the following properties:
+
+ - `tag`: The name of the tag, lowercased.
+ - `attribs`: A key/value pairing of the element's attributes. Keys are lowercased.
+ - `text`: The text content of the tag.
+
 ### Allowed CSS Classes
 
 If you wish to allow specific CSS classes on a particular element, you can do so with the `allowedClasses` option. Any other CSS classes are discarded.

@@ -7,9 +7,10 @@ module.exports = sanitizeHtml;
 function sanitizeHtml(html, options) {
   var result = '';
 
-  function Frame(tag) {
+  function Frame(tag, attribs) {
     var that = this;
     this.tag = tag;
+    this.attribs = attribs || {};
     this.tagPosition = result.length;
     this.text = ''; // Node inner text
 
@@ -78,16 +79,16 @@ function sanitizeHtml(html, options) {
   var skipText = false;
   var parser = new htmlparser.Parser({
     onopentag: function(name, attribs) {
-     var frame = new Frame(name);
+     var frame = new Frame(name, attribs);
      stack.push(frame);
 
       var skip = false;
       if (_.has(transformTagsMap, name)) {
         var transformedTag = transformTagsMap[name](name, attribs);
 
-        attribs = transformedTag.attribs;
+        frame.attribs = attribs = transformedTag.attribs;
         if (name !== transformedTag.tagName) {
-          name = transformedTag.tagName;
+          frame.name = name = transformedTag.tagName;
           transformMap[depth] = transformedTag.tagName;
         }
       }
@@ -110,12 +111,14 @@ function sanitizeHtml(html, options) {
           if (_.has(allowedAttributesMap[name], a)) {
             if ((a === 'href') || (a === 'src')) {
               if (naughtyHref(value)) {
+                delete frame.attribs[a];
                 return;
               }
             }
             if (a === 'class') {
               value = filterClasses(value, allowedClassesMap[name]);
               if (!value.length) {
+                delete frame.attribs['class'];
                 return;
               }
             }
@@ -125,6 +128,8 @@ function sanitizeHtml(html, options) {
               // results in double escapes
               result += '="' + value + '"';
             }
+          } else {
+            delete frame.attribs[a];
           }
         });
       }
