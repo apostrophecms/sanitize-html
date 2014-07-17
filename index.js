@@ -201,8 +201,9 @@ function sanitizeHtml(html, options) {
     // number of situations. Start reading here:
     // https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Embedded_tab
     href = href.replace(/[\x00-\x20]+/, '');
-    // Case insensitive so we don't get faked out by JAVASCRIPT #1
-    var matches = href.match(/^([a-zA-Z]+)\:/);
+    // Match all possible strings so we don't get faked out by JAVASCRIPT #1
+    // or even malformed CDATA (i.e. java<!-- -->script:alert('XSS'); )
+    var matches = href.match(/^([^:]+)\:/);
     if (!matches) {
       // No scheme = no way to inject js (right?)
       return false;
