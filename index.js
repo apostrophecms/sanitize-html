@@ -201,6 +201,10 @@ function sanitizeHtml(html, options) {
     // number of situations. Start reading here:
     // https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Embedded_tab
     href = href.replace(/[\x00-\x20]+/, '');
+    // Clobber any comments in URLs, which the browser might
+    // interpret inside an XML data island, allowing
+    // a javascript: URL to be snuck through
+    href = href.replace(/<\!\-\-.*?\-\-\>/g, '');
     // Case insensitive so we don't get faked out by JAVASCRIPT #1
     var matches = href.match(/^([a-zA-Z]+)\:/);
     if (!matches) {
