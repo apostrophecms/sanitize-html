@@ -170,7 +170,7 @@ function sanitizeHtml(html, options) {
         delete transformMap[depth];
       }
 
-      if (options.exclusiveFilter && options.exclusiveFilter(_.cloneDeep(frame))) {
+      if (options.exclusiveFilter && options.exclusiveFilter(frame)) {
          result = result.substr(0, frame.tagPosition);
          return;
       }
