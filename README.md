@@ -127,6 +127,13 @@ sanitizeHtml(
 );
 ```
 
+The `frame` object supplied to the callback provides the following attributes:
+
+ - `tag`: The tag name, i.e. `'img'`.
+ - `attribs`: The tag's attributes, i.e. `{ src: "/path/to/tux.png" }`.
+ - `text`: The text content of the tag.
+ - `tagPosition`: The index of the tag's position in the result string.
+
 ### Allowed CSS Classes
 
 If you wish to allow specific CSS classes on a particular element, you can do so with the `allowedClasses` option. Any other CSS classes are discarded.
