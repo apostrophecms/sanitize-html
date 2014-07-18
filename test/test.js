@@ -215,7 +215,10 @@ describe('sanitizeHtml', function() {
           }
         }
       ),
-      '<img src="" />'
+      // This is weird but not dangerous. Without the &quot there
+      // would probably be some way to make it come out as a
+      // separate attribute
+      '<img src="onmouseover=&quot;alert(\'XSS\');&quot;" />'
     );
   });
 });
