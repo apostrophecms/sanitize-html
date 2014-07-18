@@ -122,8 +122,11 @@ function sanitizeHtml(html, options) {
             result += ' ' + a;
             if (value.length) {
               // Values are ALREADY escaped, calling escapeHtml here
-              // results in double escapes
-              result += '="' + value + '"';
+              // results in double escapes.
+              // However, a bug in the HTML parser allows you to use malformed 
+              // markup to slip unescaped quotes through, so we strip them explicitly.
+              // @see https://github.com/punkave/sanitize-html/issues/19
+              result += '="' + value.replace(/"/g, '&quot;') + '"';
             }
           }
         });
