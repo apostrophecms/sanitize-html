@@ -204,5 +204,19 @@ describe('sanitizeHtml', function() {
       ''
     );
   });
+  it('should not allow a naked = sign followed by an unrelated attribute to result in one merged attribute with unescaped double quote marks', function() {
+    assert.equal(
+      sanitizeHtml(
+        '<IMG SRC= onmouseover="alert(\'XSS\');">',
+        {
+          allowedTags: [ 'img' ],
+          allowedAttributes: {
+            img: [ 'src' ]
+          }
+        }
+      ),
+      '<img src="" />'
+    );
+  });
 });
 
