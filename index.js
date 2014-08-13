@@ -34,28 +34,36 @@ function sanitizeHtml(html, options) {
     script: true,
     style: true
   };
-  var allowedTagsMap = {};
-  _.each(options.allowedTags, function(tag) {
-    allowedTagsMap[tag] = true;
-  });
+  var allowedTagsMap;
+  if(options.allowedTags) {
+    allowedTagsMap = {};
+    _.each(options.allowedTags, function(tag) {
+      allowedTagsMap[tag] = true;
+    });
+  }
   var selfClosingMap = {};
   _.each(options.selfClosing, function(tag) {
     selfClosingMap[tag] = true;
   });
-  var allowedAttributesMap = {};
-  _.each(options.allowedAttributes, function(attributes, tag) {
-    allowedAttributesMap[tag] = {};
-    _.each(attributes, function(name) {
-      allowedAttributesMap[tag][name] = true;
+  var allowedAttributesMap;
+  if(options.allowedAttributes) {
+    allowedAttributesMap = {};
+    _.each(options.allowedAttributes, function(attributes, tag) {
+      allowedAttributesMap[tag] = {};
+      _.each(attributes, function(name) {
+        allowedAttributesMap[tag][name] = true;
+      });
     });
-  });
+  }
   var allowedClassesMap = {};
   _.each(options.allowedClasses, function(classes, tag) {
     // Implicitly allows the class attribute
-    if (!allowedAttributesMap[tag]) {
-      allowedAttributesMap[tag] = {};
+    if(allowedAttributesMap) {
+      if (!allowedAttributesMap[tag]) {
+        allowedAttributesMap[tag] = {};
+      }
+      allowedAttributesMap[tag]['class'] = true;
     }
-    allowedAttributesMap[tag]['class'] = true;
 
     allowedClassesMap[tag] = {};
     _.each(classes, function(name) {
@@ -93,7 +101,7 @@ function sanitizeHtml(html, options) {
         }
       }
 
-      if (!_.has(allowedTagsMap, name)) {
+      if (allowedTagsMap && !_.has(allowedTagsMap, name)) {
         skip = true;
         if (_.has(nonTextTagsMap, name)) {
           skipText = true;
@@ -106,9 +114,9 @@ function sanitizeHtml(html, options) {
         return;
       }
       result += '<' + name;
-      if (_.has(allowedAttributesMap, name)) {
+      if (!allowedAttributesMap || _.has(allowedAttributesMap, name)) {
         _.each(attribs, function(value, a) {
-          if (_.has(allowedAttributesMap[name], a)) {
+          if (!allowedAttributesMap || _.has(allowedAttributesMap[name], a)) {
             if ((a === 'href') || (a === 'src')) {
               if (naughtyHref(value)) {
                 delete frame.attribs[a];

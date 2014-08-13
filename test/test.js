@@ -7,6 +7,12 @@ describe('sanitizeHtml', function() {
   it('should pass through simple well-formed whitelisted markup', function() {
     assert.equal(sanitizeHtml('<div><p>Hello <b>there</b></p></div>'), '<div><p>Hello <b>there</b></p></div>');
   });
+  it('should pass through all markup if allowedTags and allowedAttributes are set to false', function() {
+    assert.equal(sanitizeHtml('<div><wiggly worms="ewww">hello</wiggly></div>', {
+      allowedTags: false,
+      allowedAttributes: false
+    }), '<div><wiggly worms="ewww">hello</wiggly></div>');
+  });
   it('should respect text nodes at top level', function() {
     assert.equal(sanitizeHtml('Blah blah blah<p>Whee!</p>'), 'Blah blah blah<p>Whee!</p>');
   });
@@ -222,4 +228,3 @@ describe('sanitizeHtml', function() {
     );
   });
 });
-

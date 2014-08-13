@@ -63,6 +63,15 @@ If you do not specify `allowedTags` or `allowedAttributes` our default list is a
     // URL schemes we permit
     allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ]
 
+"What if I want to allow all tags or all attributes?"
+
+Simple! instead of leaving `allowedTags` or `allowedAttributes` out of the options, set either
+one or both to `false`:
+
+    allowedTags: false,
+    allowedAttributes: false
+
+
 ### Transformations
 
 What if you want to add or change an attribute? What if you want to transform one tag to another? No problem, it's simple!
@@ -224,4 +233,3 @@ We're rocking our tests and have been working great in production for months, so
 Feel free to open issues on [github](http://github.com/punkave/sanitize-html).
 
 <a href="http://punkave.com/"><img src="https://raw.github.com/punkave/sanitize-html/master/logos/logo-box-builtby.png" /></a>
-
