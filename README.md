@@ -180,6 +180,8 @@ sanitizeHtml(
 
 ## Changelog
 
+1.4.0: ability to  allow all attributes or tags through by setting `allowedAttributes` and/or `allowedTags` to false. Thanks to Anand Thakker.
+
 1.3.0: `attribs` now available on frames passed to exclusive filter.
 
 1.2.3: fixed another possible XSS attack vector; no definitive exploit was found but it looks possible. [See this issue.](https://github.com/punkave/sanitize-html/pull/20) Thanks to Jim O'Brien.
