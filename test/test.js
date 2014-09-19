@@ -233,15 +233,11 @@ describe('sanitizeHtml', function() {
         '<a href="test.html">test</a>',
         {
           allowedTags: [ 'a' ],
-          allowedAttributes: {
-            a: ['href', 'target']
-          },
+          allowedAttributes: { a: ['href', 'target']},
           transformTags: {
             'a': function (tagName, attribs) {
-
               if (!attribs.href)
                 return false;
-
               return {
                 tagName: tagName,
                 attribs: {
@@ -265,15 +261,11 @@ describe('sanitizeHtml', function() {
         '<a href="test.html">blah</a>',
         {
           allowedTags: [ 'a' ],
-          allowedAttributes: {
-            a: ['href', 'target']
-          },
+          allowedAttributes: {a: ['href', 'target']},
           transformTags: {
             'a': function (tagName, attribs) {
-
               if (!attribs.href)
                 return false;
-
               return {
                 tagName: tagName,
                 attribs: {
