@@ -227,4 +227,68 @@ describe('sanitizeHtml', function() {
       '<img src="onmouseover=&quot;alert(\'XSS\');&quot;" />'
     );
   });
+  it('should not filter if exclusive filter does not match after transforming tags', function() {
+    assert.equal(
+      sanitizeHtml(
+        '<a href="test.html">test</a>',
+        {
+          allowedTags: [ 'a' ],
+          allowedAttributes: {
+            a: ['href', 'target']
+          },
+          transformTags: {
+            'a': function (tagName, attribs) {
+
+              if (!attribs.href)
+                return false;
+
+              return {
+                tagName: tagName,
+                attribs: {
+                  target: '_blank',
+                  href: attribs.href
+                }
+              };
+            }
+          },
+          exclusiveFilter: function(frame) {
+            return frame.tag === 'a' && frame.text.trim() == 'blah';
+          }
+        }
+      ),
+      '<a target="_blank" href="test.html">test</a>'
+    )
+  });
+  it('should filter if exclusive filter does match after transforming tags', function() {
+    assert.equal(
+      sanitizeHtml(
+        '<a href="test.html">blah</a>',
+        {
+          allowedTags: [ 'a' ],
+          allowedAttributes: {
+            a: ['href', 'target']
+          },
+          transformTags: {
+            'a': function (tagName, attribs) {
+
+              if (!attribs.href)
+                return false;
+
+              return {
+                tagName: tagName,
+                attribs: {
+                  target: '_blank',
+                  href: attribs.href
+                }
+              };
+            }
+          },
+          exclusiveFilter: function(frame) {
+            return frame.tag === 'a' && frame.text.trim() == 'blah';
+          }
+        }
+      ),
+      ''
+    )
+  });
 });
