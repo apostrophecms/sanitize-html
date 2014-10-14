@@ -281,6 +281,21 @@ describe('sanitizeHtml', function() {
         }
       ),
       ''
-    )
+    );
+  });
+  it('should not be faked out by double <', function() {
+    assert.equal(
+      sanitizeHtml('<<img src="javascript:evil"/>img src="javascript:evil"/>'
+      ),
+      ''
+    );
+    // I don't love what I get back here obviously, but
+    // it is not an attack vector, although it might be parsed
+    // by some browsers as containing an unbalanced close tag.
+    assert.equal(
+      sanitizeHtml('<<a href="javascript:evil"/>a href="javascript:evil"/>'
+      ),
+      '<<a>a href="javascript:evil"/></a>'
+    );
   });
 });

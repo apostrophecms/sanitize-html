@@ -4,7 +4,11 @@ var he = require('he');
 
 module.exports = sanitizeHtml;
 
-function sanitizeHtml(html, options) {
+// Ignore the _recursing flag; it's there for recursive
+// invocation as a guard against this exploit:
+// https://github.com/fb55/htmlparser2/issues/105
+
+function sanitizeHtml(html, options, _recursing) {
   var result = '';
 
   function Frame(tag, attribs) {
@@ -87,8 +91,8 @@ function sanitizeHtml(html, options) {
   var skipText = false;
   var parser = new htmlparser.Parser({
     onopentag: function(name, attribs) {
-     var frame = new Frame(name, attribs);
-     stack.push(frame);
+      var frame = new Frame(name, attribs);
+      stack.push(frame);
 
       var skip = false;
       if (_.has(transformTagsMap, name)) {
@@ -198,6 +202,18 @@ function sanitizeHtml(html, options) {
   });
   parser.write(html);
   parser.end();
+
+  // Invoke recursively until we stop finding
+  // clever little nesting exploits
+  if (!_recursing) {
+    while (true) {
+      var newResult = sanitizeHtml(result, options, true);
+      if (newResult === result) {
+        return result;
+      }
+      result = newResult;
+    }
+  }
   return result;
 
   function escapeHtml(s) {

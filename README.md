@@ -180,6 +180,10 @@ sanitizeHtml(
 
 ## Changelog
 
+1.4.3: invokes itself recursively until the markup stops changing to guard against [this issue](https://github.com/fb55/htmlparser2/issues/105). Bump to htmlparser2 version 3.7.x.
+
+1.4.1, 1.4.2: more tests.
+
 1.4.0: ability to  allow all attributes or tags through by setting `allowedAttributes` and/or `allowedTags` to false. Thanks to Anand Thakker.
 
 1.3.0: `attribs` now available on frames passed to exclusive filter.
