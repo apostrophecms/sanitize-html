@@ -298,4 +298,9 @@ describe('sanitizeHtml', function() {
       '<<a>a href="javascript:evil"/></a>'
     );
   });
+  it('should clean up string inside a textarea', function() {
+    assert.equal(sanitizeHtml('<form><textarea>Hello</textarea></textarea><p>test</p>', {
+      allowedTags: [ 'p' ]
+    }), '<p>test</p>');
+  });
 });
