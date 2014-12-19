@@ -36,7 +36,8 @@ function sanitizeHtml(html, options, _recursing) {
   // drop the tag but keep its content.
   var nonTextTagsMap = {
     script: true,
-    style: true
+    style: true,
+    textarea: true
   };
   var allowedTagsMap;
   if(options.allowedTags) {

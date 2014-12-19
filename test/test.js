@@ -44,7 +44,7 @@ describe('sanitizeHtml', function() {
     assert.equal(sanitizeHtml('<style>.foo { color: blue; }</style><p>Paragraph</p>'), '<p>Paragraph</p>');
   });
   it('should drop the content of textarea elements', function() {
-    assert.equal(sanitizeHtml('<form><textarea>Hello</textarea></textarea><p>test</p>', {
+    assert.equal(sanitizeHtml('<form><textarea>Hello</textarea></form><p>test</p>', {
       allowedTags: [ 'p' ]
     }), '<p>test</p>');
   });
