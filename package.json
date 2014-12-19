@@ -24,5 +24,8 @@
     "he": "~0.4.1",
     "htmlparser2": "3.7.x",
     "lodash": "2.4.x"
+  },
+  "devDependencies": {
+    "mocha": "^2.0.1"
   }
 }
