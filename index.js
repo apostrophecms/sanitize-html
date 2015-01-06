@@ -64,7 +64,7 @@ function sanitizeHtml(html, options, _recursing) {
           allowedAttributesMap[tag][name] = true;
         }
       });
-      allowedAttributesGlobMap[tag] = new RegExp('^' + globRegex.join('|') + '$');
+      allowedAttributesGlobMap[tag] = new RegExp('^(' + globRegex.join('|') + ')$');
     });
   }
   var allowedClassesMap = {};
