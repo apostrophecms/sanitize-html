@@ -298,4 +298,18 @@ describe('sanitizeHtml', function() {
       '<<a>a href="javascript:evil"/></a>'
     );
   });
+  it('should allow attributes to be specified as globs', function() {
+    assert.equal(
+      sanitizeHtml('<a data-target="#test" data-foo="hello">click me</a>', {
+        allowedTags: [ 'a' ],
+        allowedAttributes: { a: ['data-*'] }
+      }), '<a data-target="#test" data-foo="hello">click me</a>'
+    );
+    assert.equal(
+      sanitizeHtml('<a data-target="#test" data-my-foo="hello">click me</a>', {
+        allowedTags: [ 'a' ],
+        allowedAttributes: { a: ['data-*-foo'] }
+      }), '<a data-my-foo="hello">click me</a>'
+    );
+  });
 });

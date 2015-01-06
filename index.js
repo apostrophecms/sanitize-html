@@ -50,13 +50,21 @@ function sanitizeHtml(html, options, _recursing) {
     selfClosingMap[tag] = true;
   });
   var allowedAttributesMap;
+  var allowedAttributesGlobMap;
   if(options.allowedAttributes) {
     allowedAttributesMap = {};
+    allowedAttributesGlobMap = {};
     _.each(options.allowedAttributes, function(attributes, tag) {
       allowedAttributesMap[tag] = {};
+      var globRegex = [];
       _.each(attributes, function(name) {
-        allowedAttributesMap[tag][name] = true;
+        if(name.indexOf('*') >= 0) {
+          globRegex.push(name.replace(/\*/g, '.*'));
+        } else {
+          allowedAttributesMap[tag][name] = true;
+        }
       });
+      allowedAttributesGlobMap[tag] = new RegExp('^' + globRegex.join('|') + '$');
     });
   }
   var allowedClassesMap = {};
@@ -120,7 +128,8 @@ function sanitizeHtml(html, options, _recursing) {
       result += '<' + name;
       if (!allowedAttributesMap || _.has(allowedAttributesMap, name)) {
         _.each(attribs, function(value, a) {
-          if (!allowedAttributesMap || _.has(allowedAttributesMap[name], a)) {
+          if (!allowedAttributesMap || _.has(allowedAttributesMap[name], a) ||
+              allowedAttributesGlobMap[name].test(a)) {
             if ((a === 'href') || (a === 'src')) {
               if (naughtyHref(value)) {
                 delete frame.attribs[a];
