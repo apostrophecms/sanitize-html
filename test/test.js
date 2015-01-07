@@ -312,4 +312,12 @@ describe('sanitizeHtml', function() {
       }), '<a data-my-foo="hello">click me</a>'
     );
   });
+  it('should quote regex chars in attributes specified as globs', function() {
+    assert.equal(
+      sanitizeHtml('<a data-b.c="#test" data-bcc="remove this">click me</a>', {
+        allowedTags: [ 'a' ],
+        allowedAttributes: { a: ['data-b.*'] }
+      }), '<a data-b.c="#test">click me</a>'
+    );
+  });
 });

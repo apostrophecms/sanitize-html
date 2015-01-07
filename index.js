@@ -1,6 +1,7 @@
 var htmlparser = require('htmlparser2');
 var _ = require('lodash');
 var he = require('he');
+var quoteRegexp = require('regexp-quote');
 
 module.exports = sanitizeHtml;
 
@@ -59,7 +60,7 @@ function sanitizeHtml(html, options, _recursing) {
       var globRegex = [];
       _.each(attributes, function(name) {
         if(name.indexOf('*') >= 0) {
-          globRegex.push(name.replace(/\*/g, '.*'));
+          globRegex.push(quoteRegexp(name).replace(/\\\*/g, '.*'));
         } else {
           allowedAttributesMap[tag][name] = true;
         }
