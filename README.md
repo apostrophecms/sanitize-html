@@ -71,6 +71,15 @@ one or both to `false`:
     allowedTags: false,
     allowedAttributes: false
 
+### Wildcards for attributes
+
+You can use the `*` wildcard to allow all attributes with a certain prefix:
+
+```javascript
+allowedAttributes: {
+  a: [ 'href', 'data-*' ]
+}
+```
 
 ### Transformations
 
@@ -179,6 +188,8 @@ sanitizeHtml(
 ```
 
 ## Changelog
+
+1.5.0: support for `*` wildcards in allowedAttributes. With tests. Thanks to Calvin Montgomery.
 
 1.4.3: invokes itself recursively until the markup stops changing to guard against [this issue](https://github.com/fb55/htmlparser2/issues/105). Bump to htmlparser2 version 3.7.x.
 
