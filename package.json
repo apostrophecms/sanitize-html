@@ -23,6 +23,7 @@
   "dependencies": {
     "he": "~0.4.1",
     "htmlparser2": "3.7.x",
-    "lodash": "2.4.x"
+    "lodash": "2.4.x",
+    "regexp-quote": "0.0.0"
   }
 }
