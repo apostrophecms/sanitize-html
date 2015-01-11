@@ -65,7 +65,11 @@ describe('sanitizeHtml', function() {
     assert.equal(sanitizeHtml('<a href="java\0&#14;\t\r\n script:alert(\'foo\')">Hax</a>'), '<a>Hax</a>');
   });
   it('should dump character codes 1-32 even when escaped with padding rather than trailing ;', function() {
-    assert.equal(sanitizeHtml('<a href="java&#0000000script:alert(\'foo\')">Hax</a>'), '<a>Hax</a>');
+    assert.equal(sanitizeHtml('<a href="java&#0000001script:alert(\'foo\')">Hax</a>'), '<a>Hax</a>');
+    // This one is weird, but the browser does not interpret it
+    // as a scheme, so we're OK. That character is 65535, not null. I
+    // think it's a limitation of the entities module
+    assert.equal(sanitizeHtml('<a href="java&#0000000script:alert(\'foo\')">Hax</a>'), '<a href="java�script:alert(\'foo\')">Hax</a>');
   });
   it('should still like nice schemes', function() {
     assert.equal(sanitizeHtml('<a href="http://google.com/">Hi</a>'), '<a href="http://google.com/">Hi</a>');
@@ -287,15 +291,12 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<<img src="javascript:evil"/>img src="javascript:evil"/>'
       ),
-      ''
+      '&lt;img src=&quot;javascript:evil&quot;/&gt;'
     );
-    // I don't love what I get back here obviously, but
-    // it is not an attack vector, although it might be parsed
-    // by some browsers as containing an unbalanced close tag.
     assert.equal(
       sanitizeHtml('<<a href="javascript:evil"/>a href="javascript:evil"/>'
       ),
-      '<<a>a href="javascript:evil"/></a>'
+      '&lt;<a>a href=&quot;javascript:evil&quot;/&gt;</a>'
     );
   });
   it('should allow attributes to be specified as globs', function() {

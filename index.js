@@ -1,6 +1,5 @@
 var htmlparser = require('htmlparser2');
 var _ = require('lodash');
-var he = require('he');
 var quoteRegexp = require('regexp-quote');
 
 module.exports = sanitizeHtml;
@@ -146,12 +145,7 @@ function sanitizeHtml(html, options, _recursing) {
             }
             result += ' ' + a;
             if (value.length) {
-              // Values are ALREADY escaped, calling escapeHtml here
-              // results in double escapes.
-              // However, a bug in the HTML parser allows you to use malformed 
-              // markup to slip unescaped quotes through, so we strip them explicitly.
-              // @see https://github.com/punkave/sanitize-html/issues/19
-              result += '="' + value.replace(/"/g, '&quot;') + '"';
+              result += '="' + escapeHtml(value) + '"';
             }
           } else {
             delete frame.attribs[a];
@@ -168,9 +162,7 @@ function sanitizeHtml(html, options, _recursing) {
       if (skipText) {
         return;
       }
-      // It is NOT actually raw text, entities are already escaped.
-      // If we call escapeHtml here we wind up double-escaping.
-      result += text;
+      result += escapeHtml(text);
       if (stack.length) {
            var frame = stack[stack.length - 1];
            frame.text += text;
@@ -209,21 +201,11 @@ function sanitizeHtml(html, options, _recursing) {
 
       result += "</" + name + ">";
     }
-  });
+  }, { decodeEntities: true });
+
   parser.write(html);
   parser.end();
 
-  // Invoke recursively until we stop finding
-  // clever little nesting exploits
-  if (!_recursing) {
-    while (true) {
-      var newResult = sanitizeHtml(result, options, true);
-      if (newResult === result) {
-        return result;
-      }
-      result = newResult;
-    }
-  }
   return result;
 
   function escapeHtml(s) {
@@ -237,12 +219,10 @@ function sanitizeHtml(html, options, _recursing) {
   }
 
   function naughtyHref(href) {
-    // So we don't get faked out by a hex or decimal escaped javascript URL #1
-    href = he.decode(href);
     // Browsers ignore character codes of 32 (space) and below in a surprising
     // number of situations. Start reading here:
     // https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Embedded_tab
-    href = href.replace(/[\x00-\x20]+/, '');
+    href = href.replace(/[\x00-\x20]+/g, '');
     // Clobber any comments in URLs, which the browser might
     // interpret inside an XML data island, allowing
     // a javascript: URL to be snuck through
