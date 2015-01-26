@@ -189,6 +189,8 @@ sanitizeHtml(
 
 ## Changelog
 
+1.5.2: guard checks for allowed attributes correctly to avoid an undefined property error. Thanks to Zeke.
+
 1.5.1: updated to htmlparser2 1.8.x. Started using the `decodeEntities` option, which allows us to pass our filter evasion tests without the need to recursively invoke the filter.
 
 1.5.0: support for `*` wildcards in allowedAttributes. With tests. Thanks to Calvin Montgomery.

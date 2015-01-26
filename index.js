@@ -128,8 +128,8 @@ function sanitizeHtml(html, options, _recursing) {
       result += '<' + name;
       if (!allowedAttributesMap || _.has(allowedAttributesMap, name)) {
         _.each(attribs, function(value, a) {
-          if (!allowedAttributesMap || _.has(allowedAttributesMap[name], a) ||
-              allowedAttributesGlobMap[name].test(a)) {
+          if (!allowedAttributesMap || _.has(allowedAttributesMap[name], a) || (_.has(allowedAttributesGlobMap, name) &&
+              allowedAttributesGlobMap[name].test(a))) {
             if ((a === 'href') || (a === 'src')) {
               if (naughtyHref(value)) {
                 delete frame.attribs[a];
