@@ -189,6 +189,8 @@ sanitizeHtml(
 
 ## Changelog
 
+1.5.3: do not escape special characters inside a script or style element, if they are allowed. This is consistent with the way browsers parse them; nothing closes them except the appropriate closing tag for the entire element. Of course, this only comes into play if you actually choose to allow those tags. Thanks to aletorrado.
+
 1.5.2: guard checks for allowed attributes correctly to avoid an undefined property error. Thanks to Zeke.
 
 1.5.1: updated to htmlparser2 1.8.x. Started using the `decodeEntities` option, which allows us to pass our filter evasion tests without the need to recursively invoke the filter.

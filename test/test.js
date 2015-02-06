@@ -321,7 +321,7 @@ describe('sanitizeHtml', function() {
       }), '<a data-b.c="#test">click me</a>'
     );
   });
-  it('should not escape inner content from non-text tags', function() {
+  it('should not escape inner content from non-text tags (when allowed)', function() {
     assert.equal(
       sanitizeHtml('<div>"normal text"</div><script>"this is code"</script>', {
         allowedTags: [ 'script' ]
