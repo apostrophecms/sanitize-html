@@ -321,4 +321,16 @@ describe('sanitizeHtml', function() {
       }), '<a data-b.c="#test">click me</a>'
     );
   });
+  it('should not escape inner content from non-text tags', function() {
+    assert.equal(
+      sanitizeHtml('<div>"normal text"</div><script>"this is code"</script>', {
+        allowedTags: [ 'script' ]
+      }), '&quot;normal text&quot;<script>"this is code"</script>'
+    );
+    assert.equal(
+      sanitizeHtml('<div>"normal text"</div><style>body { background-image: url("image.test"); }</style>', {
+        allowedTags: [ 'style' ]
+      }), '&quot;normal text&quot;<style>body { background-image: url("image.test"); }</style>'
+    );
+  });
 });
