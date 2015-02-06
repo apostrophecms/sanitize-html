@@ -162,7 +162,12 @@ function sanitizeHtml(html, options, _recursing) {
       if (skipText) {
         return;
       }
-      result += escapeHtml(text);
+      var tag = stack[stack.length-1] && stack[stack.length-1].tag;
+      if (_.has(nonTextTagsMap, tag)) {
+        result += text;
+      } else {
+        result += escapeHtml(text);
+      }
       if (stack.length) {
            var frame = stack[stack.length - 1];
            frame.text += text;
