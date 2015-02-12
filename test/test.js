@@ -333,4 +333,11 @@ describe('sanitizeHtml', function() {
       }), '&quot;normal text&quot;<style>body { background-image: url("image.test"); }</style>'
     );
   });
+  it('should not escape text when turned off', function() {
+    assert.equal(
+      sanitizeHtml('"nonescaped & text"<script>"this is code"</script>', {
+        escapeText: false,
+    }), '"nonescaped & text"'
+    );
+  });
 });

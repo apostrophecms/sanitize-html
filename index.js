@@ -145,7 +145,7 @@ function sanitizeHtml(html, options, _recursing) {
             }
             result += ' ' + a;
             if (value.length) {
-              result += '="' + escapeHtml(value) + '"';
+              result += '="' + (options.escapeText ? escapeHtml(value) : value) + '"';
             }
           } else {
             delete frame.attribs[a];
@@ -163,7 +163,7 @@ function sanitizeHtml(html, options, _recursing) {
         return;
       }
       var tag = stack[stack.length-1] && stack[stack.length-1].tag;
-      if (_.has(nonTextTagsMap, tag)) {
+      if (_.has(nonTextTagsMap, tag) || !options.escapeText) {
         result += text;
       } else {
         result += escapeHtml(text);
@@ -268,7 +268,8 @@ sanitizeHtml.defaults = {
   // Lots of these won't come up by default because we don't allow them
   selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
   // URL schemes we permit
-  allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ]
+  allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
+  escapeText: true
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {
