@@ -165,11 +165,13 @@ sanitizeHtml(
     '<p>some text...</p>',
     {
         textFilter: function(text) {
-            return text.replace(/\.\.\./, '&hellip;');;
+            return text.replace(/\.\.\./, '&hellip;');
         }
     }
 );
 ```
+
+Note that the text passed to the `textFilter` method is already escaped for safe display as HTML. You may add markup and use entity escape sequences in your `textFilter`.
 
 ### Allowed CSS Classes
 
@@ -207,6 +209,8 @@ sanitizeHtml(
 ```
 
 ## Changelog
+
+1.6.0: added `textFilter` option. Thanks to Csaba Palfi.
 
 1.5.3: do not escape special characters inside a script or style element, if they are allowed. This is consistent with the way browsers parse them; nothing closes them except the appropriate closing tag for the entire element. Of course, this only comes into play if you actually choose to allow those tags. Thanks to aletorrado.
 
