@@ -166,7 +166,7 @@ function sanitizeHtml(html, options, _recursing) {
       if (_.has(nonTextTagsMap, tag)) {
         result += text;
       } else {
-        result += options.processText(escapeHtml(text));
+        result += options.textFilter(escapeHtml(text));
       }
       if (stack.length) {
            var frame = stack[stack.length - 1];
@@ -269,7 +269,7 @@ sanitizeHtml.defaults = {
   selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
   // URL schemes we permit
   allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
-  processText: function(text) { return text; }
+  textFilter: function(text) { return text; }
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {

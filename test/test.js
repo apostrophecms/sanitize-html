@@ -336,7 +336,7 @@ describe('sanitizeHtml', function() {
   it('should process text nodes with provided function', function() {
     assert.equal(
       sanitizeHtml('"normal text this should be removed"', {
-        processText: function(text) {
+        textFilter: function(text) {
           return text.replace(' this should be removed', '');
         }
       }), '&quot;normal text&quot;'
