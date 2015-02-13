@@ -333,4 +333,13 @@ describe('sanitizeHtml', function() {
       }), '&quot;normal text&quot;<style>body { background-image: url("image.test"); }</style>'
     );
   });
+  it('should process text nodes with provided function', function() {
+    assert.equal(
+      sanitizeHtml('"normal text this should be removed"', {
+        textFilter: function(text) {
+          return text.replace(' this should be removed', '');
+        }
+      }), '&quot;normal text&quot;'
+    );
+  });
 });

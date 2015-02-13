@@ -152,6 +152,25 @@ The `frame` object supplied to the callback provides the following attributes:
  - `text`: The text content of the tag.
  - `tagPosition`: The index of the tag's position in the result string.
 
+You can also process all text content with a provided filter function. Let's say we want an ellipsis instead of three dots.
+
+```html
+<p>some text...</p>
+```
+
+We can do that with the following filter:
+
+```javascript
+sanitizeHtml(
+    '<p>some text...</p>',
+    {
+        textFilter: function(text) {
+            return text.replace(/\.\.\./, '&hellip;');;
+        }
+    }
+);
+```
+
 ### Allowed CSS Classes
 
 If you wish to allow specific CSS classes on a particular element, you can do so with the `allowedClasses` option. Any other CSS classes are discarded.
