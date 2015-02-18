@@ -210,6 +210,8 @@ sanitizeHtml(
 
 ## Changelog
 
+1.6.1: the string `'undefined'` (as opposed to `undefined`) is perfectly valid text and shouldn't be expressly converted to the empty string.
+
 1.6.0: added `textFilter` option. Thanks to Csaba Palfi.
 
 1.5.3: do not escape special characters inside a script or style element, if they are allowed. This is consistent with the way browsers parse them; nothing closes them except the appropriate closing tag for the entire element. Of course, this only comes into play if you actually choose to allow those tags. Thanks to aletorrado.

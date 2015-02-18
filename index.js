@@ -219,9 +219,6 @@ function sanitizeHtml(html, options, _recursing) {
   return result;
 
   function escapeHtml(s) {
-    if (s === 'undefined') {
-      s = '';
-    }
     if (typeof(s) !== 'string') {
       s = s + '';
     }
