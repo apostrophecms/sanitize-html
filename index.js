@@ -107,6 +107,11 @@ function sanitizeHtml(html, options, _recursing) {
         var transformedTag = transformTagsMap[name](name, attribs);
 
         frame.attribs = attribs = transformedTag.attribs;
+
+        if (transformedTag.text !== undefined) {
+          frame.innerText = transformedTag.text;
+        }
+
         if (name !== transformedTag.tagName) {
           frame.name = name = transformedTag.tagName;
           transformMap[depth] = transformedTag.tagName;
@@ -162,7 +167,15 @@ function sanitizeHtml(html, options, _recursing) {
       if (skipText) {
         return;
       }
-      var tag = stack[stack.length-1] && stack[stack.length-1].tag;
+      var lastFrame = stack[stack.length-1];
+      var tag;
+
+      if (lastFrame) {
+        tag = lastFrame.tag;
+        // If inner text was set by transform function then let's use it
+        text = lastFrame.innerText !== undefined ? lastFrame.innerText : text;
+      }
+
       if (_.has(nonTextTagsMap, tag)) {
         result += text;
       } else {
