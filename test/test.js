@@ -184,10 +184,8 @@ describe('sanitizeHtml', function() {
         // teeny-tiny valid transparent GIF in a data URL
         '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />',
         {
-          allowedTags: ['img', 'p'],
-          allowedSchemes: {
-            sanitizeDefault: ['data', 'http']
-          }
+          allowedTags: [ 'img', 'p' ],
+          allowedSchemes: [ 'data', 'http' ]
         }
       ),
       '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />'
@@ -200,10 +198,10 @@ describe('sanitizeHtml', function() {
         '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" /><a href="https://www.example.com"></a>',
         {
           allowedTags: ['img', 'a'],
-          allowedSchemes: {
+          allowedSchemes: ['http'],
+          allowedSchemesPerTag: {
             img: [],
-            a: ['https'],
-            sanitizeDefault: ['http']
+            a: ['https']
           }
         }
       ),

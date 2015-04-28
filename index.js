@@ -241,8 +241,8 @@ function sanitizeHtml(html, options, _recursing) {
       return false;
     }
     var scheme = matches[1].toLowerCase();
-    return (!_.contains(options.allowedSchemes[name], scheme) &&
-    !_.contains(options.allowedSchemes.sanitizeDefault, scheme));
+    return (!_.contains(options.allowedSchemesPerTag[name], scheme) &&
+    !_.contains(options.allowedSchemes, scheme));
   }
 
   function filterClasses(classes, allowed) {
@@ -271,9 +271,8 @@ sanitizeHtml.defaults = {
   // Lots of these won't come up by default because we don't allow them
   selfClosing: ['img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta'],
   // URL schemes we permit
-  allowedSchemes: {
-    sanitizeDefault: ['http', 'https', 'ftp', 'mailto']
-  }
+  allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
+  allowedSchemesPerTag: {}
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {
