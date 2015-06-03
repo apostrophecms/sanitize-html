@@ -200,7 +200,22 @@ describe('sanitizeHtml', function() {
         {
           allowedTags: ['img', 'a'],
           allowedSchemes: ['http'],
-          allowedSchemesPerTag: {
+          allowedSchemesByTag: {
+            img: ['data'],
+            a: ['https']
+          }
+        }
+      ),
+      '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" /><a href="https://www.example.com"></a>'
+    );
+    assert.equal(
+      sanitizeHtml(
+        // teeny-tiny valid transparent GIF in a data URL
+        '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" /><a href="https://www.example.com"></a>',
+        {
+          allowedTags: ['img', 'a'],
+          allowedSchemes: ['http'],
+          allowedSchemesByTag: {
             img: [],
             a: ['https']
           }

@@ -61,7 +61,12 @@ If you do not specify `allowedTags` or `allowedAttributes` our default list is a
     // Lots of these won't come up by default because we don't allow them
     selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
     // URL schemes we permit
-    allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ]
+    allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
+    // Be more specific about allowed schemes
+    // for a certain tag
+    allowedSchemesByTag: {
+      img: [ 'http' ]
+    }
 
 "What if I want to allow all tags or all attributes?"
 
@@ -208,7 +213,18 @@ sanitizeHtml(
 );
 ```
 
+You can also allow a scheme for a particular tag only:
+
+```javascript
+  allowedSchemes: [ 'http', 'https' ],
+  allowedSchemesByTag: {
+    img: [ 'data' ]
+  }
+```
+
 ## Changelog
+
+1.7.0: introduced `allowedSchemesByTag` option. Thanks to Cameron Will.
 
 1.6.1: the string `'undefined'` (as opposed to `undefined`) is perfectly valid text and shouldn't be expressly converted to the empty string.
 

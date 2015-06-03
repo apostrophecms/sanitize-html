@@ -241,7 +241,12 @@ function sanitizeHtml(html, options, _recursing) {
       return false;
     }
     var scheme = matches[1].toLowerCase();
-    return (!_.contains(options.allowedSchemesPerTag[name], scheme) && !_.contains(options.allowedSchemes, scheme));
+
+    if (_.has(options.allowedSchemesByTag, name)) {
+      return !_.contains(options.allowedSchemesByTag[name], scheme);
+    }
+
+    return !_.contains(options.allowedSchemes, scheme);
   }
 
   function filterClasses(classes, allowed) {
@@ -271,7 +276,7 @@ sanitizeHtml.defaults = {
   selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
   // URL schemes we permit
   allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
-  allowedSchemesPerTag: {}
+  allowedSchemesByTag: {}
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {
