@@ -131,7 +131,7 @@ function sanitizeHtml(html, options, _recursing) {
           if (!allowedAttributesMap || _.has(allowedAttributesMap[name], a) || (_.has(allowedAttributesGlobMap, name) &&
               allowedAttributesGlobMap[name].test(a))) {
             if ((a === 'href') || (a === 'src')) {
-              if (naughtyHref(value)) {
+              if (naughtyHref(name, value)) {
                 delete frame.attribs[a];
                 return;
               }
@@ -225,7 +225,7 @@ function sanitizeHtml(html, options, _recursing) {
     return s.replace(/\&/g, '&amp;').replace(/</g, '&lt;').replace(/\>/g, '&gt;').replace(/\"/g, '&quot;');
   }
 
-  function naughtyHref(href) {
+  function naughtyHref(name, href) {
     // Browsers ignore character codes of 32 (space) and below in a surprising
     // number of situations. Start reading here:
     // https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Embedded_tab
@@ -241,7 +241,7 @@ function sanitizeHtml(html, options, _recursing) {
       return false;
     }
     var scheme = matches[1].toLowerCase();
-    return (!_.contains(options.allowedSchemes, scheme));
+    return (!_.contains(options.allowedSchemesPerTag[name], scheme) && !_.contains(options.allowedSchemes, scheme));
   }
 
   function filterClasses(classes, allowed) {
@@ -270,7 +270,8 @@ sanitizeHtml.defaults = {
   // Lots of these won't come up by default because we don't allow them
   selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
   // URL schemes we permit
-  allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ]
+  allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
+  allowedSchemesPerTag: {}
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {

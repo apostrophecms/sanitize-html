@@ -192,6 +192,23 @@ describe('sanitizeHtml', function() {
       '<p class="nifty">whee</p>'
     );
   });
+  it('should allow defining schemes on a per-tag basis', function() {
+    assert.equal(
+      sanitizeHtml(
+        // teeny-tiny valid transparent GIF in a data URL
+        '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" /><a href="https://www.example.com"></a>',
+        {
+          allowedTags: ['img', 'a'],
+          allowedSchemes: ['http'],
+          allowedSchemesPerTag: {
+            img: [],
+            a: ['https']
+          }
+        }
+      ),
+      '<img /><a href="https://www.example.com"></a>'
+    );
+  });
   it('should not act weird when the class attribute is empty', function() {
     assert.equal(
       sanitizeHtml(
