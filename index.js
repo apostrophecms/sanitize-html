@@ -42,23 +42,19 @@ function sanitizeHtml(html, options, _recursing) {
   // these tags, we should drop their content too. For other tags you would
   // drop the tag but keep its content.
   var nonTextTagsArray = [ 'script', 'style' ];
-  var allowedTagsArray;
-  if(options.allowedTags) {
-    allowedTagsArray = options.allowedTags;
-  }
   var allowedAttributesMap;
   var allowedAttributesGlobMap;
   if(options.allowedAttributes) {
     allowedAttributesMap = {};
     allowedAttributesGlobMap = {};
     each(options.allowedAttributes, function(attributes, tag) {
-      allowedAttributesMap[tag] = {};
+      allowedAttributesMap[tag] = [];
       var globRegex = [];
       attributes.forEach(function(name) {
         if(name.indexOf('*') >= 0) {
           globRegex.push(quoteRegexp(name).replace(/\\\*/g, '.*'));
         } else {
-          allowedAttributesMap[tag][name] = true;
+          allowedAttributesMap[tag].push(name);
         }
       });
       allowedAttributesGlobMap[tag] = new RegExp('^(' + globRegex.join('|') + ')$');
@@ -69,12 +65,12 @@ function sanitizeHtml(html, options, _recursing) {
     // Implicitly allows the class attribute
     if(allowedAttributesMap) {
       if (!allowedAttributesMap[tag]) {
-        allowedAttributesMap[tag] = {};
+        allowedAttributesMap[tag] = [];
       }
-      allowedAttributesMap[tag]['class'] = true;
+      allowedAttributesMap[tag].push('class');
     }
 
-    allowedClassesMap[tag] = classes
+    allowedClassesMap[tag] = classes;
   });
 
   var transformTagsMap = {};
@@ -107,7 +103,7 @@ function sanitizeHtml(html, options, _recursing) {
         }
       }
 
-      if (allowedTagsArray && !allowedTagsArray.includes(name)) {
+      if (options.allowedTags && !options.allowedTags.includes(name)) {
         skip = true;
         if (nonTextTagsArray.includes(name)) {
           skipText = true;
@@ -122,7 +118,7 @@ function sanitizeHtml(html, options, _recursing) {
       result += '<' + name;
       if (!allowedAttributesMap || allowedAttributesMap[name]) {
         each(attribs, function(value, a) {
-          if (!allowedAttributesMap || allowedAttributesMap[name][a] ||
+          if (!allowedAttributesMap || allowedAttributesMap[name].includes(a) ||
               (allowedAttributesGlobMap[name] && allowedAttributesGlobMap[name].test(a))) {
             if ((a === 'href') || (a === 'src')) {
               if (naughtyHref(name, value)) {
