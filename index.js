@@ -1,6 +1,13 @@
 var htmlparser = require('htmlparser2');
-var _ = require('lodash');
+var extend = require('xtend');
 var quoteRegexp = require('regexp-quote');
+require('array-includes').shim(); // Array.prototype.includes polyfill
+
+function each(obj, cb) {
+  obj && Object.keys(obj).forEach(function (key) {
+    cb(obj[key], key)
+  })
+}
 
 module.exports = sanitizeHtml;
 
@@ -29,62 +36,45 @@ function sanitizeHtml(html, options, _recursing) {
   if (!options) {
     options = sanitizeHtml.defaults;
   } else {
-    _.defaults(options, sanitizeHtml.defaults);
+    options = extend(sanitizeHtml.defaults, options);
   }
   // Tags that contain something other than HTML. If we are not allowing
   // these tags, we should drop their content too. For other tags you would
   // drop the tag but keep its content.
-  var nonTextTagsMap = {
-    script: true,
-    style: true
-  };
-  var allowedTagsMap;
-  if(options.allowedTags) {
-    allowedTagsMap = {};
-    _.each(options.allowedTags, function(tag) {
-      allowedTagsMap[tag] = true;
-    });
-  }
-  var selfClosingMap = {};
-  _.each(options.selfClosing, function(tag) {
-    selfClosingMap[tag] = true;
-  });
+  var nonTextTagsArray = [ 'script', 'style' ];
   var allowedAttributesMap;
   var allowedAttributesGlobMap;
   if(options.allowedAttributes) {
     allowedAttributesMap = {};
     allowedAttributesGlobMap = {};
-    _.each(options.allowedAttributes, function(attributes, tag) {
-      allowedAttributesMap[tag] = {};
+    each(options.allowedAttributes, function(attributes, tag) {
+      allowedAttributesMap[tag] = [];
       var globRegex = [];
-      _.each(attributes, function(name) {
+      attributes.forEach(function(name) {
         if(name.indexOf('*') >= 0) {
           globRegex.push(quoteRegexp(name).replace(/\\\*/g, '.*'));
         } else {
-          allowedAttributesMap[tag][name] = true;
+          allowedAttributesMap[tag].push(name);
         }
       });
       allowedAttributesGlobMap[tag] = new RegExp('^(' + globRegex.join('|') + ')$');
     });
   }
   var allowedClassesMap = {};
-  _.each(options.allowedClasses, function(classes, tag) {
+  each(options.allowedClasses, function(classes, tag) {
     // Implicitly allows the class attribute
     if(allowedAttributesMap) {
       if (!allowedAttributesMap[tag]) {
-        allowedAttributesMap[tag] = {};
+        allowedAttributesMap[tag] = [];
       }
-      allowedAttributesMap[tag]['class'] = true;
+      allowedAttributesMap[tag].push('class');
     }
 
-    allowedClassesMap[tag] = {};
-    _.each(classes, function(name) {
-      allowedClassesMap[tag][name] = true;
-    });
+    allowedClassesMap[tag] = classes;
   });
 
   var transformTagsMap = {};
-  _.each(options.transformTags, function(transform, tag){
+  each(options.transformTags, function(transform, tag){
     if (typeof transform === 'function') {
       transformTagsMap[tag] = transform;
     } else if (typeof transform === "string") {
@@ -103,7 +93,7 @@ function sanitizeHtml(html, options, _recursing) {
       stack.push(frame);
 
       var skip = false;
-      if (_.has(transformTagsMap, name)) {
+      if (transformTagsMap[name]) {
         var transformedTag = transformTagsMap[name](name, attribs);
 
         frame.attribs = attribs = transformedTag.attribs;
@@ -113,9 +103,9 @@ function sanitizeHtml(html, options, _recursing) {
         }
       }
 
-      if (allowedTagsMap && !_.has(allowedTagsMap, name)) {
+      if (options.allowedTags && !options.allowedTags.includes(name)) {
         skip = true;
-        if (_.has(nonTextTagsMap, name)) {
+        if (nonTextTagsArray.includes(name)) {
           skipText = true;
         }
         skipMap[depth] = true;
@@ -126,10 +116,10 @@ function sanitizeHtml(html, options, _recursing) {
         return;
       }
       result += '<' + name;
-      if (!allowedAttributesMap || _.has(allowedAttributesMap, name)) {
-        _.each(attribs, function(value, a) {
-          if (!allowedAttributesMap || _.has(allowedAttributesMap[name], a) || (_.has(allowedAttributesGlobMap, name) &&
-              allowedAttributesGlobMap[name].test(a))) {
+      if (!allowedAttributesMap || allowedAttributesMap[name]) {
+        each(attribs, function(value, a) {
+          if (!allowedAttributesMap || allowedAttributesMap[name].includes(a) ||
+              (allowedAttributesGlobMap[name] && allowedAttributesGlobMap[name].test(a))) {
             if ((a === 'href') || (a === 'src')) {
               if (naughtyHref(name, value)) {
                 delete frame.attribs[a];
@@ -152,7 +142,7 @@ function sanitizeHtml(html, options, _recursing) {
           }
         });
       }
-      if (_.has(selfClosingMap, name)) {
+      if (options.selfClosing.includes(name)) {
         result += " />";
       } else {
         result += ">";
@@ -163,7 +153,7 @@ function sanitizeHtml(html, options, _recursing) {
         return;
       }
       var tag = stack[stack.length-1] && stack[stack.length-1].tag;
-      if (_.has(nonTextTagsMap, tag)) {
+      if (nonTextTagsArray.includes(tag)) {
         result += text;
       } else {
         var escaped = escapeHtml(text);
@@ -204,7 +194,7 @@ function sanitizeHtml(html, options, _recursing) {
 
       frame.updateParentNodeText();
 
-      if (_.has(selfClosingMap, name)) {
+      if (options.selfClosing.includes(name)) {
          // Already output />
          return;
       }
@@ -242,11 +232,11 @@ function sanitizeHtml(html, options, _recursing) {
     }
     var scheme = matches[1].toLowerCase();
 
-    if (_.has(options.allowedSchemesByTag, name)) {
-      return !_.contains(options.allowedSchemesByTag[name], scheme);
+    if (options.allowedSchemesByTag[name]) {
+      return !options.allowedSchemesByTag[name].includes(scheme);
     }
 
-    return !_.contains(options.allowedSchemes, scheme);
+    return !options.allowedSchemes || !options.allowedSchemes.includes(scheme);
   }
 
   function filterClasses(classes, allowed) {
@@ -255,8 +245,8 @@ function sanitizeHtml(html, options, _recursing) {
       return classes;
     }
     classes = classes.split(/\s+/);
-    return _.filter(classes, function(c) {
-      return _.has(allowed, c);
+    return classes.filter(function(clss) {
+      return allowed.includes(clss);
     }).join(' ');
   }
 }
