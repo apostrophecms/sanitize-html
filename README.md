@@ -224,6 +224,8 @@ You can also allow a scheme for a particular tag only:
 
 ## Changelog
 
+1.7.1: removed lodash dependency, adding lighter dependencies and polyfills in its place. Thanks to Joseph Dykstra.
+
 1.7.0: introduced `allowedSchemesByTag` option. Thanks to Cameron Will.
 
 1.6.1: the string `'undefined'` (as opposed to `undefined`) is perfectly valid text and shouldn't be expressly converted to the empty string.
