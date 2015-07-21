@@ -1,12 +1,11 @@
 var htmlparser = require('htmlparser2');
 var extend = require('xtend');
 var quoteRegexp = require('regexp-quote');
-require('array-includes').shim(); // Array.prototype.includes polyfill
 
 function each(obj, cb) {
-  obj && Object.keys(obj).forEach(function (key) {
-    cb(obj[key], key)
-  })
+  if (obj) Object.keys(obj).forEach(function (key) {
+    cb(obj[key], key);
+  });
 }
 
 module.exports = sanitizeHtml;
@@ -103,9 +102,9 @@ function sanitizeHtml(html, options, _recursing) {
         }
       }
 
-      if (options.allowedTags && !options.allowedTags.includes(name)) {
+      if (options.allowedTags && !options.allowedTags.indexOf(name) !== -1) {
         skip = true;
-        if (nonTextTagsArray.includes(name)) {
+        if (nonTextTagsArray.indexOf(name) !== -1) {
           skipText = true;
         }
         skipMap[depth] = true;
@@ -118,7 +117,7 @@ function sanitizeHtml(html, options, _recursing) {
       result += '<' + name;
       if (!allowedAttributesMap || allowedAttributesMap[name]) {
         each(attribs, function(value, a) {
-          if (!allowedAttributesMap || allowedAttributesMap[name].includes(a) ||
+          if (!allowedAttributesMap || allowedAttributesMap[name].indexOf(a) !== -1 ||
               (allowedAttributesGlobMap[name] && allowedAttributesGlobMap[name].test(a))) {
             if ((a === 'href') || (a === 'src')) {
               if (naughtyHref(name, value)) {
@@ -142,7 +141,7 @@ function sanitizeHtml(html, options, _recursing) {
           }
         });
       }
-      if (options.selfClosing.includes(name)) {
+      if (options.selfClosing.indexOf(name) !== -1) {
         result += " />";
       } else {
         result += ">";
@@ -153,7 +152,7 @@ function sanitizeHtml(html, options, _recursing) {
         return;
       }
       var tag = stack[stack.length-1] && stack[stack.length-1].tag;
-      if (nonTextTagsArray.includes(tag)) {
+      if (nonTextTagsArray.indexOf(tag) !== -1) {
         result += text;
       } else {
         var escaped = escapeHtml(text);
@@ -194,7 +193,7 @@ function sanitizeHtml(html, options, _recursing) {
 
       frame.updateParentNodeText();
 
-      if (options.selfClosing.includes(name)) {
+      if (options.selfClosing.indexOf(name) !== -1) {
          // Already output />
          return;
       }
@@ -233,10 +232,10 @@ function sanitizeHtml(html, options, _recursing) {
     var scheme = matches[1].toLowerCase();
 
     if (options.allowedSchemesByTag[name]) {
-      return !options.allowedSchemesByTag[name].includes(scheme);
+      return !options.allowedSchemesByTag[name].indexOf(scheme) !== -1;
     }
 
-    return !options.allowedSchemes || !options.allowedSchemes.includes(scheme);
+    return !options.allowedSchemes || !options.allowedSchemes.indexOf(scheme) !== -1;
   }
 
   function filterClasses(classes, allowed) {
@@ -246,7 +245,7 @@ function sanitizeHtml(html, options, _recursing) {
     }
     classes = classes.split(/\s+/);
     return classes.filter(function(clss) {
-      return allowed.includes(clss);
+      return allowed.indexOf(clss) !== -1;
     }).join(' ');
   }
 }
@@ -255,7 +254,9 @@ function sanitizeHtml(html, options, _recursing) {
 // programmatically if you wish
 
 sanitizeHtml.defaults = {
-  allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol', 'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div', 'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre' ],
+  allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
+    'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
+    'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre' ],
   allowedAttributes: {
     a: [ 'href', 'name', 'target' ],
     // We don't currently allow img itself by default, but this
