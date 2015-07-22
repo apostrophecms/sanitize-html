@@ -224,6 +224,8 @@ You can also allow a scheme for a particular tag only:
 
 ## Changelog
 
+1.7.2: removed `array-includes` dependency in favor of `indexOf`, which is a little more verbose but slightly faster and doesn't require a shim. Thanks again to Joseph Dykstra.
+
 1.7.1: removed lodash dependency, adding lighter dependencies and polyfills in its place. Thanks to Joseph Dykstra.
 
 1.7.0: introduced `allowedSchemesByTag` option. Thanks to Cameron Will.
