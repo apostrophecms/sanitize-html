@@ -37,10 +37,11 @@ function sanitizeHtml(html, options, _recursing) {
   } else {
     options = extend(sanitizeHtml.defaults, options);
   }
-  // Tags that contain something other than HTML. If we are not allowing
-  // these tags, we should drop their content too. For other tags you would
-  // drop the tag but keep its content.
-  var nonTextTagsArray = [ 'script', 'style' ];
+  // Tags that contain something other than HTML, or where discarding
+  // the text when the tag is disallowed makes sense for other reasons.
+  // If we are not allowing these tags, we should drop their content too.
+  // For other tags you would drop the tag but keep its content.
+  var nonTextTagsArray = [ 'script', 'style', 'textarea' ];
   var allowedAttributesMap;
   var allowedAttributesGlobMap;
   if(options.allowedAttributes) {

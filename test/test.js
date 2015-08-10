@@ -43,6 +43,14 @@ describe('sanitizeHtml', function() {
   it('should drop the content of style elements', function() {
     assert.equal(sanitizeHtml('<style>.foo { color: blue; }</style><p>Paragraph</p>'), '<p>Paragraph</p>');
   });
+  it('should drop the content of textarea elements', function() {
+    assert.equal(sanitizeHtml('<textarea>Nifty</textarea><p>Paragraph</p>'), '<p>Paragraph</p>');
+  });
+  it('should preserve textarea content if textareas are allowed', function() {
+    assert.equal(sanitizeHtml('<textarea>Nifty</textarea><p>Paragraph</p>', {
+      allowedTags: [ 'textarea', 'p' ]
+    }), '<textarea>Nifty</textarea><p>Paragraph</p>');
+  });
   it('should preserve entities as such', function() {
     assert.equal(sanitizeHtml('<a name="&lt;silly&gt;">&lt;Kapow!&gt;</a>'), '<a name="&lt;silly&gt;">&lt;Kapow!&gt;</a>');
   });
