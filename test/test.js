@@ -108,6 +108,27 @@ describe('sanitizeHtml', function() {
     }}, allowedAttributes: { ul: ['bar', 'class'] } }), '<ul class="foo" bar="bar"><li>Hello world</li></ul>');
   });
 
+  it('should replace text and attributes when they are changed by transforming function', function () {
+    assert.equal(sanitizeHtml('<a href="http://somelink">some text</a>', { transformTags: {a: function (tagName, attribs) {
+      return {
+        tagName: tagName,
+        attribs: attribs,
+        text: ''
+      }
+    }}}), '<a href="http://somelink"></a>');
+  });
+  it('should replace text and attributes when they are changed by transforming function and textFilter is set', function () {
+    assert.equal(sanitizeHtml('<a href="http://somelink">some text</a>', { transformTags: {a: function (tagName, attribs) {
+      return {
+        tagName: tagName,
+        attribs: attribs,
+        text: 'some text need"to<be>filtered'
+      }
+    }}, textFilter: function (text) {
+      return text.replace(/\s/g, '_');
+    }}), '<a href="http://somelink">some_text_need&quot;to&lt;be&gt;filtered</a>');
+  });
+
   it('should skip an empty link', function() {
      assert.strictEqual(
      sanitizeHtml('<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>', {

@@ -115,6 +115,8 @@ The most advanced usage:
       }
     });
 
+You can specify the `*` wildcard instead of a tag name to transform all tags.
+
 There is also a helper method which should be enough for simple cases in which you want to change the tag and/or add some attributes:
 
     clean = sanitizeHtml(dirty, {
@@ -223,6 +225,14 @@ You can also allow a scheme for a particular tag only:
 ```
 
 ## Changelog
+
+1.8.0:
+
+* `transformTags` now accepts the `*` wildcard to transform all tags. Thanks to Jamy Timmermans.
+
+* Text that has been modified by `transformTags` is then passed through `textFilter`. Thanks to Pavlo Yurichuk.
+
+* Content inside `textarea` is discarded if `textarea` is not allowed. I don't know why it took me this long to see that this is just common sense. Thanks to David Frank.
 
 1.7.2: removed `array-includes` dependency in favor of `indexOf`, which is a little more verbose but slightly faster and doesn't require a shim. Thanks again to Joseph Dykstra.
 
