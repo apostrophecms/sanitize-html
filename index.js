@@ -74,11 +74,18 @@ function sanitizeHtml(html, options, _recursing) {
   });
 
   var transformTagsMap = {};
-  each(options.transformTags, function(transform, tag){
+  var transformTagsAll;
+  each(options.transformTags, function(transform, tag) {
+    var transFun;
     if (typeof transform === 'function') {
-      transformTagsMap[tag] = transform;
+      transFun = transform;
     } else if (typeof transform === "string") {
-      transformTagsMap[tag] = sanitizeHtml.simpleTransform(transform);
+      transFun = sanitizeHtml.simpleTransform(transform);
+    }
+    if (tag === '*') {
+      transformTagsAll = transFun;
+    } else {
+      transformTagsMap[tag] = transFun;
     }
   });
 
@@ -93,8 +100,18 @@ function sanitizeHtml(html, options, _recursing) {
       stack.push(frame);
 
       var skip = false;
+      var transformedTag;
       if (transformTagsMap[name]) {
-        var transformedTag = transformTagsMap[name](name, attribs);
+        transformedTag = transformTagsMap[name](name, attribs);
+
+        frame.attribs = attribs = transformedTag.attribs;
+        if (name !== transformedTag.tagName) {
+          frame.name = name = transformedTag.tagName;
+          transformMap[depth] = transformedTag.tagName;
+        }
+      }
+      if (transformTagsAll) {
+        transformedTag = transformTagsAll(name, attribs);
 
         frame.attribs = attribs = transformedTag.attribs;
         if (name !== transformedTag.tagName) {
