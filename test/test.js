@@ -425,4 +425,23 @@ describe('sanitizeHtml', function() {
       }), '&quot;normal text&quot;'
     );
   });
+  it('should respect htmlparser2 options when passed in', function() {
+    assert.equal(
+      sanitizeHtml("<Archer><Sterling>I am</Sterling></Archer>", {
+        allowedTags: false,
+        allowedAttributes: false,
+      }),
+      "<archer><sterling>I am</sterling></archer>"
+    );
+    assert.equal(
+      sanitizeHtml("<Archer><Sterling>I am</Sterling></Archer>", {
+        allowedTags: false,
+        allowedAttributes: false,
+        parser: {
+          lowerCaseTags: false
+        }
+      }),
+      "<Archer><Sterling>I am</Sterling></Archer>"
+    );
+  });
 });

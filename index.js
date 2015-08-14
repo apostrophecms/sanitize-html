@@ -34,8 +34,14 @@ function sanitizeHtml(html, options, _recursing) {
 
   if (!options) {
     options = sanitizeHtml.defaults;
+    options.parser = htmlParserDefaults;
   } else {
     options = extend(sanitizeHtml.defaults, options);
+    if (options.parser) {
+      options.parser = extend(htmlParserDefaults, options.parser);
+    } else {
+      options.parser = htmlParserDefaults;
+    }
   }
   // Tags that contain something other than HTML, or where discarding
   // the text when the tag is disallowed makes sense for other reasons.
@@ -231,8 +237,7 @@ function sanitizeHtml(html, options, _recursing) {
 
       result += "</" + name + ">";
     }
-  }, { decodeEntities: true });
-
+  }, options.parser);
   parser.write(html);
   parser.end();
 
@@ -284,6 +289,9 @@ function sanitizeHtml(html, options, _recursing) {
 // Defaults are accessible to you so that you can use them as a starting point
 // programmatically if you wish
 
+var htmlParserDefaults = {
+  decodeEntities: true
+};
 sanitizeHtml.defaults = {
   allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
     'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
