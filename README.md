@@ -85,6 +85,19 @@ allowedAttributes: {
   a: [ 'href', 'data-*' ]
 }
 ```
+### htmlparser2 Options
+
+`santizeHtml` is built on `htmlparser2`. By default the only option passed down is `decodeEntities: true` You can set the options to pass by using the parser option.
+
+```javascript
+clean = sanitizeHtml(dirty, {
+    allowedTags: ['a'],
+    parser: {
+        lowerCaseTags: true
+    }
+});
+```
+See the [htmlparser2 wiki] (https://github.com/fb55/htmlparser2/wiki/Parser-options) for the full list of possible options.
 
 ### Transformations
 
