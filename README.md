@@ -239,6 +239,8 @@ You can also allow a scheme for a particular tag only:
 
 ## Changelog
 
+1.9.0: `parser` option allows options to be passed directly to `htmlparser2. Thanks to Danny Scott.
+
 1.8.0:
 
 * `transformTags` now accepts the `*` wildcard to transform all tags. Thanks to Jamy Timmermans.
