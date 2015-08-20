@@ -51,7 +51,9 @@ If you do not specify `allowedTags` or `allowedAttributes` our default list is a
 
 "What are the default options?"
 
-    allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol', 'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div', 'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre' ],
+    allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
+      'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
+      'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre' ],
     allowedAttributes: {
       a: [ 'href', 'name', 'target' ],
       // We don't currently allow img itself by default, but this
@@ -62,11 +64,7 @@ If you do not specify `allowedTags` or `allowedAttributes` our default list is a
     selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
     // URL schemes we permit
     allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
-    // Be more specific about allowed schemes
-    // for a certain tag
-    allowedSchemesByTag: {
-      img: [ 'http' ]
-    }
+    allowedSchemesByTag: {}
 
 "What if I want to allow all tags or all attributes?"
 
