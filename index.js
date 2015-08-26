@@ -144,10 +144,13 @@ function sanitizeHtml(html, options, _recursing) {
         return;
       }
       result += '<' + name;
-      if (!allowedAttributesMap || allowedAttributesMap[name]) {
+      if (!allowedAttributesMap || allowedAttributesMap[name] || allowedAttributesMap['*']) {
         each(attribs, function(value, a) {
-          if (!allowedAttributesMap || allowedAttributesMap[name].indexOf(a) !== -1 ||
-              (allowedAttributesGlobMap[name] && allowedAttributesGlobMap[name].test(a))) {
+          if (!allowedAttributesMap ||
+              (allowedAttributesMap[name] && allowedAttributesMap['*'].indexOf(a) !== -1 ) ||
+              (allowedAttributesMap['*'] && allowedAttributesMap['*'].indexOf(a) !== -1 ) ||
+              (allowedAttributesGlobMap[name] && allowedAttributesGlobMap[name].test(a)) ||
+              (allowedAttributesGlobMap['*'] && allowedAttributesGlobMap['*'].test(a))) {
             if ((a === 'href') || (a === 'src')) {
               if (naughtyHref(name, value)) {
                 delete frame.attribs[a];
