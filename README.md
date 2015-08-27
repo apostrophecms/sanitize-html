@@ -83,6 +83,15 @@ allowedAttributes: {
   a: [ 'href', 'data-*' ]
 }
 ```
+
+Also you can use the `*` as name for a tag, to allow listed attributes to be valid for any tag:
+
+```javascript
+allowedAttributes: {
+  '*': [ 'href', 'align', 'alt', 'center', 'bgcolor' ]
+}
+```
+
 ### htmlparser2 Options
 
 `santizeHtml` is built on `htmlparser2`. By default the only option passed down is `decodeEntities: true` You can set the options to pass by using the parser option.
