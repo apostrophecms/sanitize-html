@@ -147,7 +147,7 @@ function sanitizeHtml(html, options, _recursing) {
       if (!allowedAttributesMap || allowedAttributesMap[name] || allowedAttributesMap['*']) {
         each(attribs, function(value, a) {
           if (!allowedAttributesMap ||
-              (allowedAttributesMap[name] && allowedAttributesMap['*'].indexOf(a) !== -1 ) ||
+              (allowedAttributesMap[name] && allowedAttributesMap[name].indexOf(a) !== -1 ) ||
               (allowedAttributesMap['*'] && allowedAttributesMap['*'].indexOf(a) !== -1 ) ||
               (allowedAttributesGlobMap[name] && allowedAttributesGlobMap[name].test(a)) ||
               (allowedAttributesGlobMap['*'] && allowedAttributesGlobMap['*'].test(a))) {
