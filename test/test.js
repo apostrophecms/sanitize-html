@@ -292,6 +292,20 @@ describe('sanitizeHtml', function() {
       '<img src="onmouseover=&quot;alert(\'XSS\');&quot;" />'
     );
   });
+  it('should allow only whitelisted attributes, but to any tags, if tag is declared as  "*"', function() {
+    assert.equal(
+        sanitizeHtml(
+            '<table bgcolor="1" align="left" notlisted="0"><img src="1.gif" align="center" alt="not listed too"/></table>',
+            {
+              allowedTags: [ 'table', 'img' ],
+              allowedAttributes: {
+                '*': [ 'bgcolor', 'align', 'src' ]
+              }
+            }
+        ),
+        '<table bgcolor="1" align="left"><img src="1.gif" align="center" /></table>'
+    );
+  });
   it('should not filter if exclusive filter does not match after transforming tags', function() {
     assert.equal(
       sanitizeHtml(
