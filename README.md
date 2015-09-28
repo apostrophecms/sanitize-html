@@ -41,7 +41,7 @@ That will allow our default list of allowed tags and attributes through. It's a 
 
 Boom!
 
-"I like your set but I want to add one more tag. Is there a convenient way?" Sure:
+#### "I like your set but I want to add one more tag. Is there a convenient way?" Sure:
 
     clean = sanitizeHtml(dirty, {
       allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ])
@@ -49,7 +49,7 @@ Boom!
 
 If you do not specify `allowedTags` or `allowedAttributes` our default list is applied. So if you really want an empty list, specify one.
 
-"What are the default options?"
+#### "What are the default options?"
 
     allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
       'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
@@ -66,13 +66,20 @@ If you do not specify `allowedTags` or `allowedAttributes` our default list is a
     allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
     allowedSchemesByTag: {}
 
-"What if I want to allow all tags or all attributes?"
+#### "What if I want to allow all tags or all attributes?"
 
 Simple! instead of leaving `allowedTags` or `allowedAttributes` out of the options, set either
 one or both to `false`:
 
     allowedTags: false,
     allowedAttributes: false
+
+#### "What if I don't want to allow *any* tags?"
+
+Also simple!  Set your `allowedTag` and `allowedAttributes` to empty arrays (`[]`).
+
+    allowedTags: [],
+    allowedAttributes: []
 
 ### Wildcards for attributes
 
