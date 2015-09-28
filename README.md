@@ -246,6 +246,8 @@ You can also allow a scheme for a particular tag only:
 
 ## Changelog
 
+1.10.1: documentation cleanup. No code changes. Thanks to Rex Schrader.
+
 1.10.0: `allowedAttributes` now allows you to allow attributes for all tags by specifying `*` as the tag name. Thanks to Zdravko Georgiev.
 
 1.9.0: `parser` option allows options to be passed directly to `htmlparser2. Thanks to Danny Scott.
