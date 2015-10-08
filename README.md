@@ -251,7 +251,25 @@ You can also allow a scheme for a particular tag only:
   }
 ```
 
+### Discarding the entire contents of a disallowed tag
+
+Normally, with a few exceptions, if a tag is not allowed, all of the text within it is preserved, and so are any allowed tags within it.
+
+The exceptions are:
+
+`style`, `script`, `textarea`
+
+If you wish to expand this list, for instance to discard whatever is found inside a `noscript` tag, use the `nonTextTags` option:
+
+```javascript
+  nonTextTags: [ 'style', 'script', 'textarea', 'noscript' ]
+```
+
+Note that if you use this option you are responsible for stating the entire list. This gives you the power to retain the content of `textarea`, if you want to.
+
 ## Changelog
+
+1.11.0: added the `nonTextTags` option, with tests.
 
 1.10.1: documentation cleanup. No code changes. Thanks to Rex Schrader.
 

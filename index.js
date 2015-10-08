@@ -43,11 +43,12 @@ function sanitizeHtml(html, options, _recursing) {
       options.parser = htmlParserDefaults;
     }
   }
+
   // Tags that contain something other than HTML, or where discarding
   // the text when the tag is disallowed makes sense for other reasons.
   // If we are not allowing these tags, we should drop their content too.
   // For other tags you would drop the tag but keep its content.
-  var nonTextTagsArray = [ 'script', 'style', 'textarea' ];
+  var nonTextTagsArray = options.nonTextTags || [ 'script', 'style', 'textarea' ];
   var allowedAttributesMap;
   var allowedAttributesGlobMap;
   if(options.allowedAttributes) {
@@ -100,8 +101,14 @@ function sanitizeHtml(html, options, _recursing) {
   var skipMap = {};
   var transformMap = {};
   var skipText = false;
+  var skipTextDepth = 0;
+
   var parser = new htmlparser.Parser({
     onopentag: function(name, attribs) {
+      if (skipText) {
+        skipTextDepth++;
+        return;
+      }
       var frame = new Frame(name, attribs);
       stack.push(frame);
 
@@ -135,6 +142,7 @@ function sanitizeHtml(html, options, _recursing) {
         skip = true;
         if (nonTextTagsArray.indexOf(name) !== -1) {
           skipText = true;
+          skipTextDepth = 1;
         }
         skipMap[depth] = true;
       }
@@ -208,6 +216,15 @@ function sanitizeHtml(html, options, _recursing) {
       }
     },
     onclosetag: function(name) {
+
+      if (skipText) {
+        skipTextDepth--;
+        if (!skipTextDepth) {
+          skipText = false;
+        }
+        return;
+      }
+
       var frame = stack.pop();
       if (!frame) {
         // Do not crash on bad markup

@@ -46,6 +46,18 @@ describe('sanitizeHtml', function() {
   it('should drop the content of textarea elements', function() {
     assert.equal(sanitizeHtml('<textarea>Nifty</textarea><p>Paragraph</p>'), '<p>Paragraph</p>');
   });
+  it('should retain the content of fibble elements by default', function() {
+    assert.equal(sanitizeHtml('<fibble>Nifty</fibble><p>Paragraph</p>'), 'Nifty<p>Paragraph</p>');
+  });
+  it('should discard the content of fibble elements if specified for nonTextTags', function() {
+    assert.equal(sanitizeHtml('<fibble>Nifty</fibble><p>Paragraph</p>', { nonTextTags: [ 'fibble' ] }), '<p>Paragraph</p>');
+  });
+  it('should retain allowed tags within a fibble element if fibble is not specified for nonTextTags', function() {
+    assert.equal(sanitizeHtml('<fibble>Ni<em>f</em>ty</fibble><p>Paragraph</p>', {}), 'Ni<em>f</em>ty<p>Paragraph</p>');
+  });
+  it('should discard allowed tags within a fibble element if fibble is specified for nonTextTags', function() {
+    assert.equal(sanitizeHtml('<fibble>Ni<em>f</em>ty</fibble><p>Paragraph</p>', { nonTextTags: [ 'fibble' ] }), '<p>Paragraph</p>');
+  });
   it('should preserve textarea content if textareas are allowed', function() {
     assert.equal(sanitizeHtml('<textarea>Nifty</textarea><p>Paragraph</p>', {
       allowedTags: [ 'textarea', 'p' ]
