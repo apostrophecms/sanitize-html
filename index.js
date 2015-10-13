@@ -221,8 +221,9 @@ function sanitizeHtml(html, options, _recursing) {
         skipTextDepth--;
         if (!skipTextDepth) {
           skipText = false;
+        } else {
+          return;
         }
-        return;
       }
 
       var frame = stack.pop();

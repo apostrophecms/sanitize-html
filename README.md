@@ -269,6 +269,8 @@ Note that if you use this option you are responsible for stating the entire list
 
 ## Changelog
 
+1.11.1: fixed a regression introduced in 1.11.0 which caused the closing tag of the parent of a `textarea` tag to be lost. Thanks to Stefano Sala, who contributed the missing test.
+
 1.11.0: added the `nonTextTags` option, with tests.
 
 1.10.1: documentation cleanup. No code changes. Thanks to Rex Schrader.
