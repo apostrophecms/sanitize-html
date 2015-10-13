@@ -46,6 +46,9 @@ describe('sanitizeHtml', function() {
   it('should drop the content of textarea elements', function() {
     assert.equal(sanitizeHtml('<textarea>Nifty</textarea><p>Paragraph</p>'), '<p>Paragraph</p>');
   });
+  it('should drop the content of textarea elements but keep the closing parent tag, when nested', function() {
+    assert.equal(sanitizeHtml('<p>Paragraph<textarea>Nifty</textarea></p>'), '<p>Paragraph</p>');
+  });
   it('should retain the content of fibble elements by default', function() {
     assert.equal(sanitizeHtml('<fibble>Nifty</fibble><p>Paragraph</p>'), 'Nifty<p>Paragraph</p>');
   });
