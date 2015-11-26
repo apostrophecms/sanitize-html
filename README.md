@@ -305,7 +305,7 @@ Note that if you use this option you are responsible for stating the entire list
 
 1.10.0: `allowedAttributes` now allows you to allow attributes for all tags by specifying `*` as the tag name. Thanks to Zdravko Georgiev.
 
-1.9.0: `parser` option allows options to be passed directly to `htmlparser2. Thanks to Danny Scott.
+1.9.0: `parser` option allows options to be passed directly to `htmlparser`. Thanks to Danny Scott.
 
 1.8.0:
 
