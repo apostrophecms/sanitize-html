@@ -77,6 +77,10 @@ function sanitizeHtml(html, options, _recursing) {
       allowedAttributesMap[tag].push('class');
     }
 
+    classes.map(function(clss) {
+      return quoteRegexp(clss).replace(/\\\*/g, '.*')
+    })
+
     allowedClassesMap[tag] = classes;
   });
 
@@ -302,7 +306,9 @@ function sanitizeHtml(html, options, _recursing) {
     }
     classes = classes.split(/\s+/);
     return classes.filter(function(clss) {
-      return allowed.indexOf(clss) !== -1;
+      return allowed.some(function(_allowed) {
+        return clss.match(_allowed)
+      })
     }).join(' ');
   }
 }
