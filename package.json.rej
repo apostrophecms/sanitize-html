@@ -1,0 +1,17 @@
+***************
+*** 21,27 ****
+    "author": "P'unk Avenue LLC",
+    "license": "MIT",
+    "dependencies": {
+-     "htmlparser2": "3.9.x",
+      "regexp-quote": "0.0.0",
+      "xtend": "^4.0.0"
+    }
+--- 21,27 ----
+    "author": "P'unk Avenue LLC",
+    "license": "MIT",
+    "dependencies": {
++     "htmlparser2": "^3.9.0",
+      "regexp-quote": "0.0.0",
+      "xtend": "^4.0.0"
+    }

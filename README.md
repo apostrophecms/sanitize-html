@@ -297,6 +297,8 @@ Note that if you use this option you are responsible for stating the entire list
 
 ## Changelog
 
+1.11.3: bumped `htmlparser2` version to address crashing bug in older version. Thanks to e-jigsaw.
+
 1.11.2: fixed README typo that interfered with readability due to markdown issues. No code changes. Thanks to Mikael Korpela. Also improved code block highlighting in README. Thanks to Alex Siman.
 
 1.11.1: fixed a regression introduced in 1.11.0 which caused the closing tag of the parent of a `textarea` tag to be lost. Thanks to Stefano Sala, who contributed the missing test.
