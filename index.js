@@ -278,7 +278,7 @@ function sanitizeHtml(html, options, _recursing) {
     href = href.replace(/[\x00-\x20]+/g, '');
     // Clobber grave accent
     // https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Grave_accent_obfuscation
-    href = href.replace(/`/, '');
+    href = href.replace(/`/g, '');
     // Clobber any comments in URLs, which the browser might
     // interpret inside an XML data island, allowing
     // a javascript: URL to be snuck through
