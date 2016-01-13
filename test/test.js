@@ -222,6 +222,25 @@ describe('sanitizeHtml', function() {
       '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />'
     );
   });
+  it('should prevent from OWASP grave accent obfuscation', function() {
+    assert.equal(
+      sanitizeHtml(
+      '<img SRC=`javascript:alert("RSnake says, XSS")`>',
+        {
+          allowedTags: ['img']
+        }
+      ),
+      '<img />'
+    );
+  });
+  it('should allow grave accents in normal text (for i18n)', function() {
+    assert.equal(
+      sanitizeHtml(
+        '<p>`test`</p>'
+      ),
+      '<p>`test`</p>'
+    );
+  });
   it('should allow specific classes when whitelisted with allowedClasses', function() {
     assert.equal(
       sanitizeHtml(
