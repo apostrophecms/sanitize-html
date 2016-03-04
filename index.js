@@ -113,6 +113,7 @@ function sanitizeHtml(html, options, _recursing) {
       stack.push(frame);
 
       var skip = false;
+      var hasText = frame.text ? true : false;
       var transformedTag;
       if (transformTagsMap[name]) {
         transformedTag = transformTagsMap[name](name, attribs);
@@ -185,6 +186,9 @@ function sanitizeHtml(html, options, _recursing) {
         result += " />";
       } else {
         result += ">";
+        if (frame.innerText && !hasText && !options.textFilter) {
+          result += frame.innerText;
+        }
       }
     },
     ontext: function(text) {
