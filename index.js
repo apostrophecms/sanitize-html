@@ -1,7 +1,6 @@
 var htmlparser = require('htmlparser2');
 var extend = require('xtend');
 var quoteRegexp = require('regexp-quote');
-var caja = require('html-css-sanitizer');
 var css = require('css');
 
 function each(obj, cb) {
