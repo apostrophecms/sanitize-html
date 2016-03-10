@@ -1,6 +1,8 @@
 var htmlparser = require('htmlparser2');
 var extend = require('xtend');
 var quoteRegexp = require('regexp-quote');
+var caja = require('html-css-sanitizer');
+var css = require('css');
 
 function each(obj, cb) {
   if (obj) Object.keys(obj).forEach(function (key) {
@@ -172,6 +174,16 @@ function sanitizeHtml(html, options, _recursing) {
                 return;
               }
             }
+            if (a === 'style') {
+              try {
+                var ast = css.parse(name + " {" + value + "}");
+                var filteredAST = filterCss(ast);
+                value = css.stringify(filteredAST, {compress: true}).substr(name.length + 1).slice(0, -1);
+              } catch (e) {
+                delete frame.attribs[a];
+                return;
+              }
+            }
             result += ' ' + a;
             if (value.length) {
               result += '="' + escapeHtml(value) + '"';
@@ -293,6 +305,41 @@ function sanitizeHtml(html, options, _recursing) {
     }
 
     return !options.allowedSchemes || options.allowedSchemes.indexOf(scheme) === -1;
+  }
+
+  function filterCss(ast) {
+    var originalAst = ast;
+    // there should only be one element in the ast array based on how we set it up
+    ast = ast.stylesheet.rules[0];
+    // Check if selector is in our allowed styles
+    if(options.allowedStyles) {
+      if(options.allowedStyles[ast.selectors[0]] || options.allowedStyles['*']) {
+        var allowedDeclarations = [];
+        ast.declarations.forEach(function(value) {
+          // Is specific style allowed?
+          // First check if allowed in glob
+          if(options.allowedStyles['*']) {
+            if(options.allowedStyles['*'][value.property]) {
+              if(options.allowedStyles['*'][value.property] === '*' || options.allowedStyles['*'][value.property].indexOf(value.value) > -1) {
+                allowedDeclarations.push(value);
+              }
+            }
+          } else if (options.allowedStyles[ast.selectors[0]]) {
+            if(options.allowedStyles[ast.selectors[0]][value.property]) {
+              if(options.allowedStyles[ast.selectors[0]][value.property] === '*' || options.allowedStyles[ast.selectors[0]][value.property].indexOf(value.value) > -1) {
+                allowedDeclarations.push(value);
+              }
+            }
+          }
+        });
+        originalAst.stylesheet.rules[0].declarations = allowedDeclarations;
+        return originalAst;
+      } else {
+        return false;
+      }
+    } else {
+      return originalAst;
+    }
   }
 
   function filterClasses(classes, allowed) {

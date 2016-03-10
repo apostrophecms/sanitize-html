@@ -21,6 +21,7 @@
   "author": "P'unk Avenue LLC",
   "license": "MIT",
   "dependencies": {
+    "css": "^2.2.1",
     "htmlparser2": "^3.9.0",
     "regexp-quote": "0.0.0",
     "xtend": "^4.0.0"

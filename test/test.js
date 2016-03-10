@@ -396,7 +396,7 @@ describe('sanitizeHtml', function() {
           }
         }
       ),
-      '<p style="text-align: center;">Text</p>'
+      '<p style="text-align:center;">Text</p>'
     );
   });
   it('should not be faked out by double <', function() {
@@ -472,5 +472,27 @@ describe('sanitizeHtml', function() {
       }),
       "<Archer><Sterling>I am</Sterling></Archer>"
     );
+  });
+  it('should sanitize styles correctly', function() {
+    var sanitizeString = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right;"><u>test</u></li><li style="text-align: justify;"><u>test</u></li></ol> <p><u><span style="color:#00FF00;">test</span></u></p><p><span style="color:#00FF00"><span style="font-size:36px;">TESTETESTESTES</span></span></p></blockquote>';
+    var expected = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right;"><u>test</u></li><li style="text-align: justify;"><u>test</u></li></ol> <p><u><span style="color:#00FF00;">test</span></u></p><p><span style="color:#00FF00;"><span style="font-size:36px;">TESTETESTESTES</span></span></p></blockquote>';
+    assert.equal(
+      sanitizeHtml(sanitizeString, {
+        allowedTags: false,
+        allowedAttributes: {
+          '*': ["dir"],
+          p: ["dir", "style"],
+          li: ["style"],
+          span: ["style"]
+        },
+        allowedStyles: {
+          '*': {
+            'color': '*',
+            'text-align': ['left','right','center','justify','initial','inherit'],
+            'font-size': '*'
+          }
+        }
+      }).replace(/ /g,''), expected.replace(/ /g,'')
+    )
   });
 });
