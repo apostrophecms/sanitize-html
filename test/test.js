@@ -495,4 +495,13 @@ describe('sanitizeHtml', function() {
       }).replace(/ /g,''), expected.replace(/ /g,'')
     )
   });
+  it('Should remove empty style tags', function() {
+    assert.equal(
+      sanitizeHtml("<span style=''></span>", {
+        allowedTags: false,
+        allowedAttributes: false
+      }),
+      "<span></span>"
+    );
+  })
 });

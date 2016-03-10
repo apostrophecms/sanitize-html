@@ -178,6 +178,10 @@ function sanitizeHtml(html, options, _recursing) {
                 var ast = css.parse(name + " {" + value + "}");
                 var filteredAST = filterCss(ast);
                 value = css.stringify(filteredAST, {compress: true}).substr(name.length + 1).slice(0, -1);
+                if(value.length === 0) {
+                  delete frame.attribs[a];
+                  return;
+                }
               } catch (e) {
                 delete frame.attribs[a];
                 return;
