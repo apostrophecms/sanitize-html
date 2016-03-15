@@ -249,6 +249,29 @@ clean = sanitizeHtml(dirty, {
 });
 ```
 
+### Allowed CSS Styles
+
+If you wish to allow specific CSS _styles_ on a particular element, you can do that with the `allowedStyles` option.
+Any other CSS classes are discarded.
+
+This implies that the `style` attribute is allowed on that element
+
+```javascript
+clean = sanitizeHtml(dirty, {
+        allowedTags: ['p'],
+        allowedAttributes: {
+          'p': ["style"],
+        },
+        allowedStyles: {
+          '*': {
+            'color': '*',
+            'text-align': ['left','right','center','justify','initial','inherit'],
+            'font-size': '*'
+          }
+        }
+      });
+```
+
 ### Allowed URL schemes
 
 By default we allow the following URL schemes in cases where `href`, `src`, etc. are allowed:
