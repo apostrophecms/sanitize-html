@@ -503,5 +503,39 @@ describe('sanitizeHtml', function() {
       }),
       "<span></span>"
     );
+  });
+  it('Should remote invalid styles', function() {
+    assert.equal(
+      sanitizeHtml("<span style='color: blue; text-align: justify'></span>", {
+        allowedTags: false,
+        allowedAttributes: {
+          "span": ["style"]
+        },
+        allowedStyles: {
+          'span': {
+            "color": "blue",
+            "text-align": ['left']
+          }
+        }
+      }), '<span style="color:blue;"></span>'
+    );
+  });
+  it('Should allow a specific style from global', function() {
+    assert.equal(
+      sanitizeHtml("<span style='color: yellow;'></span>", {
+        allowedTags: false,
+        allowedAttributes: {
+          "span": ["style"]
+        },
+        allowedStyles: {
+          '*': {
+            "color": ["yellow"]
+          },
+          'span': {
+            "color": ["green"]
+          }
+        }
+      }), '<span style="color:yellow;"></span>'
+    );
   })
 });
