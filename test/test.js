@@ -433,7 +433,7 @@ describe('sanitizeHtml', function() {
       }), '<a data-b.c="#test">click me</a>'
     );
   });
-  it('should not escape inner content from non-text tags (when allowed)', function() {
+  it('should not escape inner content of script and style tags (when allowed)', function() {
     assert.equal(
       sanitizeHtml('<div>"normal text"</div><script>"this is code"</script>', {
         allowedTags: [ 'script' ]
@@ -444,6 +444,16 @@ describe('sanitizeHtml', function() {
         allowedTags: [ 'style' ]
       }), '&quot;normal text&quot;<style>body { background-image: url("image.test"); }</style>'
     );
+  });
+  it('should not unescape escapes found inside script tags', function() {
+    assert.equal(
+      sanitizeHtml('<script>alert("&quot;This is cool but just ironically so I quoted it&quot;")</script>',
+        {
+          allowedTags: [ 'script' ]
+        }
+      ),
+      '<script>alert("&quot;This is cool but just ironically so I quoted it&quot;")</script>'
+    )
   });
   it('should process text nodes with provided function', function() {
     assert.equal(
@@ -477,5 +487,12 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml("!<__proto__>!"),
     "!!");
+  });
+  it('should correctly maintain escaping when allowing a nonTextTags tag other than script or style', function() {
+    assert.equal(
+      sanitizeHtml('!<textarea>&lt;/textarea&gt;&lt;svg/onload=prompt`xs`&gt;</textarea>!',
+        { allowedTags: [ 'textarea' ] }
+      ), '!<textarea>&lt;/textarea&gt;&lt;svg/onload=prompt`xs`&gt;</textarea>!'
+    );
   });
 });

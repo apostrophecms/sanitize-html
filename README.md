@@ -8,7 +8,7 @@
 
 `sanitize-html` allows you to specify the tags you want to permit, and the permitted attributes for each of those tags.
 
-If a tag is not permitted, the contents of the tag are still kept, except for script and style tags.
+If a tag is not permitted, the contents of the tag are still kept, except for `script`, `style` and `textarea` tags.
 
 The syntax of poorly closed `p` and `img` elements is cleaned up.
 
@@ -295,9 +295,13 @@ nonTextTags: [ 'style', 'script', 'textarea', 'noscript' ]
 
 Note that if you use this option you are responsible for stating the entire list. This gives you the power to retain the content of `textarea`, if you want to.
 
+The content still gets escaped properly, with the exception of the `script` and `style` tags. *Allowing either `script` or `style` leaves you open to XSS attacks. Don't do that* unless you have good reason to trust their origin.
+
 ## Changelog
 
 1.11.4: fixed crash when `__proto__` is a tag name. Now using a safe check for the existence of properties in all cases. Thanks to Andrew Krasichkov.
+
+Fixed XSS attack vector via `textarea` tags (when explicitly allowed). Decided that `script` (obviously) and `style` (due to its own XSS vectors) cannot realistically be afforded any XSS protection if allowed, unless we add a full CSS parser. Thanks again to Andrew Krasichkov.
 
 1.11.3: bumped `htmlparser2` version to address crashing bug in older version. Thanks to e-jigsaw.
 
