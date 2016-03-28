@@ -473,4 +473,9 @@ describe('sanitizeHtml', function() {
       "<Archer><Sterling>I am</Sterling></Archer>"
     );
   });
+  it('should not crash due to tag names that are properties of the universal Object prototype', function() {
+    assert.equal(
+      sanitizeHtml("!<__proto__>!"),
+    "!!");
+  });
 });

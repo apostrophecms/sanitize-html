@@ -8,6 +8,11 @@ function each(obj, cb) {
   });
 }
 
+// Avoid false positives with .__proto__, .hasOwnProperty, etc.
+function has(obj, key) {
+  return ({}).hasOwnProperty.call(obj, key);
+}
+
 module.exports = sanitizeHtml;
 
 // Ignore the _recursing flag; it's there for recursive
@@ -71,7 +76,7 @@ function sanitizeHtml(html, options, _recursing) {
   each(options.allowedClasses, function(classes, tag) {
     // Implicitly allows the class attribute
     if(allowedAttributesMap) {
-      if (!allowedAttributesMap[tag]) {
+      if (!has(allowedAttributesMap, tag)) {
         allowedAttributesMap[tag] = [];
       }
       allowedAttributesMap[tag].push('class');
@@ -114,7 +119,7 @@ function sanitizeHtml(html, options, _recursing) {
 
       var skip = false;
       var transformedTag;
-      if (transformTagsMap[name]) {
+      if (has(transformTagsMap, name)) {
         transformedTag = transformTagsMap[name](name, attribs);
 
         frame.attribs = attribs = transformedTag.attribs;
@@ -152,12 +157,12 @@ function sanitizeHtml(html, options, _recursing) {
         return;
       }
       result += '<' + name;
-      if (!allowedAttributesMap || allowedAttributesMap[name] || allowedAttributesMap['*']) {
+      if (!allowedAttributesMap || has(allowedAttributesMap, name) || allowedAttributesMap['*']) {
         each(attribs, function(value, a) {
           if (!allowedAttributesMap ||
-              (allowedAttributesMap[name] && allowedAttributesMap[name].indexOf(a) !== -1 ) ||
+              (has(allowedAttributesMap, name) && allowedAttributesMap[name].indexOf(a) !== -1 ) ||
               (allowedAttributesMap['*'] && allowedAttributesMap['*'].indexOf(a) !== -1 ) ||
-              (allowedAttributesGlobMap[name] && allowedAttributesGlobMap[name].test(a)) ||
+              (has(allowedAttributesGlobMap, name) && allowedAttributesGlobMap[name].test(a)) ||
               (allowedAttributesGlobMap['*'] && allowedAttributesGlobMap['*'].test(a))) {
             if ((a === 'href') || (a === 'src')) {
               if (naughtyHref(name, value)) {
@@ -288,7 +293,7 @@ function sanitizeHtml(html, options, _recursing) {
     }
     var scheme = matches[1].toLowerCase();
 
-    if (options.allowedSchemesByTag[name]) {
+    if (has(options.allowedSchemesByTag, name)) {
       return options.allowedSchemesByTag[name].indexOf(scheme) === -1;
     }
 
