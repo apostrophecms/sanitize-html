@@ -186,6 +186,32 @@ describe('sanitizeHtml', function() {
             ''
         );
   });
+  it('Should not collapse elements containing only self closing tags', function() {
+    var tux = 'https://upload.wikimedia.org/wikipedia/commons/a/af/Tux.png?1463231285282';
+    var markup = '<a href="http://www.linux.org"><img src="'+ tux +'" /></a>'
+    assert.strictEqual(
+      sanitizeHtml(markup, {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
+        exclusiveFilter: function(frame) {
+          return (frame.tag === 'a') && !frame.text.trim() && !frame.children.length;
+        }
+      }),
+      markup
+    )
+  });
+  it('Should not collapse elements containing specified tags', function() {
+    var tux = 'https://upload.wikimedia.org/wikipedia/commons/a/af/Tux.png?1463231285282';
+    var markup = '<a href="http://www.linux.org"><img src="'+ tux +'" /></a>'
+    assert.strictEqual(
+      sanitizeHtml(markup, {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
+        exclusiveFilter: function(frame) {
+          return (frame.tag === 'a' && frame.children.length === 1 && !frame.children.indexOf('img') === -1);
+        }
+      }),
+      markup
+    )
+  });
   it('Exclusive filter should not affect elements which do not match the filter condition', function () {
       assert.strictEqual(
           sanitizeHtml('I love <a href="www.linux.org" target="_hplink">Linux</a> OS',

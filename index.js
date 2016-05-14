@@ -27,6 +27,7 @@ function sanitizeHtml(html, options, _recursing) {
     this.tag = tag;
     this.attribs = attribs || {};
     this.tagPosition = result.length;
+    this.children = [];
     this.text = ''; // Node inner text
 
     this.updateParentNodeText = function() {
@@ -35,6 +36,13 @@ function sanitizeHtml(html, options, _recursing) {
           parentFrame.text += that.text;
       }
     };
+
+    this.updateParentNodeChildren = function() {
+      if (stack.length) {
+        var parentFrame = stack[stack.length - 1];
+        parentFrame.children.push(this.tag);
+      }
+    }
   }
 
   if (!options) {
@@ -258,6 +266,7 @@ function sanitizeHtml(html, options, _recursing) {
          return;
       }
 
+      frame.updateParentNodeChildren();
       frame.updateParentNodeText();
 
       if (options.selfClosing.indexOf(name) !== -1) {
