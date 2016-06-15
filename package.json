@@ -24,5 +24,8 @@
     "htmlparser2": "^3.9.0",
     "regexp-quote": "0.0.0",
     "xtend": "^4.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.5.3"
   }
 }
