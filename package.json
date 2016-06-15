@@ -4,7 +4,8 @@
   "description": "Clean up user-submitted HTML, preserving whitelisted elements and whitelisted attributes on a per-element basis",
   "main": "index.js",
   "scripts": {
-    "build": "cp index.js dist/sanitize-html.js && browserify index.js > dist/sanitize-html.min.js",
+    "build": "browserify index.js > dist/sanitize-html.js --standalone 'sanitizeHtml'",
+    "minify": "npm run build && uglifyjs dist/sanitize-html.js > dist/sanitize-html.min.js",
     "test": "mocha test/test.js",
     "prebuild": "npm run test && rm -rf dist && mkdir dist"
   },
