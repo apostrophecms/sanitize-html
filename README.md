@@ -24,6 +24,10 @@ HTML comments are not preserved.
 
 ### Browser 
 
+*Think first: why do you want to use it in the browser?* Remember, *servers must never trust browsers.* You can't sanitize HTML for saving on the server anywhere else but on the server.
+
+But, perhaps you'd like to display sanitized HTML immediately in the browser for preview. Or ask the browser to do the sanitization work on every page load. You can if you want to!
+
 * Clone repository
 * Run npm install and build / minify:
 
@@ -331,6 +335,8 @@ Note that if you use this option you are responsible for stating the entire list
 The content still gets escaped properly, with the exception of the `script` and `style` tags. *Allowing either `script` or `style` leaves you open to XSS attacks. Don't do that* unless you have good reason to trust their origin.
 
 ## Changelog
+
+1.12.0: option to build for browser-side use. Thanks to Michael Blum.
 
 1.11.4: fixed crash when `__proto__` is a tag name. Now using a safe check for the existence of properties in all cases. Thanks to Andrew Krasichkov.
 
