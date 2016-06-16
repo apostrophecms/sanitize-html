@@ -22,6 +22,39 @@ HTML comments are not preserved.
 
 ## How to use
 
+### Browser 
+
+* Clone repository
+* Run npm install and build / minify:
+
+```bash
+npm install
+npm run minify
+```
+
+You'll find the minified and unminified versions of sanitize-html (with all its dependencies included) in the dist/ directory.
+
+Use it in the browser:
+
+```html
+<html>
+    <body>
+        <script type="text/javascript"  src="dist/sanitize-html.js"></script>
+        <script type="text/javascript" src="demo.js"></script>
+    </body>
+</html>
+```
+
+```javascript
+var html = "<strong>hello world</strong>";
+console.log(sanitizeHtml(html));
+console.log(sanitizeHtml("<img src=x onerror=alert('img') />"));
+console.log(sanitizeHtml("console.log('hello world')"));
+console.log(sanitizeHtml("<script>alert('hello world')</script>"));
+```
+
+### Node (Recommended)
+
 Install module from console:
 
 ```bash
