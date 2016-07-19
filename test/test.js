@@ -144,6 +144,25 @@ describe('sanitizeHtml', function() {
     }}), '<a href="http://somelink">some_text_need&quot;to&lt;be&gt;filtered</a>');
   });
 
+  it('should add new text when not initially set and replace attributes when they are changed by transforming function', function () {
+    assert.equal(sanitizeHtml('<a href="http://somelink"></a>', { transformTags: {a: function (tagName, attribs) {
+      return {
+        tagName: tagName,
+        attribs: attribs,
+        text: 'some new text'
+      }
+    }}}), '<a href="http://somelink">some new text</a>');
+  });
+
+  it('should preserve text when initially set and replace attributes when they are changed by transforming function', function () {
+    assert.equal(sanitizeHtml('<a href="http://somelink">some initial text</a>', { transformTags: {a: function (tagName, attribs) {
+      return {
+        tagName: tagName,
+        attribs: attribs
+      }
+    }}}), '<a href="http://somelink">some initial text</a>');
+  });
+
   it('should skip an empty link', function() {
      assert.strictEqual(
      sanitizeHtml('<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>', {

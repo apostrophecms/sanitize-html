@@ -221,6 +221,29 @@ simpleTransform(newTag, newAttributes, shouldMerge)
 
 The last parameter (`shouldMerge`) is set to `true` by default. When `true`, `simpleTransform` will merge the current attributes with the new ones (`newAttributes`). When `false`, all existing attributes are discarded.
 
+You can also add or modify the text contents of a tag:
+
+```js
+clean = sanitizeHtml(dirty, {
+  transformTags: {
+    'a': function(tagName, attribs) {
+        return {
+            tagName: 'a',
+            text: 'Some text'
+        };
+    }
+  }
+});
+```
+For example, you could transform a link element with missing anchor text:
+```js
+<a href="http://somelink.com"></a>
+```
+To a link with anchor text:
+```js
+<a href="http://somelink.com">Some text</a>
+```
+
 ### Filters
 
 You can provide a filter function to remove unwanted tags. Let's suppose we need to remove empty `a` tags like:
@@ -441,5 +464,3 @@ We're rocking our tests and have been working great in production for months, so
 Feel free to open issues on [github](http://github.com/punkave/sanitize-html).
 
 <a href="http://punkave.com/"><img src="https://raw.github.com/punkave/sanitize-html/master/logos/logo-box-builtby.png" /></a>
-
-
