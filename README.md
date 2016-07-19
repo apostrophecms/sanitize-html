@@ -359,6 +359,8 @@ The content still gets escaped properly, with the exception of the `script` and 
 
 ## Changelog
 
+1.13.0: `transformTags` can now add text to an element that initially had none. Thanks to Dushyant Singh.
+
 1.12.0: option to build for browser-side use. Thanks to Michael Blum.
 
 1.11.4: fixed crash when `__proto__` is a tag name. Now using a safe check for the existence of properties in all cases. Thanks to Andrew Krasichkov.
