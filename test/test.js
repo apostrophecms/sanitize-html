@@ -514,4 +514,14 @@ describe('sanitizeHtml', function() {
       ), '!<textarea>&lt;/textarea&gt;&lt;svg/onload=prompt`xs`&gt;</textarea>!'
     );
   });
+  it('should correctly filter <style> tags\' content', function() {
+    assert.equal(
+      sanitizeHtml('<style>body {}</style>', {
+        allowedTags: false,
+        styleFilter: function (styleContent) {
+          return styleContent.replace('body', 'div');
+        }
+      })
+    , '<style>div {}</style>');
+  });
 });
