@@ -244,6 +244,24 @@ To a link with anchor text:
 <a href="http://somelink.com">Some text</a>
 ```
 
+Or specify a function:
+
+```js
+clean = sanitizeHtml(dirty, {
+  transformTags: {
+    'style': function(tagName, attribs) {
+        return {
+            tagName: 'style',
+            text: function(text){
+			    return myCssTransform(text);
+			}
+        };
+    }
+  }
+});
+```
+
+
 ### Filters
 
 You can provide a filter function to remove unwanted tags. Let's suppose we need to remove empty `a` tags like:
