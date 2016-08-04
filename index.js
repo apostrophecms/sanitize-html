@@ -205,8 +205,15 @@ function sanitizeHtml(html, options, _recursing) {
 
       if (lastFrame) {
         tag = lastFrame.tag;
-        // If inner text was set by transform function then let's use it
-        text = lastFrame.innerText !== undefined ? lastFrame.innerText : text;
+          // If inner text was set by transform function then let's use it
+	  // If it is a function, run it now
+	  if(lastFrame.innerText !== undefined){
+	      if(typeof lastFrame.innerText === "function"){
+		  text = lastFrame.innerText(text);
+	      }else{
+		  text = lastFrame.innerText;
+	      }
+	  }
       }
 
       if ((tag === 'script') || (tag === 'style')) {
