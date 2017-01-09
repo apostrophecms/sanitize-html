@@ -144,6 +144,25 @@ describe('sanitizeHtml', function() {
     }}), '<a href="http://somelink">some_text_need&quot;to&lt;be&gt;filtered</a>');
   });
 
+  it('should add new text when not initially set and replace attributes when they are changed by transforming function', function () {
+    assert.equal(sanitizeHtml('<a href="http://somelink"></a>', { transformTags: {a: function (tagName, attribs) {
+      return {
+        tagName: tagName,
+        attribs: attribs,
+        text: 'some new text'
+      }
+    }}}), '<a href="http://somelink">some new text</a>');
+  });
+
+  it('should preserve text when initially set and replace attributes when they are changed by transforming function', function () {
+    assert.equal(sanitizeHtml('<a href="http://somelink">some initial text</a>', { transformTags: {a: function (tagName, attribs) {
+      return {
+        tagName: tagName,
+        attribs: attribs
+      }
+    }}}), '<a href="http://somelink">some initial text</a>');
+  });
+
   it('should skip an empty link', function() {
      assert.strictEqual(
      sanitizeHtml('<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>', {
@@ -433,7 +452,7 @@ describe('sanitizeHtml', function() {
       }), '<a data-b.c="#test">click me</a>'
     );
   });
-  it('should not escape inner content from non-text tags (when allowed)', function() {
+  it('should not escape inner content of script and style tags (when allowed)', function() {
     assert.equal(
       sanitizeHtml('<div>"normal text"</div><script>"this is code"</script>', {
         allowedTags: [ 'script' ]
@@ -444,6 +463,16 @@ describe('sanitizeHtml', function() {
         allowedTags: [ 'style' ]
       }), '&quot;normal text&quot;<style>body { background-image: url("image.test"); }</style>'
     );
+  });
+  it('should not unescape escapes found inside script tags', function() {
+    assert.equal(
+      sanitizeHtml('<script>alert("&quot;This is cool but just ironically so I quoted it&quot;")</script>',
+        {
+          allowedTags: [ 'script' ]
+        }
+      ),
+      '<script>alert("&quot;This is cool but just ironically so I quoted it&quot;")</script>'
+    )
   });
   it('should process text nodes with provided function', function() {
     assert.equal(
@@ -471,6 +500,18 @@ describe('sanitizeHtml', function() {
         }
       }),
       "<Archer><Sterling>I am</Sterling></Archer>"
+    );
+  });
+  it('should not crash due to tag names that are properties of the universal Object prototype', function() {
+    assert.equal(
+      sanitizeHtml("!<__proto__>!"),
+    "!!");
+  });
+  it('should correctly maintain escaping when allowing a nonTextTags tag other than script or style', function() {
+    assert.equal(
+      sanitizeHtml('!<textarea>&lt;/textarea&gt;&lt;svg/onload=prompt`xs`&gt;</textarea>!',
+        { allowedTags: [ 'textarea' ] }
+      ), '!<textarea>&lt;/textarea&gt;&lt;svg/onload=prompt`xs`&gt;</textarea>!'
     );
   });
   it('should sanitize styles correctly', function() {

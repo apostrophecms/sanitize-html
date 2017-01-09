@@ -8,7 +8,7 @@
 
 `sanitize-html` allows you to specify the tags you want to permit, and the permitted attributes for each of those tags.
 
-If a tag is not permitted, the contents of the tag are still kept, except for script and style tags.
+If a tag is not permitted, the contents of the tag are still kept, except for `script`, `style` and `textarea` tags.
 
 The syntax of poorly closed `p` and `img` elements is cleaned up.
 
@@ -21,6 +21,43 @@ HTML comments are not preserved.
 `sanitize-html` is intended for use with Node. That's pretty much it. All of its npm dependencies are pure JavaScript. `sanitize-html` is built on the excellent `htmlparser2` module.
 
 ## How to use
+
+### Browser 
+
+*Think first: why do you want to use it in the browser?* Remember, *servers must never trust browsers.* You can't sanitize HTML for saving on the server anywhere else but on the server.
+
+But, perhaps you'd like to display sanitized HTML immediately in the browser for preview. Or ask the browser to do the sanitization work on every page load. You can if you want to!
+
+* Clone repository
+* Run npm install and build / minify:
+
+```bash
+npm install
+npm run minify
+```
+
+You'll find the minified and unminified versions of sanitize-html (with all its dependencies included) in the dist/ directory.
+
+Use it in the browser:
+
+```html
+<html>
+    <body>
+        <script type="text/javascript"  src="dist/sanitize-html.js"></script>
+        <script type="text/javascript" src="demo.js"></script>
+    </body>
+</html>
+```
+
+```javascript
+var html = "<strong>hello world</strong>";
+console.log(sanitizeHtml(html));
+console.log(sanitizeHtml("<img src=x onerror=alert('img') />"));
+console.log(sanitizeHtml("console.log('hello world')"));
+console.log(sanitizeHtml("<script>alert('hello world')</script>"));
+```
+
+### Node (Recommended)
 
 Install module from console:
 
@@ -184,6 +221,29 @@ simpleTransform(newTag, newAttributes, shouldMerge)
 
 The last parameter (`shouldMerge`) is set to `true` by default. When `true`, `simpleTransform` will merge the current attributes with the new ones (`newAttributes`). When `false`, all existing attributes are discarded.
 
+You can also add or modify the text contents of a tag:
+
+```js
+clean = sanitizeHtml(dirty, {
+  transformTags: {
+    'a': function(tagName, attribs) {
+        return {
+            tagName: 'a',
+            text: 'Some text'
+        };
+    }
+  }
+});
+```
+For example, you could transform a link element with missing anchor text:
+```js
+<a href="http://somelink.com"></a>
+```
+To a link with anchor text:
+```js
+<a href="http://somelink.com">Some text</a>
+```
+
 ### Filters
 
 You can provide a filter function to remove unwanted tags. Let's suppose we need to remove empty `a` tags like:
@@ -318,7 +378,17 @@ nonTextTags: [ 'style', 'script', 'textarea', 'noscript' ]
 
 Note that if you use this option you are responsible for stating the entire list. This gives you the power to retain the content of `textarea`, if you want to.
 
+The content still gets escaped properly, with the exception of the `script` and `style` tags. *Allowing either `script` or `style` leaves you open to XSS attacks. Don't do that* unless you have good reason to trust their origin.
+
 ## Changelog
+
+1.13.0: `transformTags` can now add text to an element that initially had none. Thanks to Dushyant Singh.
+
+1.12.0: option to build for browser-side use. Thanks to Michael Blum.
+
+1.11.4: fixed crash when `__proto__` is a tag name. Now using a safe check for the existence of properties in all cases. Thanks to Andrew Krasichkov.
+
+Fixed XSS attack vector via `textarea` tags (when explicitly allowed). Decided that `script` (obviously) and `style` (due to its own XSS vectors) cannot realistically be afforded any XSS protection if allowed, unless we add a full CSS parser. Thanks again to Andrew Krasichkov.
 
 1.11.3: bumped `htmlparser2` version to address crashing bug in older version. Thanks to e-jigsaw.
 
@@ -419,5 +489,3 @@ We're rocking our tests and have been working great in production for months, so
 Feel free to open issues on [github](http://github.com/punkave/sanitize-html).
 
 <a href="http://punkave.com/"><img src="https://raw.github.com/punkave/sanitize-html/master/logos/logo-box-builtby.png" /></a>
-
-

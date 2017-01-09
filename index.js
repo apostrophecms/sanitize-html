@@ -9,6 +9,11 @@ function each(obj, cb) {
   });
 }
 
+// Avoid false positives with .__proto__, .hasOwnProperty, etc.
+function has(obj, key) {
+  return ({}).hasOwnProperty.call(obj, key);
+}
+
 module.exports = sanitizeHtml;
 
 // Ignore the _recursing flag; it's there for recursive
@@ -72,7 +77,7 @@ function sanitizeHtml(html, options, _recursing) {
   each(options.allowedClasses, function(classes, tag) {
     // Implicitly allows the class attribute
     if(allowedAttributesMap) {
-      if (!allowedAttributesMap[tag]) {
+      if (!has(allowedAttributesMap, tag)) {
         allowedAttributesMap[tag] = [];
       }
       allowedAttributesMap[tag].push('class');
@@ -114,8 +119,9 @@ function sanitizeHtml(html, options, _recursing) {
       stack.push(frame);
 
       var skip = false;
+      var hasText = frame.text ? true : false;
       var transformedTag;
-      if (transformTagsMap[name]) {
+      if (has(transformTagsMap, name)) {
         transformedTag = transformTagsMap[name](name, attribs);
 
         frame.attribs = attribs = transformedTag.attribs;
@@ -153,12 +159,12 @@ function sanitizeHtml(html, options, _recursing) {
         return;
       }
       result += '<' + name;
-      if (!allowedAttributesMap || allowedAttributesMap[name] || allowedAttributesMap['*']) {
+      if (!allowedAttributesMap || has(allowedAttributesMap, name) || allowedAttributesMap['*']) {
         each(attribs, function(value, a) {
           if (!allowedAttributesMap ||
-              (allowedAttributesMap[name] && allowedAttributesMap[name].indexOf(a) !== -1 ) ||
+              (has(allowedAttributesMap, name) && allowedAttributesMap[name].indexOf(a) !== -1 ) ||
               (allowedAttributesMap['*'] && allowedAttributesMap['*'].indexOf(a) !== -1 ) ||
-              (allowedAttributesGlobMap[name] && allowedAttributesGlobMap[name].test(a)) ||
+              (has(allowedAttributesGlobMap, name) && allowedAttributesGlobMap[name].test(a)) ||
               (allowedAttributesGlobMap['*'] && allowedAttributesGlobMap['*'].test(a))) {
             if ((a === 'href') || (a === 'src')) {
               if (naughtyHref(name, value)) {
@@ -200,6 +206,9 @@ function sanitizeHtml(html, options, _recursing) {
         result += " />";
       } else {
         result += ">";
+        if (frame.innerText && !hasText && !options.textFilter) {
+          result += frame.innerText;
+        }
       }
     },
     ontext: function(text) {
@@ -215,7 +224,11 @@ function sanitizeHtml(html, options, _recursing) {
         text = lastFrame.innerText !== undefined ? lastFrame.innerText : text;
       }
 
-      if (nonTextTagsArray.indexOf(tag) !== -1) {
+      if ((tag === 'script') || (tag === 'style')) {
+        // htmlparser2 gives us these as-is. Escaping them ruins the content. Allowing
+        // script tags is, by definition, game over for XSS protection, so if that's
+        // your concern, don't allow them. The same is essentially true for style tags
+        // which have their own collection of XSS vectors.
         result += text;
       } else {
         var escaped = escapeHtml(text);
@@ -303,7 +316,7 @@ function sanitizeHtml(html, options, _recursing) {
     }
     var scheme = matches[1].toLowerCase();
 
-    if (options.allowedSchemesByTag[name]) {
+    if (has(options.allowedSchemesByTag, name)) {
       return options.allowedSchemesByTag[name].indexOf(scheme) === -1;
     }
 
