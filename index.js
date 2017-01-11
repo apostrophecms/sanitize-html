@@ -296,8 +296,8 @@ function sanitizeHtml(html, options, _recursing) {
     // Case insensitive so we don't get faked out by JAVASCRIPT #1
     var matches = href.match(/^([a-zA-Z]+)\:/);
     if (!matches) {
-      // No scheme = no way to inject js (right?)
-      return false;
+      // No scheme, "//some.domain.co/nasty" or "some.domain.co/nasty"
+      return options.allowProtocolRelative;
     }
     var scheme = matches[1].toLowerCase();
 
@@ -340,7 +340,8 @@ sanitizeHtml.defaults = {
   selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
   // URL schemes we permit
   allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
-  allowedSchemesByTag: {}
+  allowedSchemesByTag: {},
+  allowProtocolRelative: true
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {
