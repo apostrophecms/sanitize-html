@@ -296,8 +296,13 @@ function sanitizeHtml(html, options, _recursing) {
     // Case insensitive so we don't get faked out by JAVASCRIPT #1
     var matches = href.match(/^([a-zA-Z]+)\:/);
     if (!matches) {
-      // No scheme, "//some.domain.co/nasty" or "some.domain.co/nasty"
-      return options.allowProtocolRelative;
+      // Protocol-relative URL: "//some.evil.com/nasty"
+      if (href.match(/^\/\//)) {
+        return options.allowProtocolRelative;
+      }
+
+      // No scheme: "some.evil.com/nasty"
+      return true;
     }
     var scheme = matches[1].toLowerCase();
 
