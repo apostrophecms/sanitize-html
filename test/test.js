@@ -514,4 +514,22 @@ describe('sanitizeHtml', function() {
       ), '!<textarea>&lt;/textarea&gt;&lt;svg/onload=prompt`xs`&gt;</textarea>!'
     );
   });
+  it('should allow protocol relative links by default', function() {
+    assert.equal(
+      sanitizeHtml('<a href="//cnn.com/example">test</a>'),
+      '<a href="//cnn.com/example">test</a>'
+    );
+  });
+  it('should not allow protocol relative links when allowProtocolRelative is false', function() {
+    assert.equal(
+      sanitizeHtml('<a href="//cnn.com/example">test</a>', { allowProtocolRelative: false }),
+      '<a>test</a>'
+    );
+  });
+  it('should still allow regular relative URLs when allowProtocolRelative is false', function() {
+    assert.equal(
+      sanitizeHtml('<a href="/welcome">test</a>', { allowProtocolRelative: false }),
+      '<a href="/welcome">test</a>'
+    );
+  });
 });

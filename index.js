@@ -298,7 +298,7 @@ function sanitizeHtml(html, options, _recursing) {
     if (!matches) {
       // Protocol-relative URL: "//some.evil.com/nasty"
       if (href.match(/^\/\//)) {
-        return options.allowProtocolRelative;
+        return !options.allowProtocolRelative;
       }
 
       // No scheme

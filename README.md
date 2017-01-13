@@ -359,6 +359,8 @@ The content still gets escaped properly, with the exception of the `script` and 
 
 ## Changelog
 
+1.14.0: the new `allowProtocolRelative` option, which is set to `true` by default, allows you to decline to accept URLs that start with `//` and thus point to a different host using the current protocol. If you do **not** want to permit this, set this option to `false`. This is fully backwards compatible because the default behavior is to allow them. Thanks to Luke Bernard.
+
 1.13.0: `transformTags` can now add text to an element that initially had none. Thanks to Dushyant Singh.
 
 1.12.0: option to build for browser-side use. Thanks to Michael Blum.
