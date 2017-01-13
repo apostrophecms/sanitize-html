@@ -296,7 +296,12 @@ function sanitizeHtml(html, options, _recursing) {
     // Case insensitive so we don't get faked out by JAVASCRIPT #1
     var matches = href.match(/^([a-zA-Z]+)\:/);
     if (!matches) {
-      // No scheme = no way to inject js (right?)
+      // Protocol-relative URL: "//some.evil.com/nasty"
+      if (href.match(/^\/\//)) {
+        return options.allowProtocolRelative;
+      }
+
+      // No scheme
       return false;
     }
     var scheme = matches[1].toLowerCase();
@@ -340,7 +345,8 @@ sanitizeHtml.defaults = {
   selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
   // URL schemes we permit
   allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
-  allowedSchemesByTag: {}
+  allowedSchemesByTag: {},
+  allowProtocolRelative: true
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {
