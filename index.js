@@ -301,8 +301,8 @@ function sanitizeHtml(html, options, _recursing) {
         return options.allowProtocolRelative;
       }
 
-      // No scheme: "some.evil.com/nasty"
-      return true;
+      // No scheme
+      return false;
     }
     var scheme = matches[1].toLowerCase();
 
