@@ -299,6 +299,7 @@ function sanitizeHtml(html, options, _recursing) {
       return false;
     }
 
+    // Extract the domain and subdomains from href
     // Test RegExp here: https://regex101.com/r/mfYho7/9/tests
     var matches = href.match(/^(?:[a-z]+:)?(?:\/\/)?(?:[^@]+@)?([^:\/]+)/i);
     return !allowedDomainsRe.test(matches[1]);
