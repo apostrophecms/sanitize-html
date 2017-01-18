@@ -119,7 +119,7 @@ describe('sanitizeHtml', function() {
       return {
         tagName: 'ul',
         attribs: attribs
-      }
+      };
     }}, allowedAttributes: { ul: ['bar', 'class'] } }), '<ul class="foo" bar="bar"><li>Hello world</li></ul>');
   });
 
@@ -129,7 +129,7 @@ describe('sanitizeHtml', function() {
         tagName: tagName,
         attribs: attribs,
         text: ''
-      }
+      };
     }}}), '<a href="http://somelink"></a>');
   });
   it('should replace text and attributes when they are changed by transforming function and textFilter is set', function () {
@@ -138,7 +138,7 @@ describe('sanitizeHtml', function() {
         tagName: tagName,
         attribs: attribs,
         text: 'some text need"to<be>filtered'
-      }
+      };
     }}, textFilter: function (text) {
       return text.replace(/\s/g, '_');
     }}), '<a href="http://somelink">some_text_need&quot;to&lt;be&gt;filtered</a>');
@@ -150,7 +150,7 @@ describe('sanitizeHtml', function() {
         tagName: tagName,
         attribs: attribs,
         text: 'some new text'
-      }
+      };
     }}}), '<a href="http://somelink">some new text</a>');
   });
 
@@ -159,7 +159,7 @@ describe('sanitizeHtml', function() {
       return {
         tagName: tagName,
         attribs: attribs
-      }
+      };
     }}}), '<a href="http://somelink">some initial text</a>');
   });
 
@@ -366,7 +366,7 @@ describe('sanitizeHtml', function() {
         }
       ),
       '<a target="_blank" href="test.html">test</a>'
-    )
+    );
   });
   it('should filter if exclusive filter does match after transforming tags', function() {
     assert.equal(
@@ -472,7 +472,7 @@ describe('sanitizeHtml', function() {
         }
       ),
       '<script>alert("&quot;This is cool but just ironically so I quoted it&quot;")</script>'
-    )
+    );
   });
   it('should process text nodes with provided function', function() {
     assert.equal(
@@ -530,6 +530,126 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<a href="/welcome">test</a>', { allowProtocolRelative: false }),
       '<a href="/welcome">test</a>'
+    );
+  });
+  it('should allow allowed domains', function() {
+    assert.equal(
+      sanitizeHtml('<a href="http://google.com">test</a>',
+        {
+           allowedDomains: ["google.com"]
+        }
+      ),
+      '<a href="http://google.com">test</a>'
+    );
+  });
+  it('should allow protocol relative URLs from allowed domains', function() {
+    assert.equal(
+      sanitizeHtml('<a href="//google.com">test</a>',
+        {
+           allowedDomains: ["google.com"]
+        }
+      ),
+      '<a href="//google.com">test</a>'
+    );
+  });
+  it('should allow subdomains from allowed domains', function() {
+    assert.equal(
+      sanitizeHtml('<a href="play.google.com">test</a>',
+        {
+           allowedDomains: ["google.com"]
+        }
+      ),
+      '<a href="play.google.com">test</a>'
+    );
+  });
+  it('should allow authorization URL from allowed domains', function() {
+    assert.equal(
+      sanitizeHtml('<a href="http://user:pass@google.com/">test</a>',
+        {
+           allowedDomains: ["google.com"]
+        }
+      ),
+      '<a href="http://user:pass@google.com/">test</a>'
+    );
+  });
+  it('should allow deep URLs with params from allowed domains', function() {
+    assert.equal(
+      sanitizeHtml('<a href="http://google.com/store/apps/details?id=someId&otherParam=otherParam">test</a>',
+        {
+           allowedDomains: ["google.com"]
+        }
+      ),
+      '<a href="http://google.com/store/apps/details?id=someId&amp;otherParam=otherParam">test</a>'
+    );
+  });
+  it('should allow URL from allowed domains with complex TLDs', function() {
+    assert.equal(
+      sanitizeHtml('<a href="http://mplay.google.co.uk/">test</a>',
+        {
+           allowedDomains: ["google.co.uk"]
+        }
+      ),
+      '<a href="http://mplay.google.co.uk/">test</a>'
+    );
+  });
+  it('should not allow disallowed domains', function() {
+    assert.equal(
+      sanitizeHtml('<a href="http://yahoo.com">test</a>',
+        {
+           allowedDomains: ["google.com"]
+        }
+      ),
+      '<a>test</a>'
+    );
+  });
+  it('should not allow protocol relative URLs from disallowed domains', function() {
+    assert.equal(
+      sanitizeHtml('<a href="//yahoo.com">test</a>',
+        {
+           allowedDomains: ["google.com"]
+        }
+      ),
+      '<a>test</a>'
+    );
+  });
+  it('should not allow subdomains from disallowed domains', function() {
+    assert.equal(
+      sanitizeHtml('<a href="weather.yahoo.com">test</a>',
+        {
+           allowedDomains: ["google.com"]
+        }
+      ),
+      '<a>test</a>'
+    );
+  });
+  it('should not allow authorization URL from disallowed domains', function() {
+    assert.equal(
+      sanitizeHtml('<a href="http://user:pass@yahoo.com/">test</a>',
+        {
+           allowedDomains: ["google.com"]
+        }
+      ),
+      '<a>test</a>'
+    );
+  });
+  it('should not allow deep URLs with params from disallowed domains', function() {
+    assert.equal(
+      sanitizeHtml('<a href="http://yahoo.com/store/apps/details?id=someId&otherParam=otherParam">test</a>',
+        {
+           allowedDomains: ["google.com"]
+        }
+      ),
+      '<a>test</a>'
+    );
+  });
+  it('should not allow URL from disallowed domains with complex TLDs', function() {
+    assert.equal(
+      sanitizeHtml('<a href="http://weather.yahoo.co.in/">test</a>',
+        {
+           allowedDomains: ["google.co.uk"]
+        }
+      ),
+      '<a>test</a>'
     );
   });
 });

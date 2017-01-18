@@ -72,6 +72,16 @@ function sanitizeHtml(html, options, _recursing) {
       allowedAttributesGlobMap[tag] = new RegExp('^(' + globRegex.join('|') + ')$');
     });
   }
+  var allowedDomainsRe;
+  if (options.allowedDomains) {
+    var allowedDomainsBunch = "";
+    for (var f = 0; f < options.allowedDomains.length; f++) {
+      allowedDomainsBunch += options.allowedDomains[f] + "$|";
+    }
+    // remove the last "|"
+    allowedDomainsBunch = allowedDomainsBunch.slice(0, -1);
+    allowedDomainsRe = new RegExp(allowedDomainsBunch, "i");
+  }
   var allowedClassesMap = {};
   each(options.allowedClasses, function(classes, tag) {
     // Implicitly allows the class attribute
@@ -284,6 +294,16 @@ function sanitizeHtml(html, options, _recursing) {
     return s.replace(/\&/g, '&amp;').replace(/</g, '&lt;').replace(/\>/g, '&gt;').replace(/\"/g, '&quot;');
   }
 
+  function naughtyDomain(href) {
+    if (!options.allowedDomains) {
+      return false;
+    }
+
+    // Test RegExp here: https://regex101.com/r/mfYho7/9/tests
+    var matches = href.match(/^(?:[a-z]+:)?(?:\/\/)?(?:[^@]+@)?([^:\/]+)/i);
+    return !allowedDomainsRe.test(matches[1]);
+  }
+
   function naughtyHref(name, href) {
     // Browsers ignore character codes of 32 (space) and below in a surprising
     // number of situations. Start reading here:
@@ -293,6 +313,11 @@ function sanitizeHtml(html, options, _recursing) {
     // interpret inside an XML data island, allowing
     // a javascript: URL to be snuck through
     href = href.replace(/<\!\-\-.*?\-\-\>/g, '');
+
+    if (naughtyDomain(href)) {
+      return true;
+    }
+
     // Case insensitive so we don't get faked out by JAVASCRIPT #1
     var matches = href.match(/^([a-zA-Z]+)\:/);
     if (!matches) {
