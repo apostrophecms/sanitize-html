@@ -72,15 +72,16 @@ function sanitizeHtml(html, options, _recursing) {
       allowedAttributesGlobMap[tag] = new RegExp('^(' + globRegex.join('|') + ')$');
     });
   }
-  var allowedDomainsRe;
+  var allowedDomainsMap = {};
   if (options.allowedDomains) {
-    var allowedDomainsBunch = "";
-    for (var f = 0; f < options.allowedDomains.length; f++) {
-      allowedDomainsBunch += options.allowedDomains[f] + "$|";
-    }
-    // remove the last "|"
-    allowedDomainsBunch = allowedDomainsBunch.slice(0, -1);
-    allowedDomainsRe = new RegExp(allowedDomainsBunch, "i");
+    each(options.allowedDomains, function(domains, tag) {
+      allowedDomainsMap[tag] = [];
+      for (var f = 0; f < domains.length; f++) {
+        allowedDomainsMap[tag].push(quoteRegexp(domains[f]) + "$");
+      }
+
+      allowedDomainsMap[tag] = new RegExp(allowedDomainsMap[tag].join("|"), "i");
+    });
   }
   var allowedClassesMap = {};
   each(options.allowedClasses, function(classes, tag) {
@@ -294,15 +295,20 @@ function sanitizeHtml(html, options, _recursing) {
     return s.replace(/\&/g, '&amp;').replace(/</g, '&lt;').replace(/\>/g, '&gt;').replace(/\"/g, '&quot;');
   }
 
-  function naughtyDomain(href) {
+  function isDomainAllowed(tag, href) {
     if (!options.allowedDomains) {
-      return false;
+      return true;
     }
 
-    // Extract the domain and subdomains from href
     // Test RegExp here: https://regex101.com/r/mfYho7/9/tests
     var matches = href.match(/^(?:[a-z]+:)?(?:\/\/)?(?:[^@]+@)?([^:\/]+)/i);
-    return !allowedDomainsRe.test(matches[1]);
+    var domain = matches[1];
+
+    if (has(options.allowedDomains, tag) ) {
+      return allowedDomainsMap[tag].test(domain);
+    }
+
+    return true;
   }
 
   function naughtyHref(name, href) {
@@ -315,7 +321,7 @@ function sanitizeHtml(html, options, _recursing) {
     // a javascript: URL to be snuck through
     href = href.replace(/<\!\-\-.*?\-\-\>/g, '');
 
-    if (naughtyDomain(href)) {
+    if (!isDomainAllowed(name, href)) {
       return true;
     }
 

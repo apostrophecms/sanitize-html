@@ -536,7 +536,9 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<a href="http://google.com">test</a>',
         {
-           allowedDomains: ["google.com"]
+           allowedDomains: {
+             a: ["google.com"]
+           }
         }
       ),
       '<a href="http://google.com">test</a>'
@@ -546,7 +548,9 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<a href="//google.com">test</a>',
         {
-           allowedDomains: ["google.com"]
+           allowedDomains: {
+             a: ["google.com"]
+           }
         }
       ),
       '<a href="//google.com">test</a>'
@@ -556,7 +560,9 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<a href="play.google.com">test</a>',
         {
-           allowedDomains: ["google.com"]
+           allowedDomains: {
+             a: ["google.com"]
+           }
         }
       ),
       '<a href="play.google.com">test</a>'
@@ -566,7 +572,9 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<a href="http://user:pass@google.com/">test</a>',
         {
-           allowedDomains: ["google.com"]
+           allowedDomains: {
+             a: ["google.com"]
+           }
         }
       ),
       '<a href="http://user:pass@google.com/">test</a>'
@@ -576,7 +584,9 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<a href="http://google.com/store/apps/details?id=someId&otherParam=otherParam">test</a>',
         {
-           allowedDomains: ["google.com"]
+           allowedDomains: {
+             a: ["google.com"]
+           }
         }
       ),
       '<a href="http://google.com/store/apps/details?id=someId&amp;otherParam=otherParam">test</a>'
@@ -586,7 +596,9 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<a href="http://mplay.google.co.uk/">test</a>',
         {
-           allowedDomains: ["google.co.uk"]
+           allowedDomains: {
+             a: ["google.co.uk"]
+           }
         }
       ),
       '<a href="http://mplay.google.co.uk/">test</a>'
@@ -596,7 +608,9 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<a href="http://yahoo.com">test</a>',
         {
-           allowedDomains: ["google.com"]
+           allowedDomains: {
+             a: ["google.com"]
+           }
         }
       ),
       '<a>test</a>'
@@ -606,7 +620,9 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<a href="//yahoo.com">test</a>',
         {
-           allowedDomains: ["google.com"]
+           allowedDomains: {
+             a: ["google.com"]
+           }
         }
       ),
       '<a>test</a>'
@@ -616,7 +632,9 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<a href="weather.yahoo.com">test</a>',
         {
-           allowedDomains: ["google.com"]
+           allowedDomains: {
+             a: ["google.com"]
+           }
         }
       ),
       '<a>test</a>'
@@ -626,7 +644,9 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<a href="http://user:pass@yahoo.com/">test</a>',
         {
-           allowedDomains: ["google.com"]
+           allowedDomains: {
+             a: ["google.com"]
+           }
         }
       ),
       '<a>test</a>'
@@ -636,7 +656,9 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<a href="http://yahoo.com/store/apps/details?id=someId&otherParam=otherParam">test</a>',
         {
-           allowedDomains: ["google.com"]
+           allowedDomains: {
+             a: ["google.com"]
+           }
         }
       ),
       '<a>test</a>'
@@ -646,10 +668,53 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<a href="http://weather.yahoo.co.in/">test</a>',
         {
-           allowedDomains: ["google.co.uk"]
+           allowedDomains: {
+             a: ["google.co.uk"]
+           }
         }
       ),
       '<a>test</a>'
     );
   });
+
+  it('should differentiate in-between tags', function() {
+    var options = {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat(['iframe']),
+      allowedAttributes: {
+        a: ["href"],
+        iframe: ["src"]
+      },
+
+      allowedDomains: {
+        a: ["google.com"],
+        iframe: ["youtube.com", "vimeo.com"]
+      }
+    };
+
+    assert.equal(
+      sanitizeHtml('<a href="http://google.com/">test</a>', options),
+      '<a href="http://google.com/">test</a>'
+    );
+
+    assert.equal(
+      sanitizeHtml('<a href="http://yahoo.com/">test</a>', options),
+      '<a>test</a>'
+    );
+
+    assert.equal(
+      sanitizeHtml('<iframe src="https://www.youtube.com/watch?v=dQw4w9WgXcQ"></iframe>', options),
+      '<iframe src="https://www.youtube.com/watch?v=dQw4w9WgXcQ"></iframe>'
+    );
+
+    assert.equal(
+      sanitizeHtml('<iframe src="https://vimeo.com/45196609"></iframe>', options),
+      '<iframe src="https://vimeo.com/45196609"></iframe>'
+    );
+
+    assert.equal(
+      sanitizeHtml('<iframe src="http://www.dailymotion.com/video/x46d2"></iframe>', options),
+      '<iframe></iframe>'
+    );
+  });
+
 });
