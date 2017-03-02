@@ -532,6 +532,78 @@ describe('sanitizeHtml', function() {
       '<a href="/welcome">test</a>'
     );
   });
+  it('should allow allowed domains', function() {
+    assert.equal(
+      sanitizeHtml('<a href="http://google.com">test</a>',
+        {
+           allowedDomains: {
+             a: ["google.com"]
+           }
+        }
+      ),
+      '<a href="http://google.com">test</a>'
+    );
+  });
+  it('should allow protocol relative URLs from allowed domains', function() {
+    assert.equal(
+      sanitizeHtml('<a href="//google.com">test</a>',
+        {
+           allowedDomains: {
+             a: ["google.com"]
+           }
+        }
+      ),
+      '<a href="//google.com">test</a>'
+    );
+  });
+  it('should allow subdomains from allowed domains', function() {
+    assert.equal(
+      sanitizeHtml('<a href="play.google.com">test</a>',
+        {
+           allowedDomains: {
+             a: ["google.com"]
+           }
+        }
+      ),
+      '<a href="play.google.com">test</a>'
+    );
+  });
+  it('should allow authorization URL from allowed domains', function() {
+    assert.equal(
+      sanitizeHtml('<a href="http://user:pass@google.com/">test</a>',
+        {
+           allowedDomains: {
+             a: ["google.com"]
+           }
+        }
+      ),
+      '<a href="http://user:pass@google.com/">test</a>'
+    );
+  });
+  it('should allow deep URLs with params from allowed domains', function() {
+    assert.equal(
+      sanitizeHtml('<a href="http://google.com/store/apps/details?id=someId&otherParam=otherParam">test</a>',
+        {
+           allowedDomains: {
+             a: ["google.com"]
+           }
+        }
+      ),
+      '<a href="http://google.com/store/apps/details?id=someId&amp;otherParam=otherParam">test</a>'
+    );
+  });
+  it('should allow URL from allowed domains with complex TLDs', function() {
+    assert.equal(
+      sanitizeHtml('<a href="http://mplay.google.co.uk/">test</a>',
+        {
+           allowedDomains: {
+             a: ["google.co.uk"]
+           }
+        }
+      ),
+      '<a href="http://mplay.google.co.uk/">test</a>'
+    );
+  });
   it('should not allow disallowed domains', function() {
     assert.equal(
       sanitizeHtml('<a href="http://yahoo.com">test</a>',
