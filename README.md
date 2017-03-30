@@ -137,6 +137,20 @@ allowedTags: [],
 allowedAttributes: []
 ```
 
+#### "Can I control the domains embeded or linked in my HTML ?"
+
+Yes you can! Using the `allowedDomains` option, you can restrict domains for each tag.
+
+```js
+allowedDomains: {
+  a: ["google.com"],
+  iframe: ["youtube.com"]
+}
+```
+This will restrict link hrefs to google.com or any google.com subdomain and iframes sources will be restricted to youtube.com and any youtube.com subdomain.
+
+If a tag is not specified inside `allowedDomains`, any domain can be used for that tag.
+
 ### Wildcards for attributes
 
 You can use the `*` wildcard to allow all attributes with a certain prefix:
