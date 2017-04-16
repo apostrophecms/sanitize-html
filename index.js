@@ -20,6 +20,10 @@ module.exports = sanitizeHtml;
 // https://github.com/fb55/htmlparser2/issues/105
 
 function sanitizeHtml(html, options, _recursing) {
+  if (typeof html === "undefined" || html === null) {
+    return;
+  }
+  
   var result = '';
 
   function Frame(tag, attribs) {
