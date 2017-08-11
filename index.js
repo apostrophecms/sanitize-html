@@ -192,7 +192,7 @@ function sanitizeHtml(html, options, _recursing) {
       } else {
         result += ">";
         if (frame.innerText && !hasText && !options.textFilter) {
-          result += frame.innerText;
+          result += escapeHtml(frame.innerText);
         }
       }
     },
