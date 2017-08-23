@@ -77,10 +77,6 @@ function sanitizeHtml(html, options, _recursing) {
       allowedAttributesMap[tag].push('class');
     }
 
-    classes.map(function(clss) {
-      return quoteRegexp(clss).replace(/\\\*/g, '.*')
-    })
-
     allowedClassesMap[tag] = classes;
   });
 
