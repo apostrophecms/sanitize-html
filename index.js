@@ -1,6 +1,6 @@
 var htmlparser = require('htmlparser2');
 var extend = require('xtend');
-var quoteRegexp = require('regexp-quote');
+var quoteRegexp = require('lodash.escaperegexp');
 
 function each(obj, cb) {
   if (obj) Object.keys(obj).forEach(function (key) {
