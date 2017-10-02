@@ -31,8 +31,8 @@ function sanitizeHtml(html, options, _recursing) {
 
     this.updateParentNodeText = function() {
       if (stack.length) {
-          var parentFrame = stack[stack.length - 1];
-          parentFrame.text += that.text;
+        var parentFrame = stack[stack.length - 1];
+        parentFrame.text += that.text;
       }
     };
   }
@@ -91,7 +91,7 @@ function sanitizeHtml(html, options, _recursing) {
     var transFun;
     if (typeof transform === 'function') {
       transFun = transform;
-    } else if (typeof transform === "string") {
+    } else if (typeof transform === 'string') {
       transFun = sanitizeHtml.simpleTransform(transform);
     }
     if (tag === '*') {
@@ -101,15 +101,30 @@ function sanitizeHtml(html, options, _recursing) {
     }
   });
 
-  var depth = 0;
-  var stack = [];
-  var skipMap = {};
-  var transformMap = {};
-  var skipText = false;
-  var skipTextDepth = 0;
+  var depth;
+  var stack;
+  var skipMap;
+  var transformMap;
+  var skipText;
+  var skipTextDepth;
 
+  var initializeState = function(){
+    result = '';
+    depth = 0;
+    stack = [];
+    skipMap = {};
+    transformMap = {};
+    skipText = false;
+    skipTextDepth = 0;
+    return this;
+  };
+
+  initializeState();
   var parser = new htmlparser.Parser({
     onopentag: function(name, attribs) {
+      if (options.enforceHtmlBoundary && name === 'html'){
+        initializeState();
+      }
       if (skipText) {
         skipTextDepth++;
         return;
@@ -161,10 +176,10 @@ function sanitizeHtml(html, options, _recursing) {
       if (!allowedAttributesMap || has(allowedAttributesMap, name) || allowedAttributesMap['*']) {
         each(attribs, function(value, a) {
           if (!allowedAttributesMap ||
-              (has(allowedAttributesMap, name) && allowedAttributesMap[name].indexOf(a) !== -1 ) ||
-              (allowedAttributesMap['*'] && allowedAttributesMap['*'].indexOf(a) !== -1 ) ||
-              (has(allowedAttributesGlobMap, name) && allowedAttributesGlobMap[name].test(a)) ||
-              (allowedAttributesGlobMap['*'] && allowedAttributesGlobMap['*'].test(a))) {
+            (has(allowedAttributesMap, name) && allowedAttributesMap[name].indexOf(a) !== -1 ) ||
+            (allowedAttributesMap['*'] && allowedAttributesMap['*'].indexOf(a) !== -1 ) ||
+            (has(allowedAttributesGlobMap, name) && allowedAttributesGlobMap[name].test(a)) ||
+            (allowedAttributesGlobMap['*'] && allowedAttributesGlobMap['*'].test(a))) {
             if ((a === 'href') || (a === 'src')) {
               if (naughtyHref(name, value)) {
                 delete frame.attribs[a];
@@ -188,9 +203,9 @@ function sanitizeHtml(html, options, _recursing) {
         });
       }
       if (options.selfClosing.indexOf(name) !== -1) {
-        result += " />";
+        result += ' />';
       } else {
-        result += ">";
+        result += '>';
         if (frame.innerText && !hasText && !options.textFilter) {
           result += frame.innerText;
         }
@@ -224,8 +239,8 @@ function sanitizeHtml(html, options, _recursing) {
         }
       }
       if (stack.length) {
-           var frame = stack[stack.length - 1];
-           frame.text += text;
+        var frame = stack[stack.length - 1];
+        frame.text += text;
       }
     },
     onclosetag: function(name) {
@@ -244,7 +259,7 @@ function sanitizeHtml(html, options, _recursing) {
         // Do not crash on bad markup
         return;
       }
-      skipText = false;
+      skipText = options.enforceHtmlBoundary ? name === 'html' : false;
       depth--;
       if (skipMap[depth]) {
         delete skipMap[depth];
@@ -258,18 +273,18 @@ function sanitizeHtml(html, options, _recursing) {
       }
 
       if (options.exclusiveFilter && options.exclusiveFilter(frame)) {
-         result = result.substr(0, frame.tagPosition);
-         return;
+        result = result.substr(0, frame.tagPosition);
+        return;
       }
 
       frame.updateParentNodeText();
 
       if (options.selfClosing.indexOf(name) !== -1) {
-         // Already output />
-         return;
+        // Already output />
+        return;
       }
 
-      result += "</" + name + ">";
+      result += '</' + name + '>';
     }
   }, options.parser);
   parser.write(html);
@@ -346,7 +361,8 @@ sanitizeHtml.defaults = {
   // URL schemes we permit
   allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
   allowedSchemesByTag: {},
-  allowProtocolRelative: true
+  allowProtocolRelative: true,
+  enforceHtmlBoundary: false
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {
