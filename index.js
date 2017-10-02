@@ -116,7 +116,6 @@ function sanitizeHtml(html, options, _recursing) {
     transformMap = {};
     skipText = false;
     skipTextDepth = 0;
-    return this;
   };
 
   initializeState();
