@@ -115,7 +115,8 @@ selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', '
 // URL schemes we permit
 allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
 allowedSchemesByTag: {},
-allowProtocolRelative: true
+allowProtocolRelative: true,
+enforceHtmlBoundary: false
 ```
 
 #### "What if I want to allow all tags or all attributes?"
@@ -154,7 +155,15 @@ allowedAttributes: {
   '*': [ 'href', 'align', 'alt', 'center', 'bgcolor' ]
 }
 ```
+### Discarding text outside of ```<html></html>``` tags
 
+Sometimes various applications creating html as function of clipboard copy generate control characters after terminating html tag. By default sanitize-html will not discard these characters and return them in sanitized string. This behaviour can be modified using enforceHtmlBoundary option.
+
+Setting this option to true will instruct sanitize-html to discard all characters outside of html tag boundary which is before ```<html>``` and after ```</html>``` tag.
+
+```javascript
+enforceHtmlBoundary: true
+```
 ### htmlparser2 Options
 
 `santizeHtml` is built on `htmlparser2`. By default the only option passed down is `decodeEntities: true` You can set the options to pass by using the parser option.
