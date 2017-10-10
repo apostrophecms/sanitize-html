@@ -182,57 +182,57 @@ describe('sanitizeHtml', function() {
   });
 
   it('should skip an empty link', function() {
-    assert.strictEqual(
-      sanitizeHtml('<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>', {
-        exclusiveFilter: function (frame) {
-          return frame.tag === 'a' && !frame.text.trim();
-        }
-      }),
-      '<p>This is <br />Linux</p>'
-    );
-  });
+     assert.strictEqual(
+     sanitizeHtml('<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>', {
+             exclusiveFilter: function (frame) {
+                 return frame.tag === 'a' && !frame.text.trim();
+             }
+         }),
+         '<p>This is <br />Linux</p>'
+        );
+    });
 
-  it("Should expose a node's inner text and inner HTML to the filter", function() {
-    assert.strictEqual(
-      sanitizeHtml('<p>12<a href="http://www.linux.org"><br/>3<br></a><span>4</span></p>', {
-        exclusiveFilter : function(frame) {
-          if (frame.tag === 'p') {
-            assert.strictEqual(frame.text, '124');
-          } else if (frame.tag === 'a') {
-            assert.strictEqual(frame.text, '3');
-            return true;
-          } else if (frame.tag === 'br') {
-            assert.strictEqual(frame.text, '');
-          } else {
-            assert.fail('p, a, br', frame.tag);
-          }
-          return false;
-        }
-      }),
-      '<p>124</p>'
-    );
-  });
+    it("Should expose a node's inner text and inner HTML to the filter", function() {
+        assert.strictEqual(
+            sanitizeHtml('<p>12<a href="http://www.linux.org"><br/>3<br></a><span>4</span></p>', {
+                exclusiveFilter : function(frame) {
+                    if (frame.tag === 'p') {
+                        assert.strictEqual(frame.text, '124');
+                    } else if (frame.tag === 'a') {
+                        assert.strictEqual(frame.text, '3');
+                        return true;
+                    } else if (frame.tag === 'br') {
+                        assert.strictEqual(frame.text, '');
+                    } else {
+                        assert.fail('p, a, br', frame.tag);
+                    }
+                    return false;
+                }
+            }),
+            '<p>124</p>'
+        );
+    });
 
   it('Should collapse nested empty elements', function() {
-    assert.strictEqual(
-      sanitizeHtml('<p><a href="http://www.linux.org"><br/></a></p>', {
-        exclusiveFilter : function(frame) {
-          return (frame.tag === 'a' || frame.tag === 'p' ) && !frame.text.trim();
-        }
-      }),
-      ''
-    );
+        assert.strictEqual(
+            sanitizeHtml('<p><a href="http://www.linux.org"><br/></a></p>', {
+                    exclusiveFilter : function(frame) {
+                        return (frame.tag === 'a' || frame.tag === 'p' ) && !frame.text.trim();
+                    }
+                }),
+            ''
+        );
   });
   it('Exclusive filter should not affect elements which do not match the filter condition', function () {
-    assert.strictEqual(
-      sanitizeHtml('I love <a href="www.linux.org" target="_hplink">Linux</a> OS',
-        {
-          exclusiveFilter: function (frame) {
-            return (frame.tag === 'a') && !frame.text.trim();
-          }
-        }),
-      'I love <a href="www.linux.org" target="_hplink">Linux</a> OS'
-    );
+      assert.strictEqual(
+          sanitizeHtml('I love <a href="www.linux.org" target="_hplink">Linux</a> OS',
+              {
+                  exclusiveFilter: function (frame) {
+                      return (frame.tag === 'a') && !frame.text.trim();
+                  }
+              }),
+          'I love <a href="www.linux.org" target="_hplink">Linux</a> OS'
+      );
   });
   it('should disallow data URLs with default allowedSchemes', function() {
     assert.equal(
@@ -346,16 +346,16 @@ describe('sanitizeHtml', function() {
   });
   it('should allow only whitelisted attributes, but to any tags, if tag is declared as  "*"', function() {
     assert.equal(
-      sanitizeHtml(
-        '<table bgcolor="1" align="left" notlisted="0"><img src="1.gif" align="center" alt="not listed too"/></table>',
-        {
-          allowedTags: [ 'table', 'img' ],
-          allowedAttributes: {
-            '*': [ 'bgcolor', 'align', 'src' ]
-          }
-        }
-      ),
-      '<table bgcolor="1" align="left"><img src="1.gif" align="center" /></table>'
+        sanitizeHtml(
+            '<table bgcolor="1" align="left" notlisted="0"><img src="1.gif" align="center" alt="not listed too"/></table>',
+            {
+              allowedTags: [ 'table', 'img' ],
+              allowedAttributes: {
+                '*': [ 'bgcolor', 'align', 'src' ]
+              }
+            }
+        ),
+        '<table bgcolor="1" align="left"><img src="1.gif" align="center" /></table>'
     );
   });
   it('should not filter if exclusive filter does not match after transforming tags', function() {
@@ -523,7 +523,7 @@ describe('sanitizeHtml', function() {
   it('should not crash due to tag names that are properties of the universal Object prototype', function() {
     assert.equal(
       sanitizeHtml("!<__proto__>!"),
-      "!!");
+    "!!");
   });
   it('should correctly maintain escaping when allowing a nonTextTags tag other than script or style', function() {
     assert.equal(
