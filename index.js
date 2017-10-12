@@ -135,7 +135,7 @@ function sanitizeHtml(html, options, _recursing) {
       var hasText = frame.text ? true : false;
       var transformedTag;
       if (has(transformTagsMap, name)) {
-        transformedTag = transformTagsMap[name](name, attribs);
+        transformedTag = transformTagsMap[name](name, attribs, frame.text || "");
 
         frame.attribs = attribs = transformedTag.attribs;
 
@@ -232,7 +232,7 @@ function sanitizeHtml(html, options, _recursing) {
       } else {
         var escaped = escapeHtml(text);
         if (options.textFilter) {
-          result += options.textFilter(escaped);
+          result += options.textFilter(escaped,tag);
         } else {
           result += escaped;
         }

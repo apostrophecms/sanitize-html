@@ -236,7 +236,7 @@ You can also add or modify the text contents of a tag:
 ```js
 clean = sanitizeHtml(dirty, {
   transformTags: {
-    'a': function(tagName, attribs) {
+    'a': function(tagName, attribs, text) {
         return {
             tagName: 'a',
             text: 'Some text'
@@ -253,6 +253,7 @@ To a link with anchor text:
 ```js
 <a href="http://somelink.com">Some text</a>
 ```
+The additional text parameter provides current text of the tag you are transforming. You can use it for conditional processing or you can just return a completely new string.
 
 ### Filters
 
@@ -294,15 +295,28 @@ We can do that with the following filter:
 sanitizeHtml(
   '<p>some text...</p>',
   {
-    textFilter: function(text) {
-      return text.replace(/\.\.\./, '&hellip;');
+    textFilter: function(text,tag) {
+      if (tag === "p") {
+        text.replace(/\.\.\./, '&hellip;');
+      } else {
+        return text;
+      }
     }
   }
 );
 ```
 
-Note that the text passed to the `textFilter` method is already escaped for safe display as HTML. You may add markup and use entity escape sequences in your `textFilter`.
 
+Note that the text passed to the `textFilter` method is already escaped for safe display as HTML. You may add markup and use entity escape sequences in your `textFilter`.
+Also note, that the `tag` input parameter may be `undefined`, this could happen when you have text before any tag is opened. `textFilter` could be invoked several times per tag. Having the context of tag is important since it gives you opportunity to do some cleanup.
+
+Example:
+
+Here `textFilter` would be called once with undefined tag and value of `Hello`, twice for `html` tag with text values of `me` and `too`, and also twice for `body` tag, with text values of `foo` and `bar`. Naturally it would also be called once for `p` tag with text value of `some paragraph`.
+
+```javascript
+Hello<html>me<body>foo<p>some paragraph</p>bar</body>too</html>
+```
 ### Allowed CSS Classes
 
 If you wish to allow specific CSS classes on a particular element, you can do so with the `allowedClasses` option. Any other CSS classes are discarded.
