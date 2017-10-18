@@ -236,7 +236,7 @@ You can also add or modify the text contents of a tag:
 ```js
 clean = sanitizeHtml(dirty, {
   transformTags: {
-    'a': function(tagName, attribs, text) {
+    'a': function(tagName, attribs) {
         return {
             tagName: 'a',
             text: 'Some text'
@@ -253,7 +253,6 @@ To a link with anchor text:
 ```js
 <a href="http://somelink.com">Some text</a>
 ```
-The additional text parameter provides current text of the tag you are transforming. You can use it for conditional processing or you can just return a completely new string.
 
 ### Filters
 
