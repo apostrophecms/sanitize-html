@@ -135,7 +135,7 @@ function sanitizeHtml(html, options, _recursing) {
       var hasText = frame.text ? true : false;
       var transformedTag;
       if (has(transformTagsMap, name)) {
-        transformedTag = transformTagsMap[name](name, attribs, frame.text || "");
+        transformedTag = transformTagsMap[name](name, attribs);
 
         frame.attribs = attribs = transformedTag.attribs;
 
