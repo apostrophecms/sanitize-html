@@ -525,6 +525,18 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<a href="//cnn.com/example">test</a>', { allowProtocolRelative: false }),
       '<a>test</a>'
     );
+    assert.equal(
+      sanitizeHtml('<a href="/\\cnn.com/example">test</a>', { allowProtocolRelative: false }),
+      '<a>test</a>'
+    );
+    assert.equal(
+      sanitizeHtml('<a href="\\\\cnn.com/example">test</a>', { allowProtocolRelative: false }),
+      '<a>test</a>'
+    );
+    assert.equal(
+      sanitizeHtml('<a href="\\/cnn.com/example">test</a>', { allowProtocolRelative: false }),
+      '<a>test</a>'
+    );
   });
   it('should still allow regular relative URLs when allowProtocolRelative is false', function() {
     assert.equal(

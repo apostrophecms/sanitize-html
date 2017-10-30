@@ -296,8 +296,8 @@ function sanitizeHtml(html, options, _recursing) {
     // Case insensitive so we don't get faked out by JAVASCRIPT #1
     var matches = href.match(/^([a-zA-Z]+)\:/);
     if (!matches) {
-      // Protocol-relative URL: "//some.evil.com/nasty"
-      if (href.match(/^\/\//)) {
+      // Protocol-relative URL starting with any combination of '/' and '\'
+      if (href.match(/^[\/\\]{2}/)) {
         return !options.allowProtocolRelative;
       }
 
