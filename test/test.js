@@ -544,4 +544,30 @@ describe('sanitizeHtml', function() {
       '<a href="/welcome">test</a>'
     );
   });
+  it('should discard srcset by default', function() {
+    assert.equal(
+      sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />', {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ])
+      }),
+      '<img src="fallback.jpg" />'
+    );
+  });
+  it('should accept srcset if allowed', function() {
+    assert.equal(
+      sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />', {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
+        allowedAttributes: { img: [ 'src', 'srcset' ] }        
+      }),
+      '<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />'
+    );
+  });
+  it('should drop bogus srcset', function() {
+    assert.equal(
+      sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x, javascript:alert(1) 100w 2x" />', {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
+        allowedAttributes: { img: [ 'src', 'srcset' ] }        
+      }),
+      '<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />'
+    );
+  });
 });

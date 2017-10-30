@@ -366,6 +366,7 @@ The content still gets escaped properly, with the exception of the `script` and 
 
 ## Changelog
 
+1.15.0: if configured as an allowed attribute (not the default), check for naughty URLs in `srcset` attributes. Thanks to Mike Samuel for the nudge to do this and to Sindre Sorhus for the `srcset` module.
 1.14.3: inadvertent removal of lodash regexp quote dependency in 1.14.2 has been corrected.
 1.14.2: protocol-relative URL detection must spot URLs starting with `\\` rather than `//` due to ages-old tolerance features of web browsers, intended for sleepy Windows developers. Thanks to Martin Bajanik.
 1.14.1: documented `allowProtocolRelative` option. No code changes from 1.14.0, released a few moments ago.  
