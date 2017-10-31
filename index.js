@@ -1,6 +1,7 @@
 var htmlparser = require('htmlparser2');
 var extend = require('xtend');
-var quoteRegexp = require('regexp-quote');
+var quoteRegexp = require('lodash.escaperegexp');
+var srcset = require('srcset');
 
 function each(obj, cb) {
   if (obj) Object.keys(obj).forEach(function (key) {
@@ -11,6 +12,17 @@ function each(obj, cb) {
 // Avoid false positives with .__proto__, .hasOwnProperty, etc.
 function has(obj, key) {
   return ({}).hasOwnProperty.call(obj, key);
+}
+
+// Returns those elements of `a` for which `cb(a)` returns truthy
+function filter(a, cb) {
+  var n = [];
+  each(a, function(v) {
+    if (cb(v)) {
+      n.push(v);
+    }
+  });
+  return n;
 }
 
 module.exports = sanitizeHtml;
@@ -160,6 +172,7 @@ function sanitizeHtml(html, options, _recursing) {
       result += '<' + name;
       if (!allowedAttributesMap || has(allowedAttributesMap, name) || allowedAttributesMap['*']) {
         each(attribs, function(value, a) {
+          var parsed;
           if (!allowedAttributesMap ||
               (has(allowedAttributesMap, name) && allowedAttributesMap[name].indexOf(a) !== -1 ) ||
               (allowedAttributesMap['*'] && allowedAttributesMap['*'].indexOf(a) !== -1 ) ||
@@ -171,6 +184,34 @@ function sanitizeHtml(html, options, _recursing) {
                 return;
               }
             }
+
+            if (a === 'srcset') {
+              try {
+                var parsed = srcset.parse(value);
+                each(parsed, function(value) {
+                  if (naughtyHref('srcset', value.url)) {
+                    value.evil = true;
+                  }
+                });
+                parsed = filter(parsed, function(v) {
+                  return !v.evil;
+                });
+                if (!parsed.length) {
+                  delete frame.attribs[a];
+                  return;
+                } else {
+                  value = srcset.stringify(filter(parsed, function(v) {
+                    return !v.evil;
+                  }));
+                  frame.attribs[a] = value;
+                }
+              } catch (e) {
+                // Unparseable srcset
+                delete frame.attribs[a];
+                return;
+              }
+            }
+
             if (a === 'class') {
               value = filterClasses(value, allowedClassesMap[name]);
               if (!value.length) {
@@ -296,8 +337,8 @@ function sanitizeHtml(html, options, _recursing) {
     // Case insensitive so we don't get faked out by JAVASCRIPT #1
     var matches = href.match(/^([a-zA-Z]+)\:/);
     if (!matches) {
-      // Protocol-relative URL: "//some.evil.com/nasty"
-      if (href.match(/^\/\//)) {
+      // Protocol-relative URL starting with any combination of '/' and '\'
+      if (href.match(/^[\/\\]{2}/)) {
         return !options.allowProtocolRelative;
       }
 
@@ -338,7 +379,8 @@ sanitizeHtml.defaults = {
   allowedAttributes: {
     a: [ 'href', 'name', 'target' ],
     // We don't currently allow img itself by default, but this
-    // would make sense if we did
+    // would make sense if we did. You could add srcset here,
+    // and if you do the URL is checked for safety
     img: [ 'src' ]
   },
   // Lots of these won't come up by default because we don't allow them

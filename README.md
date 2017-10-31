@@ -366,8 +366,10 @@ The content still gets escaped properly, with the exception of the `script` and 
 
 ## Changelog
 
-1.14.1: documented `allowProtocolRelative` option. No code changes from 1.14.0, released a few moments ago.
-
+1.15.0: if configured as an allowed attribute (not the default), check for naughty URLs in `srcset` attributes. Thanks to Mike Samuel for the nudge to do this and to Sindre Sorhus for the `srcset` module.
+1.14.3: inadvertent removal of lodash regexp quote dependency in 1.14.2 has been corrected.
+1.14.2: protocol-relative URL detection must spot URLs starting with `\\` rather than `//` due to ages-old tolerance features of web browsers, intended for sleepy Windows developers. Thanks to Martin Bajanik.
+1.14.1: documented `allowProtocolRelative` option. No code changes from 1.14.0, released a few moments ago.  
 1.14.0: the new `allowProtocolRelative` option, which is set to `true` by default, allows you to decline to accept URLs that start with `//` and thus point to a different host using the current protocol. If you do **not** want to permit this, set this option to `false`. This is fully backwards compatible because the default behavior is to allow them. Thanks to Luke Bernard.
 
 1.13.0: `transformTags` can now add text to an element that initially had none. Thanks to Dushyant Singh.
