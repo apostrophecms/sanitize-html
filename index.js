@@ -27,6 +27,19 @@ function filter(a, cb) {
 
 module.exports = sanitizeHtml;
 
+// A valid attribute name.
+// We use a tolerant definition based on the set of strings defined by
+// html.spec.whatwg.org/multipage/parsing.html#before-attribute-name-state
+// and html.spec.whatwg.org/multipage/parsing.html#attribute-name-state .
+// The characters accepted are ones which can be appended to the attribute
+// name buffer without triggering a parse error:
+//   * unexpected-equals-sign-before-attribute-name
+//   * unexpected-null-character
+//   * unexpected-character-in-attribute-name
+// We exclude the empty string because it's impossible to get to the after
+// attribute name state with an empty attribute name buffer.
+const VALID_HTML_ATTRIBUTE_NAME = /^[^\0\t\n\f\r /<=>]+$/;
+
 // Ignore the _recursing flag; it's there for recursive
 // invocation as a guard against this exploit:
 // https://github.com/fb55/htmlparser2/issues/105
@@ -172,6 +185,12 @@ function sanitizeHtml(html, options, _recursing) {
       result += '<' + name;
       if (!allowedAttributesMap || has(allowedAttributesMap, name) || allowedAttributesMap['*']) {
         each(attribs, function(value, a) {
+          if (!VALID_HTML_ATTRIBUTE_NAME.test(a)) {
+            // This prevents part of an attribute name in the output from being
+            // interpreted as the end of an attribute, or end of a tag.
+            delete frame.attribs[a];
+            return;
+          }
           var parsed;
           if (!allowedAttributesMap ||
               (has(allowedAttributesMap, name) && allowedAttributesMap[name].indexOf(a) !== -1 ) ||
