@@ -570,4 +570,13 @@ describe('sanitizeHtml', function() {
       '<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />'
     );
   });
+  it('drop attribute names with meta-characters', function() {
+    assert.equal(
+      sanitizeHtml('<span data-<script>alert(1)//>', {
+        allowedTags: ['span'],
+        allowedAttributes: { 'span': ['data-*'] }
+      }),
+      '<span>alert(1)//&gt;</span>'
+    );
+  });
 });
