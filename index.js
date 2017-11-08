@@ -303,7 +303,7 @@ function sanitizeHtml(html, options, _recursing) {
     classes = classes.split(/\s+/);
     return classes.filter(function(clss) {
       return allowed.some(function(_allowed) {
-        var allowedRegex = new RegExp('^' + _allowed.split('*').join('.*') + '$');
+        var allowedRegex = new RegExp('^' + _allowed.split('*').join('.+') + '$');
 
         return clss.match(allowedRegex);
       })

@@ -264,6 +264,20 @@ describe('sanitizeHtml', function() {
       '<p>whee</p>'
     );
   });
+  it('Allowed class WILDCARD should only match one or more things (not zero or more)', function() {
+    assert.equal(
+      sanitizeHtml(
+        '<p class="nifty- nifty-a simple dippy">whee</p>',
+        {
+          allowedTags: [ 'p' ],
+          allowedClasses: {
+            p: [ 'nifty-*' ]
+          }
+        }
+      ),
+      '<p class="nifty-a">whee</p>'
+    );
+  });
   it('should allow defining schemes on a per-tag basis', function() {
     assert.equal(
       sanitizeHtml(
