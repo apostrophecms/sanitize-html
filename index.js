@@ -1,6 +1,7 @@
 var htmlparser = require('htmlparser2');
 var extend = require('xtend');
-var quoteRegexp = require('regexp-quote');
+var quoteRegexp = require('lodash.escaperegexp');
+var srcset = require('srcset');
 var css = require('css');
 
 function each(obj, cb) {
@@ -14,7 +15,31 @@ function has(obj, key) {
   return ({}).hasOwnProperty.call(obj, key);
 }
 
+// Returns those elements of `a` for which `cb(a)` returns truthy
+function filter(a, cb) {
+  var n = [];
+  each(a, function(v) {
+    if (cb(v)) {
+      n.push(v);
+    }
+  });
+  return n;
+}
+
 module.exports = sanitizeHtml;
+
+// A valid attribute name.
+// We use a tolerant definition based on the set of strings defined by
+// html.spec.whatwg.org/multipage/parsing.html#before-attribute-name-state
+// and html.spec.whatwg.org/multipage/parsing.html#attribute-name-state .
+// The characters accepted are ones which can be appended to the attribute
+// name buffer without triggering a parse error:
+//   * unexpected-equals-sign-before-attribute-name
+//   * unexpected-null-character
+//   * unexpected-character-in-attribute-name
+// We exclude the empty string because it's impossible to get to the after
+// attribute name state with an empty attribute name buffer.
+const VALID_HTML_ATTRIBUTE_NAME = /^[^\0\t\n\f\r /<=>]+$/;
 
 // Ignore the _recursing flag; it's there for recursive
 // invocation as a guard against this exploit:
@@ -161,6 +186,13 @@ function sanitizeHtml(html, options, _recursing) {
       result += '<' + name;
       if (!allowedAttributesMap || has(allowedAttributesMap, name) || allowedAttributesMap['*']) {
         each(attribs, function(value, a) {
+          if (!VALID_HTML_ATTRIBUTE_NAME.test(a)) {
+            // This prevents part of an attribute name in the output from being
+            // interpreted as the end of an attribute, or end of a tag.
+            delete frame.attribs[a];
+            return;
+          }
+          var parsed;
           if (!allowedAttributesMap ||
               (has(allowedAttributesMap, name) && allowedAttributesMap[name].indexOf(a) !== -1 ) ||
               (allowedAttributesMap['*'] && allowedAttributesMap['*'].indexOf(a) !== -1 ) ||
@@ -172,6 +204,34 @@ function sanitizeHtml(html, options, _recursing) {
                 return;
               }
             }
+
+            if (a === 'srcset') {
+              try {
+                var parsed = srcset.parse(value);
+                each(parsed, function(value) {
+                  if (naughtyHref('srcset', value.url)) {
+                    value.evil = true;
+                  }
+                });
+                parsed = filter(parsed, function(v) {
+                  return !v.evil;
+                });
+                if (!parsed.length) {
+                  delete frame.attribs[a];
+                  return;
+                } else {
+                  value = srcset.stringify(filter(parsed, function(v) {
+                    return !v.evil;
+                  }));
+                  frame.attribs[a] = value;
+                }
+              } catch (e) {
+                // Unparseable srcset
+                delete frame.attribs[a];
+                return;
+              }
+            }
+
             if (a === 'class') {
               value = filterClasses(value, allowedClassesMap[name]);
               if (!value.length) {
@@ -311,7 +371,12 @@ function sanitizeHtml(html, options, _recursing) {
     // Case insensitive so we don't get faked out by JAVASCRIPT #1
     var matches = href.match(/^([a-zA-Z]+)\:/);
     if (!matches) {
-      // No scheme = no way to inject js (right?)
+      // Protocol-relative URL starting with any combination of '/' and '\'
+      if (href.match(/^[\/\\]{2}/)) {
+        return !options.allowProtocolRelative;
+      }
+
+      // No scheme
       return false;
     }
     var scheme = matches[1].toLowerCase();
@@ -383,14 +448,16 @@ sanitizeHtml.defaults = {
   allowedAttributes: {
     a: [ 'href', 'name', 'target' ],
     // We don't currently allow img itself by default, but this
-    // would make sense if we did
+    // would make sense if we did. You could add srcset here,
+    // and if you do the URL is checked for safety
     img: [ 'src' ]
   },
   // Lots of these won't come up by default because we don't allow them
   selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
   // URL schemes we permit
   allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
-  allowedSchemesByTag: {}
+  allowedSchemesByTag: {},
+  allowProtocolRelative: true
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {

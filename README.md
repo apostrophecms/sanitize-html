@@ -114,7 +114,8 @@ allowedAttributes: {
 selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
 // URL schemes we permit
 allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
-allowedSchemesByTag: {}
+allowedSchemesByTag: {},
+allowProtocolRelative: true
 ```
 
 #### "What if I want to allow all tags or all attributes?"
@@ -362,6 +363,12 @@ allowedSchemesByTag: {
 }
 ```
 
+And you can forbid the use of protocol-relative URLs (starting with `//`) to access another site using the current protocol, which is allowed by default:
+
+```javascript
+allowProtocolRelative: false
+```
+
 ### Discarding the entire contents of a disallowed tag
 
 Normally, with a few exceptions, if a tag is not allowed, all of the text within it is preserved, and so are any allowed tags within it.
@@ -381,6 +388,12 @@ Note that if you use this option you are responsible for stating the entire list
 The content still gets escaped properly, with the exception of the `script` and `style` tags. *Allowing either `script` or `style` leaves you open to XSS attacks. Don't do that* unless you have good reason to trust their origin.
 
 ## Changelog
+
+1.15.0: if configured as an allowed attribute (not the default), check for naughty URLs in `srcset` attributes. Thanks to Mike Samuel for the nudge to do this and to Sindre Sorhus for the `srcset` module.
+1.14.3: inadvertent removal of lodash regexp quote dependency in 1.14.2 has been corrected.
+1.14.2: protocol-relative URL detection must spot URLs starting with `\\` rather than `//` due to ages-old tolerance features of web browsers, intended for sleepy Windows developers. Thanks to Martin Bajanik.
+1.14.1: documented `allowProtocolRelative` option. No code changes from 1.14.0, released a few moments ago.  
+1.14.0: the new `allowProtocolRelative` option, which is set to `true` by default, allows you to decline to accept URLs that start with `//` and thus point to a different host using the current protocol. If you do **not** want to permit this, set this option to `false`. This is fully backwards compatible because the default behavior is to allow them. Thanks to Luke Bernard.
 
 1.13.0: `transformTags` can now add text to an element that initially had none. Thanks to Dushyant Singh.
 

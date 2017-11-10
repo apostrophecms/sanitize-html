@@ -514,7 +514,72 @@ describe('sanitizeHtml', function() {
       ), '!<textarea>&lt;/textarea&gt;&lt;svg/onload=prompt`xs`&gt;</textarea>!'
     );
   });
-  it('should sanitize styles correctly', function() {
+  it('should allow protocol relative links by default', function() {
+    assert.equal(
+      sanitizeHtml('<a href="//cnn.com/example">test</a>'),
+      '<a href="//cnn.com/example">test</a>'
+    );
+  });
+  it('should not allow protocol relative links when allowProtocolRelative is false', function() {
+    assert.equal(
+      sanitizeHtml('<a href="//cnn.com/example">test</a>', { allowProtocolRelative: false }),
+      '<a>test</a>'
+    );
+    assert.equal(
+      sanitizeHtml('<a href="/\\cnn.com/example">test</a>', { allowProtocolRelative: false }),
+      '<a>test</a>'
+    );
+    assert.equal(
+      sanitizeHtml('<a href="\\\\cnn.com/example">test</a>', { allowProtocolRelative: false }),
+      '<a>test</a>'
+    );
+    assert.equal(
+      sanitizeHtml('<a href="\\/cnn.com/example">test</a>', { allowProtocolRelative: false }),
+      '<a>test</a>'
+    );
+  });
+  it('should still allow regular relative URLs when allowProtocolRelative is false', function() {
+    assert.equal(
+      sanitizeHtml('<a href="/welcome">test</a>', { allowProtocolRelative: false }),
+      '<a href="/welcome">test</a>'
+    );
+  });
+  it('should discard srcset by default', function() {
+    assert.equal(
+      sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />', {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ])
+      }),
+      '<img src="fallback.jpg" />'
+    );
+  });
+  it('should accept srcset if allowed', function() {
+    assert.equal(
+      sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />', {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
+        allowedAttributes: { img: [ 'src', 'srcset' ] }        
+      }),
+      '<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />'
+    );
+  });
+  it('should drop bogus srcset', function() {
+    assert.equal(
+      sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x, javascript:alert(1) 100w 2x" />', {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
+        allowedAttributes: { img: [ 'src', 'srcset' ] }        
+      }),
+      '<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />'
+    );
+  });
+  it('drop attribute names with meta-characters', function() {
+    assert.equal(
+      sanitizeHtml('<span data-<script>alert(1)//>', {
+        allowedTags: ['span'],
+        allowedAttributes: { 'span': ['data-*'] }
+      }),
+      '<span>alert(1)//&gt;</span>'
+    );
+  });
+   it('should sanitize styles correctly', function() {
     var sanitizeString = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right;"><u>test</u></li><li style="text-align: justify;"><u>test</u></li></ol> <p><u><span style="color:#00FF00;">test</span></u></p><p><span style="color:#00FF00"><span style="font-size:36px;">TESTETESTESTES</span></span></p></blockquote>';
     var expected = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right;"><u>test</u></li><li style="text-align: justify;"><u>test</u></li></ol> <p><u><span style="color:#00FF00;">test</span></u></p><p><span style="color:#00FF00;"><span style="font-size:36px;">TESTETESTESTES</span></span></p></blockquote>';
     assert.equal(
@@ -578,5 +643,5 @@ describe('sanitizeHtml', function() {
         }
       }), '<span style="color:yellow;"></span>'
     );
-  })
+  });
 });
