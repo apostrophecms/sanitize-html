@@ -1,6 +1,7 @@
 var htmlparser = require('htmlparser2');
 var extend = require('xtend');
 var quoteRegexp = require('lodash.escaperegexp');
+var cloneDeep = require('lodash.clonedeep')
 var srcset = require('srcset');
 var css = require('css');
 
@@ -241,8 +242,10 @@ function sanitizeHtml(html, options, _recursing) {
             }
             if (a === 'style') {
               try {
-                var ast = css.parse(name + " {" + value + "}");
-                var filteredAST = filterCss(ast);
+                var abstractSyntaxTree = css.parse(name + " {" + value + "}");
+                // console.log('im about to filter')
+                var filteredAST = filterCss(abstractSyntaxTree, options.allowedStyles);
+                // console.log(filteredAST)
                 value = css.stringify(filteredAST, {compress: true}).substr(name.length + 1).slice(0, -1);
                 if(value.length === 0) {
                   delete frame.attribs[a];
@@ -388,40 +391,62 @@ function sanitizeHtml(html, options, _recursing) {
     return !options.allowedSchemes || options.allowedSchemes.indexOf(scheme) === -1;
   }
 
-  function filterCss(ast) {
-    var originalAst = ast;
-    // there should only be one element in the ast array based on how we set it up
-    ast = ast.stylesheet.rules[0];
-    // Check if selector is in our allowed styles
-    if(options.allowedStyles) {
-      if(options.allowedStyles[ast.selectors[0]] || options.allowedStyles['*']) {
-        var allowedDeclarations = [];
-        ast.declarations.forEach(function(value) {
-          // Is specific style allowed?
-          // First check if allowed in glob
-          if(options.allowedStyles['*']) {
-            if(options.allowedStyles['*'][value.property]) {
-              if(options.allowedStyles['*'][value.property] === '*' || options.allowedStyles['*'][value.property].indexOf(value.value) > -1) {
-                allowedDeclarations.push(value);
-              }
-            }
-          } else if (options.allowedStyles[ast.selectors[0]]) {
-            if(options.allowedStyles[ast.selectors[0]][value.property]) {
-              if(options.allowedStyles[ast.selectors[0]][value.property] === '*' || options.allowedStyles[ast.selectors[0]][value.property].indexOf(value.value) > -1) {
-                allowedDeclarations.push(value);
-              }
-            }
-          }
-        });
-        originalAst.stylesheet.rules[0].declarations = allowedDeclarations;
-        return originalAst;
-      } else {
-        return false;
-      }
-    } else {
-      return originalAst;
-    }
+/**
+   * Filters user input css properties by whitelisted regex attributes.
+   *
+   * @param {object} abstractSyntaxTree - Object representation of CSS attributes.
+   * @property {string} abstractSyntaxTree.type - Typically 'stylesheet'.
+   * @property {object} abstractSyntaxTree.stylesheet
+   * @property {array[object]} abstractSyntaxTree.stylesheet.rules - Contains properties and values per style
+   * @property {array[object]} abstractSyntaxTree.parsingErrors
+   * @param {object} allowedStyles - Keys are properties (i.e color), value is list of permitted regex rules (i.e /green/i).
+   * @return {object}                    - Abstract Syntax Tree with filtered style attributes.
+   */
+function filterCss(abstractSyntaxTree, allowedStyles) {
+  'use strict';
+  if (!allowedStyles) {
+    return abstractSyntaxTree;
   }
+
+  var filteredAST = cloneDeep(abstractSyntaxTree);
+  // There should only be one element in the abstractSyntaxTree array based on how we set it up
+  var astRules = abstractSyntaxTree.stylesheet.rules[0];
+  var selectedRule = allowedStyles[astRules.selectors[0]] || allowedStyles['*'];
+  // Check if selector is in our allowed styles
+
+  if (selectedRule) {
+    /**
+         * Filters the existing attributes for the given property. Discards any attributes
+         * which don't match the whitelist.
+         *
+         * @param  {object} attributeObject - Object representing the current css property.
+         * @property {string} type          - Typically 'declaration'.
+         * @property {string} property      - The CSS property, i.e 'color'.
+         * @property {string} value         - The corresponding value to the css property, i.e 'red'.
+         * @return {abstractSyntaxTree}     - Object representation of attributes and values.
+         */
+    var filteredDeclarations = astRules.declarations.reduce(function(
+      allowedDeclarationsList,
+      attributeObject
+    ) {
+      // If this property is whitelisted...
+      if (selectedRule.hasOwnProperty(attributeObject.property)) {
+        var matchesRegex = selectedRule[attributeObject.property].some(function(regularExpression) {
+          return regularExpression.test(attributeObject.value);
+        });
+
+        if (matchesRegex) {
+          allowedDeclarationsList.push(attributeObject);
+        }
+        return allowedDeclarationsList;
+      }
+    }, []);
+  }
+
+  filteredAST.stylesheet.rules[0].declarations = filteredDeclarations;
+
+  return filteredAST;
+}
 
   function filterClasses(classes, allowed) {
     if (!allowed) {
@@ -480,3 +505,73 @@ sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {
     };
   };
 };
+
+// console.log('im about to run')
+var myOptions = {
+  allowedTags: [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'ul', 'ol', 'li', 'strong', 'em', 'u', 'br', 'span' ],
+  allowedAttributes: {
+  'a': [ 'href', 'name', 'target', 'style' ],
+  '*': [ 'style' ]
+},
+  allowedStyles: {
+    '*': {
+      'color': [ /red/, /green/],
+      'font-family': [ 'helvetica' ]
+    }
+  },
+  // URL schemes we permit
+  allowedSchemes: [ 'http', 'https', 'mailto' ],
+  allowProtocolRelative: true
+}
+
+sanitizeHtml('<h1><a target="blank" href="https://www.google.com">BLAH BLAH</a></h1><p data-test="no" style="color: red; font-family: helvetica;"><span style="color: green;">Get a free</span> 6" Sub!</p>', myOptions)
+
+
+/**
+ * [filterCss description]
+ *
+ * @param  {object} abstractSyntaxTree - Object representation of CSS attributes
+ * @property {object} abstractSyntaxTree.type
+ * @property {object} abstractSyntaxTree.stylesheet
+ * @property {array[object]} abstractSyntaxTree.stylesheet
+ * @property {array[object]} abstractSyntaxTree.parsingErrors
+ * @return {object}                    [description]
+ */
+// function filterCss(abstractSyntaxTree, allowedStyles) {
+//   if (!allowedStyles) {
+//     return abstractSyntaxTree
+//   }
+//   console.log(abstractSyntaxTree)
+//   var originalAst = Object.assign({}, abstractSyntaxTree);
+//   // there should only be one element in the abstractSyntaxTree array based on how we set it up
+//   abstractSyntaxTree = abstractSyntaxTree.stylesheet.rules[0];
+//   // Check if selector is in our allowed styles
+//   if(options.allowedStyles) {
+//     if(options.allowedStyles[abstractSyntaxTree.selectors[0]] || options.allowedStyles['*']) {
+//       var allowedDeclarations = [];
+//       abstractSyntaxTree.declarations.forEach(function(value) {
+//         // Is specific style allowed?
+//         // First check if allowed in glob
+//         if(options.allowedStyles['*']) {
+//           if(options.allowedStyles['*'][value.property]) {
+//             if(options.allowedStyles['*'][value.property] === '*' || options.allowedStyles['*'][value.property].indexOf(value.value) > -1) {
+//               allowedDeclarations.push(value);
+//             }
+//           }
+//         } else if (options.allowedStyles[abstractSyntaxTree.selectors[0]]) {
+//           if(options.allowedStyles[abstractSyntaxTree.selectors[0]][value.property]) {
+//             if(options.allowedStyles[abstractSyntaxTree.selectors[0]][value.property] === '*' || options.allowedStyles[abstractSyntaxTree.selectors[0]][value.property].indexOf(value.value) > -1) {
+//               allowedDeclarations.push(value);
+//             }
+//           }
+//         }
+//       });
+//       originalAst.stylesheet.rules[0].declarations = allowedDeclarations;
+//       return originalAst;
+//     } else {
+//       return false;
+//     }
+//   } else {
+//     return originalAst;
+//   }
+// }

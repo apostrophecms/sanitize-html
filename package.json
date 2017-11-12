@@ -26,6 +26,7 @@
   "dependencies": {
     "css": "^2.2.1",
     "htmlparser2": "^3.9.0",
+    "lodash.clonedeep": "^4.5.0",
     "lodash.escaperegexp": "^4.1.2",
     "srcset": "^1.0.0",
     "xtend": "^4.0.0"
