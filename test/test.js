@@ -556,7 +556,7 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />', {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
-        allowedAttributes: { img: [ 'src', 'srcset' ] }        
+        allowedAttributes: { img: [ 'src', 'srcset' ] }
       }),
       '<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />'
     );
@@ -565,7 +565,7 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x, javascript:alert(1) 100w 2x" />', {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
-        allowedAttributes: { img: [ 'src', 'srcset' ] }        
+        allowedAttributes: { img: [ 'src', 'srcset' ] }
       }),
       '<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />'
     );
@@ -593,9 +593,10 @@ describe('sanitizeHtml', function() {
         },
         allowedStyles: {
           '*': {
-            'color': '*',
-            'text-align': ['left','right','center','justify','initial','inherit'],
-            'font-size': '*'
+            // Matches hex
+            'color': [/\#(0x)?[0-9a-f]+/i],
+            'text-align': [/left/, /right/, /center/, /justify/, /initial/, /inherit/],
+            'font-size': [/36px/]
           }
         }
       }).replace(/ /g,''), expected.replace(/ /g,'')
@@ -619,8 +620,8 @@ describe('sanitizeHtml', function() {
         },
         allowedStyles: {
           'span': {
-            "color": "blue",
-            "text-align": ['left']
+            "color": [/blue/],
+            "text-align": [/left/]
           }
         }
       }), '<span style="color:blue;"></span>'
@@ -628,20 +629,22 @@ describe('sanitizeHtml', function() {
   });
   it('Should allow a specific style from global', function() {
     assert.equal(
-      sanitizeHtml("<span style='color: yellow;'></span>", {
+      sanitizeHtml("<span style='color: yellow; text-align: center; font-family: helvetica;'></span>", {
         allowedTags: false,
         allowedAttributes: {
           "span": ["style"]
         },
         allowedStyles: {
           '*': {
-            "color": ["yellow"]
+            "color": [/yellow/],
+            "text-align": [/center/]
           },
           'span': {
-            "color": ["green"]
+            "color": [/green/],
+            "font-family": [/helvetica/]
           }
         }
-      }), '<span style="color:yellow;"></span>'
+      }), '<span style="color:yellow;text-align:center;font-family:helvetica;"></span>'
     );
   });
 });

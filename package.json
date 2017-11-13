@@ -28,6 +28,8 @@
     "htmlparser2": "^3.9.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.escaperegexp": "^4.1.2",
+    "lodash.isarray": "^4.0.0",
+    "lodash.mergewith": "^4.6.0",
     "srcset": "^1.0.0",
     "xtend": "^4.0.0"
   },
