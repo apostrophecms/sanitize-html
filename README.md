@@ -22,7 +22,7 @@ HTML comments are not preserved.
 
 ## How to use
 
-### Browser 
+### Browser
 
 *Think first: why do you want to use it in the browser?* Remember, *servers must never trust browsers.* You can't sanitize HTML for saving on the server anywhere else but on the server.
 
@@ -312,7 +312,7 @@ clean = sanitizeHtml(dirty, {
 
 ### Allowed CSS Styles
 
-If you wish to allow specific CSS _styles_ on a particular element, you can do that with the `allowedStyles` option.
+If you wish to allow specific CSS _styles_ on a particular element, you can do that with the `allowedStyles` option. Simply declare your desired attributes as regular expression options within an array for the given attribute. Specific elements will inherit whitelisted attributes from the global (\*) attribute.
 Any other CSS classes are discarded.
 
 This implies that the `style` attribute is allowed on that element
@@ -325,9 +325,14 @@ clean = sanitizeHtml(dirty, {
         },
         allowedStyles: {
           '*': {
-            'color': '*',
-            'text-align': ['left','right','center','justify','initial','inherit'],
-            'font-size': '*'
+            // Match HEX and RGB
+            'color': [/\#(0x)?[0-9a-f]+/i, /rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/],
+            'text-align': [/left/, /right/, /center/],
+            // Match any number with px, em, or %
+            'font-size': [/\d+[px|em|\%]/]
+          },
+          'p': {
+            'font-size': [/\d+rem/]
           }
         }
       });
