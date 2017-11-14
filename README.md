@@ -326,13 +326,13 @@ clean = sanitizeHtml(dirty, {
         allowedStyles: {
           '*': {
             // Match HEX and RGB
-            'color': [/\#(0x)?[0-9a-f]+/i, /rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/],
-            'text-align': [/left/, /right/, /center/],
+            'color': [/^\#(0x)?[0-9a-f]+$/i, /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/],
+            'text-align': [/^left$/, /^right$/, /^center$/],
             // Match any number with px, em, or %
-            'font-size': [/^\d+$[px|em|\%]/]
+            'font-size': [/^\d+$[px|em|\%]$/]
           },
           'p': {
-            'font-size': [/\d+rem/]
+            'font-size': [/^\d+rem$/]
           }
         }
       });
