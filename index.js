@@ -1,7 +1,7 @@
 var htmlparser = require('htmlparser2');
 var extend = require('xtend');
 var quoteRegexp = require('lodash.escaperegexp');
-var cloneDeep = require('lodash.clonedeep')
+var cloneDeep = require('lodash.clonedeep');
 var isArray = require('lodash.isarray');
 var mergeWith = require('lodash.mergewith');
 var srcset = require('srcset');
@@ -393,7 +393,7 @@ function sanitizeHtml(html, options, _recursing) {
     return !options.allowedSchemes || options.allowedSchemes.indexOf(scheme) === -1;
   }
 
-/**
+  /**
    * Filters user input css properties by whitelisted regex attributes.
    *
    * @param {object} abstractSyntaxTree  - Object representation of CSS attributes.
@@ -425,32 +425,8 @@ function sanitizeHtml(html, options, _recursing) {
       selectedRule = allowedStyles[astRules.selector] || allowedStyles['*'];
     }
 
-    /**
-     * Filters the existing attributes for the given property. Discards any attributes
-     * which don't match the whitelist.
-     *
-     * @param  {object} attributeObject - Object representing the current css property.
-     * @property {string} type          - Typically 'declaration'.
-     * @property {string} prop          - The CSS property, i.e 'color'.
-     * @property {string} value         - The corresponding value to the css property, i.e 'red'.
-     * @return {array[Declaration]}     - Object representation of attributes and values.
-     */
     if (selectedRule) {
-      var filteredDeclarations = astRules.nodes.reduce(function(allowedDeclarationsList, attributeObject) {
-        // If this property is whitelisted...
-        if (selectedRule.hasOwnProperty(attributeObject.prop)) {
-          var matchesRegex = selectedRule[attributeObject.prop].some(function(regularExpression) {
-            return regularExpression.test(attributeObject.value);
-          });
-
-          if (matchesRegex) {
-            allowedDeclarationsList.push(attributeObject);
-          }
-        }
-        return allowedDeclarationsList;
-      }, []);
-
-      filteredAST.nodes[0].nodes = filteredDeclarations;
+      filteredAST.nodes[0].nodes = astRules.nodes.reduce(filterDeclarations(selectedRule), []);
     }
 
     return filteredAST;
@@ -474,6 +450,33 @@ function sanitizeHtml(html, options, _recursing) {
       .join('');
   }
 
+  /**
+    * Filters the existing attributes for the given property. Discards any attributes
+    * which don't match the whitelist.
+    *
+    * @param  {object} selectedRule             - Example: { color: red, font-family: helvetica }
+    * @param  {array} allowedDeclarationsList   - List of declarations which pass whitelisting.
+    * @param  {object} attributeObject          - Object representing the current css property.
+    * @property {string} attributeObject.type   - Typically 'declaration'.
+    * @property {string} attributeObject.prop   - The CSS property, i.e 'color'.
+    * @property {string} attributeObject.value  - The corresponding value to the css property, i.e 'red'.
+    * @return {function}                        - When used in Array.reduce, will return an array of Declaration objects
+    */
+  function filterDeclarations(selectedRule) {
+    return function (allowedDeclarationsList, attributeObject) {
+      // If this property is whitelisted...
+      if (selectedRule.hasOwnProperty(attributeObject.prop)) {
+        var matchesRegex = selectedRule[attributeObject.prop].some(function(regularExpression) {
+          return regularExpression.test(attributeObject.value);
+        });
+
+        if (matchesRegex) {
+          allowedDeclarationsList.push(attributeObject);
+        }
+      }
+      return allowedDeclarationsList;
+    };
+  }
 
   function filterClasses(classes, allowed) {
     if (!allowed) {
