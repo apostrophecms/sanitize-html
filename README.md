@@ -312,10 +312,13 @@ clean = sanitizeHtml(dirty, {
 
 ### Allowed CSS Styles
 
-If you wish to allow specific CSS _styles_ on a particular element, you can do that with the `allowedStyles` option. Simply declare your desired attributes as regular expression options within an array for the given attribute. Specific elements will inherit whitelisted attributes from the global (\*) attribute.
-Any other CSS classes are discarded.
+If you wish to allow specific CSS _styles_ on a particular element, you can do that with the `allowedStyles` option. Simply declare your desired attributes as regular expression options within an array for the given attribute. Specific elements will inherit whitelisted attributes from the global (\*) attribute. Any other CSS classes are discarded.
 
-This implies that the `style` attribute is allowed on that element
+**You must also use `allowedAttributes`** to activate the `style` attribute for the relevant elements. Otherwise this feature will never come into play.
+
+**When constructing regular expressions, don't forget `^` and `$`.** It's not enough to say "the string should contain this." It must also say "and only this."
+
+**URLs in inline styles are NOT filtered by any mechanism other than your regular expression.**
 
 ```javascript
 clean = sanitizeHtml(dirty, {
@@ -394,6 +397,7 @@ The content still gets escaped properly, with the exception of the `script` and 
 
 ## Changelog
 
+1.16.0: support for sanitizing inline CSS styles, by specifying the allowed attributes and a regular expression for each. Thanks to Cameron Will and Michael Loschiavo.
 1.15.0: if configured as an allowed attribute (not the default), check for naughty URLs in `srcset` attributes. Thanks to Mike Samuel for the nudge to do this and to Sindre Sorhus for the `srcset` module.
 1.14.3: inadvertent removal of lodash regexp quote dependency in 1.14.2 has been corrected.
 1.14.2: protocol-relative URL detection must spot URLs starting with `\\` rather than `//` due to ages-old tolerance features of web browsers, intended for sleepy Windows developers. Thanks to Martin Bajanik.
