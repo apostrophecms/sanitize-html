@@ -255,6 +255,20 @@ describe('sanitizeHtml', function() {
       '<p class="nifty">whee</p>'
     );
   });
+  it('should allow specific classes when whitelisted with allowedClasses including WILDCARD', function() {
+    assert.equal(
+      sanitizeHtml(
+        '<p class="nifty-yolo simple dippy">whee</p>',
+        {
+          allowedTags: [ 'p' ],
+          allowedClasses: {
+            p: [ 'nifty-*' ]
+          }
+        }
+      ),
+      '<p class="nifty-yolo">whee</p>'
+    );
+  });
   it('should allow defining schemes on a per-tag basis', function() {
     assert.equal(
       sanitizeHtml(
