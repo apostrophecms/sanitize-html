@@ -42,7 +42,7 @@ module.exports = sanitizeHtml;
 //   * unexpected-character-in-attribute-name
 // We exclude the empty string because it's impossible to get to the after
 // attribute name state with an empty attribute name buffer.
-const VALID_HTML_ATTRIBUTE_NAME = /^[^\0\t\n\f\r /<=>]+$/;
+var VALID_HTML_ATTRIBUTE_NAME = /^[^\0\t\n\f\r /<=>]+$/;
 
 // Ignore the _recursing flag; it's there for recursive
 // invocation as a guard against this exploit:
