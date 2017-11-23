@@ -2,7 +2,6 @@ var htmlparser = require('htmlparser2');
 var extend = require('xtend');
 var quoteRegexp = require('lodash.escaperegexp');
 var cloneDeep = require('lodash.clonedeep');
-var isArray = require('lodash.isarray');
 var mergeWith = require('lodash.mergewith');
 var srcset = require('srcset');
 var postcss = require('postcss');
@@ -416,7 +415,7 @@ function sanitizeHtml(html, options, _recursing) {
         cloneDeep(allowedStyles[astRules.selector]),
         allowedStyles['*'],
         function(objValue, srcValue) {
-          if (isArray(objValue)) {
+          if (Array.isArray(objValue)) {
             return objValue.concat(srcValue);
           }
         }
