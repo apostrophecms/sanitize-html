@@ -2,10 +2,11 @@ var htmlparser = require('htmlparser2');
 var extend = require('xtend');
 var quoteRegexp = require('lodash.escaperegexp');
 var cloneDeep = require('lodash.clonedeep');
-var isArray = require('lodash.isarray');
 var mergeWith = require('lodash.mergewith');
 var srcset = require('srcset');
 var postcss = require('postcss');
+
+var isArray = Array.isArray;
 
 function each(obj, cb) {
   if (obj) Object.keys(obj).forEach(function (key) {
