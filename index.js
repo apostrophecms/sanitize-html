@@ -30,6 +30,11 @@ function filter(a, cb) {
 
 module.exports = sanitizeHtml;
 
+// Ignore the _recursing flag; it's there for recursive
+// invocation as a guard against this exploit:
+// https://github.com/fb55/htmlparser2/issues/105
+
+function sanitizeHtml(html, options, _recursing) {
 // A valid attribute name.
 // We use a tolerant definition based on the set of strings defined by
 // html.spec.whatwg.org/multipage/parsing.html#before-attribute-name-state
@@ -42,12 +47,6 @@ module.exports = sanitizeHtml;
 // We exclude the empty string because it's impossible to get to the after
 // attribute name state with an empty attribute name buffer.
 const VALID_HTML_ATTRIBUTE_NAME = /^[^\0\t\n\f\r /<=>]+$/;
-
-// Ignore the _recursing flag; it's there for recursive
-// invocation as a guard against this exploit:
-// https://github.com/fb55/htmlparser2/issues/105
-
-function sanitizeHtml(html, options, _recursing) {
   var result = '';
 
   function Frame(tag, attribs) {
