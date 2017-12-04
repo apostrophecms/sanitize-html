@@ -397,6 +397,8 @@ The content still gets escaped properly, with the exception of the `script` and 
 
 ## Changelog
 
+1.17.0: addition of `dist` directory for use with Bower.
+
 1.16.1: changelog formatting only.
 
 1.16.0: support for sanitizing inline CSS styles, by specifying the allowed attributes and a regular expression for each. Thanks to Cameron Will and Michael Loschiavo.

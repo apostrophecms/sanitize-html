@@ -1,0 +1,26 @@
+{
+  "name": "sanitize-html",
+  "description": "Clean up user-submitted HTML, preserving whitelisted elements and whitelisted attributes on a per-element basis",
+  "main": "/dist/sanitize-html.js",
+  "authors": [
+    "P'unk Avenue LLC"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "html",
+    "parser",
+    "sanitizer",
+    "html",
+    "sanitizer",
+    "apostrophe"
+  ],
+  "homepage": "https://github.com/podio/sanitize-html",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
