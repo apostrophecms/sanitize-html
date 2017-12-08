@@ -33,6 +33,9 @@
     "xtend": "^4.0.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babelify": "^8.0.0",
     "browserify": "^13.0.1",
     "mocha": "^2.5.3",
     "uglify-js": "^2.6.2"
