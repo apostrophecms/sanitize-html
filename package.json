@@ -2,12 +2,13 @@
   "name": "sanitize-html",
   "version": "1.16.1",
   "description": "Clean up user-submitted HTML, preserving whitelisted elements and whitelisted attributes on a per-element basis",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "browserify index.js > dist/sanitize-html.js --standalone 'sanitizeHtml'",
+    "prepare": "make clean && make all",
+    "build": "browserify dist/index.js > dist/sanitize-html.js --standalone 'sanitizeHtml'",
     "minify": "npm run build && uglifyjs dist/sanitize-html.js > dist/sanitize-html.min.js",
     "test": "mocha test/test.js",
-    "prebuild": "npm run test && rm -rf dist && mkdir dist"
+    "prebuild": "npm run test && npm run prepare"
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,9 @@
     "xtend": "^4.0.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babelify": "^8.0.0",
     "browserify": "^13.0.1",
     "mocha": "^2.5.3",
     "uglify-js": "^2.6.2"
