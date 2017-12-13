@@ -401,7 +401,11 @@ The content still gets escaped properly, with the exception of the `script` and 
 
 1.16.2: `sanitize-html` is now compiled with `babel`. An npm `prepublish` script takes care of this at `npm publish` time, so the latest code should always be compiled to operate all the way back to ES5 browsers and earlier versions of Node. Thanks to Ayushya Jaiswal.
 
-Please note that using `sanitize-html` in the browser for content before it is submitted to your server is usually a security hole. Are you trusting the browser? Anyone could bypass that using the network panel. Sanitization is best done either on the server after the repsonse is recieved, or just before content is inserted into the page and that is the primary use case for this module.
+Please note that using `sanitize-html` in the browser for content before it is submitted to your server is either a security hole or usability bug. Are you trusting the browser? Anyone could bypass that using the network panel. Sanitization is best done either on the server after the repsonse is recieved, or just before content is inserted into the page and that is the primary use case for this module.
+
+Tt's best to keep user data unsantized for as long as possible, only sanitizing it at the last possible moment before it's inserted into the page.
+
+If you santize content before it's inserted and blacklist `<em>` you can't then change the rules without un-santizing your database content and re-sanitizing. If you santize only when the content is inserted into the page you can change your mind on whitelisted elements at any time.
 
 1.16.1: changelog formatting only.
 
