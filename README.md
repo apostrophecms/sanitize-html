@@ -401,7 +401,7 @@ The content still gets escaped properly, with the exception of the `script` and 
 
 1.16.2: `sanitize-html` is now compiled with `babel`. An npm `prepublish` script takes care of this at `npm publish` time, so the latest code should always be compiled to operate all the way back to ES5 browsers and earlier versions of Node. Thanks to Ayushya Jaiswal.
 
-Please note that running `sanitize-html` in the browser is usually a security hole. Are you trusting the browser? Anyone could bypass that using the network panel. Sanitization is almost always best done on servers and that is the primary use case for this module.
+Please note that using `sanitize-html` in the browser for content before it is submitted to your server is usually a security hole. Are you trusting the browser? Anyone could bypass that using the network panel. Sanitization is best done either on the server after the repsonse is recieved, or just before content is inserted into the page and that is the primary use case for this module.
 
 1.16.1: changelog formatting only.
 
