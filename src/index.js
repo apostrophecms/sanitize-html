@@ -206,7 +206,15 @@ function sanitizeHtml(html, options, _recursing) {
                 return;
               }
             }
-
+            if (name === 'iframe' && a === 'src') {
+              var whitelistedUrls = options.allowedUrls.filter(function(url) {
+                return value.includes(url);
+              })
+              if (!whitelistedUrls.length) {
+                delete frame.attribs[a];
+                return;
+              }
+            } 
             if (a === 'srcset') {
               try {
                 var parsed = srcset.parse(value);
@@ -233,7 +241,6 @@ function sanitizeHtml(html, options, _recursing) {
                 return;
               }
             }
-
             if (a === 'class') {
               value = filterClasses(value, allowedClassesMap[name]);
               if (!value.length) {
@@ -511,7 +518,9 @@ sanitizeHtml.defaults = {
   // URL schemes we permit
   allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
   allowedSchemesByTag: {},
-  allowProtocolRelative: true
+  allowProtocolRelative: true,
+  // Allowed urls we permit to be included in src attribute of an iframe tag
+  allowedUrls: ['youtube.com', 'vimeo.com']
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {

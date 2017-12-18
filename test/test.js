@@ -647,4 +647,22 @@ describe('sanitizeHtml', function() {
       }), '<span style="color:yellow;text-align:center;font-family:helvetica;"></span>'
     );
   });
+  it('Should allow only urls in an iframe that are whitelisted', function() {
+    assert.equal(
+      sanitizeHtml("<iframe src='https://www.youtube.com/embed/c2IlcS7AHxM'></iframe>", {
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
+        allowedUrls: ['youtube.com', 'vimeo.com']
+      }), '<iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>'
+    );
+  });
+  it('Should remove iframe src urls that are not whitelisted', function() {
+    assert.equal(
+      sanitizeHtml("<iframe src='https://www.embed.vevo.com/USUV71704255'></iframe>", {
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
+        allowedUrls: ['youtube.com', 'vimeo.com']
+      }), '<iframe></iframe>'
+    );
+  });
 });
