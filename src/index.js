@@ -207,7 +207,7 @@ function sanitizeHtml(html, options, _recursing) {
               }
             }
             if (name === 'iframe' && a === 'src') {
-              var whitelistedUrls = options.allowedUrls.filter(function(url) {
+              var whitelistedUrls = options.allowedIframeDomains.filter(function(url) {
                 return value.includes(url);
               })
               if (!whitelistedUrls.length) {
@@ -505,13 +505,16 @@ var htmlParserDefaults = {
 sanitizeHtml.defaults = {
   allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
     'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
-    'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre' ],
+    'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'iframe' ],
   allowedAttributes: {
     a: [ 'href', 'name', 'target' ],
     // We don't currently allow img itself by default, but this
     // would make sense if we did. You could add srcset here,
     // and if you do the URL is checked for safety
-    img: [ 'src' ]
+    img: [ 'src' ],
+    iframe: {
+      attributes: 'src',
+    }
   },
   // Lots of these won't come up by default because we don't allow them
   selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
@@ -519,8 +522,8 @@ sanitizeHtml.defaults = {
   allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
   allowedSchemesByTag: {},
   allowProtocolRelative: true,
-  // Allowed urls we permit to be included in src attribute of an iframe tag
-  allowedUrls: ['youtube.com', 'vimeo.com']
+  // Domains we permit to be included in src attribute of an iframe tag
+  allowedIframeDomains: ['youtube.com', 'vimeo.com']
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {
