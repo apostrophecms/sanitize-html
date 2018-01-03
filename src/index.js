@@ -4,6 +4,7 @@ var quoteRegexp = require('lodash.escaperegexp');
 var cloneDeep = require('lodash.clonedeep');
 var mergeWith = require('lodash.mergewith');
 var srcset = require('srcset');
+var url = require('url');
 var postcss = require('postcss');
 
 function each(obj, cb) {
@@ -207,10 +208,26 @@ function sanitizeHtml(html, options, _recursing) {
               }
             }
             if (name === 'iframe' && a === 'src') {
-              var whitelistedUrls = options.allowedIframeDomains.filter(function(url) {
-                return value.includes(url);
-              })
-              if (!whitelistedUrls.length) {
+              try {
+                var parsed = url.parse(value)
+                var whitelistedDomains = []
+                each(parsed, function(val, prop) {
+                  if (prop === 'hostname') {
+                    whitelistedDomains = options.allowedIframeDomains.filter(function(domain) {
+                      return val.includes(domain)
+                    })
+                  }
+                })
+        
+                if (!whitelistedDomains.length) {
+                  delete frame.attribs[a];
+                  return;
+                } else {
+                  value = url.format(parsed)
+                  frame.attribs[a] = value;
+                }
+              } catch (e) {
+                // Unparseable iframe src
                 delete frame.attribs[a];
                 return;
               }
@@ -511,10 +528,7 @@ sanitizeHtml.defaults = {
     // We don't currently allow img itself by default, but this
     // would make sense if we did. You could add srcset here,
     // and if you do the URL is checked for safety
-    img: [ 'src' ],
-    iframe: {
-      attributes: 'src',
-    }
+    img: [ 'src' ]
   },
   // Lots of these won't come up by default because we don't allow them
   selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],

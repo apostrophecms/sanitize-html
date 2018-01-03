@@ -656,9 +656,18 @@ describe('sanitizeHtml', function() {
       }), '<iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>'
     );
   });
-  it('Should remove iframe src domains that are not whitelisted', function() {
+  it('Should remove iframe src urls that are not inlcuded in whitelisted domains', function() {
     assert.equal(
       sanitizeHtml("<iframe src='https://www.embed.vevo.com/USUV71704255'></iframe>", {
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
+        allowedIframeDomains: ['youtube.com', 'vimeo.com']
+      }), '<iframe></iframe>'
+    );
+  });
+  it('Should not allow urls that do not have proper hostname', function() {
+    assert.equal(
+      sanitizeHtml("<iframe src='//www.youtube.com/embed/c2IlcS7AHxM'></iframe>", {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
         allowedIframeDomains: ['youtube.com', 'vimeo.com']

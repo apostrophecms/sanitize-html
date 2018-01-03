@@ -302,7 +302,13 @@ Note that the text passed to the `textFilter` method is already escaped for safe
 
 If you would like to allow iframe tags but want to control the domains that are allowed through you can provide an array of domains that you would like to allow as iframe sources. This domain is a property in the options object passed as an argument to the `sanitze-html` function. 
 
-This array will be checked against the html that is passed to the function and return only `src` urls that include the allowed domains in the object. 
+This array will be checked against the html that is passed to the function and return only `src` urls that include the allowed domains in the object. The url in the html that is passed must be formatted correctly (valid hostname) as an embedded iframe otherwise the module will strip out the src from the iframe. 
+
+You can get specific with the domain by specifying the allowed hostname i.e.: 
+
+```javascript
+  allowedIframeDomains: ['www.youtube.com', 'player.vimeo.com']
+```
 
 **Remember that the `iframe` tag must be allowed as well as the `src` attribute.**
 
@@ -330,9 +336,11 @@ clean = sanitizeHtml(<p><iframe src="https://www.youtube.net/embed/nykIhs12345">
   },
   allowedIframeDomains: ['youtube.com', 'twitch.tv']
 });
+```
 
 or 
 
+```javascript
 clean = sanitizeHtml(<p><iframe src="https://www.vimeo/video/12345"></iframe><p>, {
   allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
   allowedClasses: {
