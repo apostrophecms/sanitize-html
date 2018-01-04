@@ -652,7 +652,7 @@ describe('sanitizeHtml', function() {
       sanitizeHtml("<iframe src='https://www.youtube.com/embed/c2IlcS7AHxM'></iframe>", {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
-        allowedIframeDomains: ['youtube.com', 'vimeo.com']
+        allowedIframeDomains: ['www.youtube.com', 'player.vimeo.com']
       }), '<iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>'
     );
   });
@@ -661,16 +661,16 @@ describe('sanitizeHtml', function() {
       sanitizeHtml("<iframe src='https://www.embed.vevo.com/USUV71704255'></iframe>", {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
-        allowedIframeDomains: ['youtube.com', 'vimeo.com']
+        allowedIframeDomains: ['www.youtube.com', 'player.vimeo.com']
       }), '<iframe></iframe>'
     );
   });
-  it('Should not allow urls that do not have proper hostname', function() {
+  it('Should not allow iframe urls that do not have proper hostname', function() {
     assert.equal(
-      sanitizeHtml("<iframe src='//www.youtube.com/embed/c2IlcS7AHxM'></iframe>", {
+      sanitizeHtml("<iframe src='//www.vimeo.com/embed/c2IlcS7AHxM'></iframe>", {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
-        allowedIframeDomains: ['youtube.com', 'vimeo.com']
+        allowedIframeDomains: ['www.youtube.com', 'player.vimeo.com']
       }), '<iframe></iframe>'
     );
   });

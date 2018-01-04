@@ -304,7 +304,7 @@ If you would like to allow iframe tags but want to control the domains that are 
 
 This array will be checked against the html that is passed to the function and return only `src` urls that include the allowed domains in the object. The url in the html that is passed must be formatted correctly (valid hostname) as an embedded iframe otherwise the module will strip out the src from the iframe. 
 
-You can get specific with the domain by specifying the allowed hostname i.e.: 
+Make sure to pass a valid hostname along with the domain you wish to allow, i.e.: 
 
 ```javascript
   allowedIframeDomains: ['www.youtube.com', 'player.vimeo.com']
@@ -321,7 +321,7 @@ clean = sanitizeHtml(<p><iframe src="https://www.youtube.com/embed/nykIhs12345">
     'p': [ 'fancy', 'simple' ],
     'iframe': ['src']
   },
-  allowedIframeDomains: ['youtube.com', 'twitch.tv']
+  allowedIframeDomains: ['www.youtube.com', 'player.vimeo.com']
 });
 ```
 
@@ -334,7 +334,7 @@ clean = sanitizeHtml(<p><iframe src="https://www.youtube.net/embed/nykIhs12345">
     'p': [ 'fancy', 'simple' ],
     'iframe': ['src']
   },
-  allowedIframeDomains: ['youtube.com', 'twitch.tv']
+  allowedIframeDomains: ['www.youtube.com', 'player.vimeo.com']
 });
 ```
 
@@ -346,9 +346,8 @@ clean = sanitizeHtml(<p><iframe src="https://www.vimeo/video/12345"></iframe><p>
   allowedClasses: {
     'p': [ 'fancy', 'simple' ],
     'iframe': ['src']
-
   },
-  allowedIframeDomains: ['youtube.com', 'twitch.tv']
+  allowedIframeDomains: ['www.youtube.com', 'player.vimeo.com']
 });
 ```
 

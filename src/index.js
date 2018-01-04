@@ -210,21 +210,29 @@ function sanitizeHtml(html, options, _recursing) {
             if (name === 'iframe' && a === 'src') {
               try {
                 var parsed = url.parse(value)
-                var whitelistedDomains = []
-                each(parsed, function(val, prop) {
-                  if (prop === 'hostname') {
-                    whitelistedDomains = options.allowedIframeDomains.filter(function(domain) {
-                      return val.includes(domain)
-                    })
-                  }
+                var whitelistedDomains = options.allowedIframeDomains.find(function(domain) {
+                  return domain === parsed.hostname;
                 })
-        
-                if (!whitelistedDomains.length) {
-                  delete frame.attribs[a];
-                  return;
-                } else {
-                  value = url.format(parsed)
-                  frame.attribs[a] = value;
+                if (!whitelistedDomains) {
+                  //check the href to see if the hostname didn't get picked up, doesn't mean it's invalid
+                  var noHost = options.allowedIframeDomains.find(function(domain) {
+                    return parsed.href.includes(domain)
+                  })
+                  if (noHost) {
+                    //check to see if href is allowed
+                    var match = options.allowedIframeDomains.find(function(domain) {
+                      var first = parsed.href.split('//')[1];
+                      var next = first.split('/')[0]
+                      return next === domain
+                    })
+                    if (!match) {
+                      delete frame.attribs[a];
+                      return;
+                    }
+                  } else {
+                    delete frame.attribs[a];
+                    return;
+                  }
                 }
               } catch (e) {
                 // Unparseable iframe src
@@ -537,7 +545,7 @@ sanitizeHtml.defaults = {
   allowedSchemesByTag: {},
   allowProtocolRelative: true,
   // Domains we permit to be included in src attribute of an iframe tag
-  allowedIframeDomains: ['youtube.com', 'vimeo.com']
+  allowedIframeDomains: ['www.youtube.com', 'player.vimeo.com']
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {
