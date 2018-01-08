@@ -213,8 +213,7 @@ function sanitizeHtml(html, options, _recursing) {
                   value.indexOf('https:') < 0 &&
                   value.substring(0, 2) === '//') {
                 var prefix = 'https:';
-                var tempValue = value;
-                value = prefix.concat(tempValue);            
+                value = prefix.concat(value);            
               }
               try {
                 parsed = url.parse(value);
