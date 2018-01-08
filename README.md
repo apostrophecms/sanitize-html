@@ -315,7 +315,7 @@ Make sure to pass a valid hostname along with the domain you wish to allow, i.e.
 For example:
 
 ```javascript
-clean = sanitizeHtml(<p><iframe src="https://www.youtube.com/embed/nykIhs12345"></iframe><p>, {
+clean = sanitizeHtml('<p><iframe src="https://www.youtube.com/embed/nykIhs12345"></iframe><p>', {
   allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
   allowedClasses: {
     'p': [ 'fancy', 'simple' ],
@@ -328,7 +328,7 @@ clean = sanitizeHtml(<p><iframe src="https://www.youtube.com/embed/nykIhs12345">
 will pass through as safe whereas:
 
 ```javascript
-clean = sanitizeHtml(<p><iframe src="https://www.youtube.net/embed/nykIhs12345"></iframe><p>, {
+clean = sanitizeHtml('<p><iframe src="https://www.youtube.net/embed/nykIhs12345"></iframe><p>', {
   allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
   allowedClasses: {
     'p': [ 'fancy', 'simple' ],
@@ -341,7 +341,7 @@ clean = sanitizeHtml(<p><iframe src="https://www.youtube.net/embed/nykIhs12345">
 or 
 
 ```javascript
-clean = sanitizeHtml(<p><iframe src="https://www.vimeo/video/12345"></iframe><p>, {
+clean = sanitizeHtml('<p><iframe src="https://www.vimeo/video/12345"></iframe><p>', {
   allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
   allowedClasses: {
     'p': [ 'fancy', 'simple' ],

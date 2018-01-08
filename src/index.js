@@ -4,8 +4,8 @@ var quoteRegexp = require('lodash.escaperegexp');
 var cloneDeep = require('lodash.clonedeep');
 var mergeWith = require('lodash.mergewith');
 var srcset = require('srcset');
-var url = require('url');
 var postcss = require('postcss');
+var url = require('url');
 
 function each(obj, cb) {
   if (obj) Object.keys(obj).forEach(function (key) {
@@ -208,31 +208,22 @@ function sanitizeHtml(html, options, _recursing) {
               }
             }
             if (name === 'iframe' && a === 'src') {
+              //Check if value contains proper hostname prefix
+              if (value.indexOf('http:') < 0 && 
+                  value.indexOf('https:') < 0 &&
+                  value.substring(0, 2) === '//') {
+                var prefix = 'https:';
+                var tempValue = value;
+                value = prefix.concat(tempValue);            
+              }
               try {
-                var parsed = url.parse(value)
+                parsed = url.parse(value);
                 var whitelistedDomains = options.allowedIframeDomains.find(function(domain) {
                   return domain === parsed.hostname;
-                })
+                });
                 if (!whitelistedDomains) {
-                  //check the href to see if the hostname didn't get picked up, doesn't mean it's invalid
-                  var noHost = options.allowedIframeDomains.find(function(domain) {
-                    return parsed.href.includes(domain)
-                  })
-                  if (noHost) {
-                    //check to see if href is allowed
-                    var match = options.allowedIframeDomains.find(function(domain) {
-                      var first = parsed.href.split('//')[1];
-                      var next = first.split('/')[0]
-                      return next === domain
-                    })
-                    if (!match) {
-                      delete frame.attribs[a];
-                      return;
-                    }
-                  } else {
-                    delete frame.attribs[a];
-                    return;
-                  }
+                  delete frame.attribs[a];
+                  return;
                 }
               } catch (e) {
                 // Unparseable iframe src
@@ -242,7 +233,7 @@ function sanitizeHtml(html, options, _recursing) {
             } 
             if (a === 'srcset') {
               try {
-                var parsed = srcset.parse(value);
+                parsed = srcset.parse(value);
                 each(parsed, function(value) {
                   if (naughtyHref('srcset', value.url)) {
                     value.evil = true;
