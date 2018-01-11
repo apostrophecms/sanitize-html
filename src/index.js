@@ -209,18 +209,16 @@ function sanitizeHtml(html, options, _recursing) {
             }
             if (name === 'iframe' && a === 'src') {
               //Check if value contains proper hostname prefix
-              if (value.indexOf('http:') < 0 && 
-                  value.indexOf('https:') < 0 &&
-                  value.substring(0, 2) === '//') {
+              if (value.substring(0, 2) === '//') {
                 var prefix = 'https:';
                 value = prefix.concat(value);            
               }
               try {
                 parsed = url.parse(value);
-                var whitelistedDomains = options.allowedIframeDomains.find(function(domain) {
-                  return domain === parsed.hostname;
+                var whitelistedHostnames = options.allowedIframeHostnames.find(function(hostname) {
+                  return hostname === parsed.hostname;
                 });
-                if (!whitelistedDomains) {
+                if (!whitelistedHostnames) {
                   delete frame.attribs[a];
                   return;
                 }
@@ -534,8 +532,8 @@ sanitizeHtml.defaults = {
   allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
   allowedSchemesByTag: {},
   allowProtocolRelative: true,
-  // Domains we permit to be included in src attribute of an iframe tag
-  allowedIframeDomains: ['www.youtube.com', 'player.vimeo.com']
+  // Hostnames we permit to be included in src attribute of an iframe tag
+  allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {
