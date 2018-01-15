@@ -300,7 +300,7 @@ Note that the text passed to the `textFilter` method is already escaped for safe
 
 ### Iframe Filters
 
-If you would like to allow iframe tags but want to control the domains that are allowed through you can provide an array of hostnames that you would like to allow as iframe sources. This hostname is a property in the options object passed as an argument to the `sanitze-html` function. 
+If you would like to allow iframe tags but want to control the domains that are allowed through you can provide an array of hostnames that you would like to allow as iframe sources. This hostname is a property in the options object passed as an argument to the `sanitize-html` function. 
 
 This array will be checked against the html that is passed to the function and return only `src` urls that include the allowed hostnames in the object. The url in the html that is passed must be formatted correctly (valid hostname) as an embedded iframe otherwise the module will strip out the src from the iframe. 
 
@@ -455,6 +455,8 @@ Note that if you use this option you are responsible for stating the entire list
 The content still gets escaped properly, with the exception of the `script` and `style` tags. *Allowing either `script` or `style` leaves you open to XSS attacks. Don't do that* unless you have good reason to trust their origin.
 
 ## Changelog
+
+1.17.0: the new `allowedIframeHostnames` option. If present, this must be an array, and only iframe `src` URLs hostnames (complete hostnames; domain name matches are not enough) that appear on this list are allowed. You must also configure `hostname` as an allowed attribute for `iframe`. Thanks to Ryan Verys for this contribution.
 
 1.16.3: don't throw away the browserified versions before publishing them. `prepare` is not a good place to `make clean`, it runs after `prepublish`.
 
