@@ -647,4 +647,39 @@ describe('sanitizeHtml', function() {
       }), '<span style="color:yellow;text-align:center;font-family:helvetica;"></span>'
     );
   });
+  it('Should allow only hostnames in an iframe that are whitelisted', function() {
+    assert.equal(
+      sanitizeHtml('<iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>', {
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
+        allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
+      }), '<iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>'
+    );
+  });
+  it('Should remove iframe src urls that are not inlcuded in whitelisted hostnames', function() {
+    assert.equal(
+      sanitizeHtml('<iframe src="https://www.embed.vevo.com/USUV71704255"></iframe>', {
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
+        allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
+      }), '<iframe></iframe>'
+    );
+  });
+  it('Should not allow iframe urls that do not have proper hostname', function() {
+    assert.equal(
+      sanitizeHtml('<iframe src="//www.vimeo.com/embed/c2IlcS7AHxM"></iframe>', {
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
+        allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
+      }), '<iframe></iframe>'
+    );
+  });
+  it('Should allow iframe through if no hostname option is set', function() {
+    assert.equal(
+      sanitizeHtml('<iframe src="https://www.vimeo.com/embed/c2IlcS7AHxM"></iframe>', {
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']}
+      }), '<iframe src="https://www.vimeo.com/embed/c2IlcS7AHxM"></iframe>'
+    );
+  });
 });

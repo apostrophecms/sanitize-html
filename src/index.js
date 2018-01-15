@@ -5,6 +5,7 @@ var cloneDeep = require('lodash.clonedeep');
 var mergeWith = require('lodash.mergewith');
 var srcset = require('srcset');
 var postcss = require('postcss');
+var url = require('url');
 
 function each(obj, cb) {
   if (obj) Object.keys(obj).forEach(function (key) {
@@ -206,10 +207,32 @@ function sanitizeHtml(html, options, _recursing) {
                 return;
               }
             }
-
+            if (name === 'iframe' && a === 'src') {
+              //Check if value contains proper hostname prefix
+              if (value.substring(0, 2) === '//') {
+                var prefix = 'https:';
+                value = prefix.concat(value);            
+              }
+              try {
+                parsed = url.parse(value);
+                if (options.allowedIframeHostnames) {
+                  var whitelistedHostnames = options.allowedIframeHostnames.find(function(hostname) {
+                    return hostname === parsed.hostname;
+                  });
+                  if (!whitelistedHostnames) {
+                    delete frame.attribs[a];
+                    return;
+                  }
+                }
+              } catch (e) {
+                // Unparseable iframe src
+                delete frame.attribs[a];
+                return;
+              }
+            } 
             if (a === 'srcset') {
               try {
-                var parsed = srcset.parse(value);
+                parsed = srcset.parse(value);
                 each(parsed, function(value) {
                   if (naughtyHref('srcset', value.url)) {
                     value.evil = true;
@@ -233,7 +256,6 @@ function sanitizeHtml(html, options, _recursing) {
                 return;
               }
             }
-
             if (a === 'class') {
               value = filterClasses(value, allowedClassesMap[name]);
               if (!value.length) {
@@ -498,7 +520,7 @@ var htmlParserDefaults = {
 sanitizeHtml.defaults = {
   allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
     'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
-    'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre' ],
+    'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'iframe' ],
   allowedAttributes: {
     a: [ 'href', 'name', 'target' ],
     // We don't currently allow img itself by default, but this
