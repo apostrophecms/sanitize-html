@@ -215,12 +215,14 @@ function sanitizeHtml(html, options, _recursing) {
               }
               try {
                 parsed = url.parse(value);
-                var whitelistedHostnames = options.allowedIframeHostnames.find(function(hostname) {
-                  return hostname === parsed.hostname;
-                });
-                if (!whitelistedHostnames) {
-                  delete frame.attribs[a];
-                  return;
+                if (options.allowedIframeHostnames) {
+                  var whitelistedHostnames = options.allowedIframeHostnames.find(function(hostname) {
+                    return hostname === parsed.hostname;
+                  });
+                  if (!whitelistedHostnames) {
+                    delete frame.attribs[a];
+                    return;
+                  }
                 }
               } catch (e) {
                 // Unparseable iframe src
@@ -531,9 +533,7 @@ sanitizeHtml.defaults = {
   // URL schemes we permit
   allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
   allowedSchemesByTag: {},
-  allowProtocolRelative: true,
-  // Hostnames we permit to be included in src attribute of an iframe tag
-  allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
+  allowProtocolRelative: true
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {
