@@ -201,7 +201,7 @@ function sanitizeHtml(html, options, _recursing) {
               (allowedAttributesMap['*'] && allowedAttributesMap['*'].indexOf(a) !== -1 ) ||
               (has(allowedAttributesGlobMap, name) && allowedAttributesGlobMap[name].test(a)) ||
               (allowedAttributesGlobMap['*'] && allowedAttributesGlobMap['*'].test(a))) {
-            if ((a === 'href') || (a === 'src')) {
+            if (options.allowedSchemesAppliedToAttributes.indexOf(a) !== -1) {
               if (naughtyHref(name, value)) {
                 delete frame.attribs[a];
                 return;
@@ -533,6 +533,7 @@ sanitizeHtml.defaults = {
   // URL schemes we permit
   allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
   allowedSchemesByTag: {},
+  allowedSchemesAppliedToAttributes: [ 'href', 'src', 'cite' ],
   allowProtocolRelative: true
 };
 
