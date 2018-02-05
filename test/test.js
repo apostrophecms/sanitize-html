@@ -682,4 +682,19 @@ describe('sanitizeHtml', function() {
       }), '<iframe src="https://www.vimeo.com/embed/c2IlcS7AHxM"></iframe>'
     );
   });
+  it('Should only allow attributes to have specific values ', function() {
+    assert.equal(
+      sanitizeHtml('<iframe name=\"IFRAME\" allowfullscreen=\"true\" sandbox=\"allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation\"></iframe>',{
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat( ['iframe'] ),
+        allowedAttributes: {
+          iframe: [ 
+            {
+              name: 'sandbox',
+              values: ['allow-popups', 'allow-same-origin', 'allow-scripts']
+            },
+            'allowfullscreen'
+          ]
+        }
+      }), '<iframe allowfullscreen=\"true\" sandbox=\"allow-popups allow-same-origin allow-scripts\"></iframe>');
+  });
 });
