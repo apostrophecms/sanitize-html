@@ -29,6 +29,8 @@
     "htmlparser2": "^3.9.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.escaperegexp": "^4.1.2",
+    "lodash.isplainobject": "^4.0.6",
+    "lodash.isstring": "^4.0.1",
     "lodash.mergewith": "^4.6.0",
     "postcss": "^6.0.14",
     "srcset": "^1.0.0",
