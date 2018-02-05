@@ -141,6 +141,20 @@ allowedTags: [],
 allowedAttributes: []
 ```
 
+### "What if I want to set specific values on some attributes?"
+
+When setting the attribute in `allowedAttributes` simply use an object with attribute `name` and allowed `values`:
+
+```js
+        allowedAttributes: {
+          iframe: [ 
+            {
+              name: 'sandbox',
+              values: ['allow-popups', 'allow-same-origin', 'allow-scripts']
+            }
+          ]
+```
+
 ### Wildcards for attributes
 
 You can use the `*` wildcard to allow all attributes with a certain prefix:
