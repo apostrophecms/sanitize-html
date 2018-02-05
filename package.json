@@ -7,7 +7,7 @@
     "prepare": "true",
     "build": "make clean && make all && npm run prepare && browserify dist/index.js > dist/sanitize-html.js --standalone 'sanitizeHtml'",
     "minify": "npm run build && uglifyjs dist/sanitize-html.js > dist/sanitize-html.min.js",
-    "prepublish": "make clean && npm run minify",
+    "prepublishOnly": "make clean && npm run minify",
     "test": "npm run prepublish && mocha test/test.js"
   },
   "repository": {
