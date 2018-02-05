@@ -3,6 +3,8 @@ var extend = require('xtend');
 var quoteRegexp = require('lodash.escaperegexp');
 var cloneDeep = require('lodash.clonedeep');
 var mergeWith = require('lodash.mergewith');
+var isString = require('lodash.isString');
+var isPlainObject = require('lodash.isPlainObject');
 var srcset = require('srcset');
 var postcss = require('postcss');
 var url = require('url');
@@ -91,11 +93,11 @@ function sanitizeHtml(html, options, _recursing) {
     each(options.allowedAttributes, function(attributes, tag) {
       allowedAttributesMap[tag] = [];
       var globRegex = [];
-      attributes.forEach(function(name) {
-        if(name.indexOf('*') >= 0) {
-          globRegex.push(quoteRegexp(name).replace(/\\\*/g, '.*'));
+      attributes.forEach(function(obj) {
+        if(isString(obj) && obj.indexOf('*') >= 0) {
+          globRegex.push(quoteRegexp(obj).replace(/\\\*/g, '.*'));
         } else {
-          allowedAttributesMap[tag].push(name);
+          allowedAttributesMap[tag].push(obj);
         }
       });
       allowedAttributesGlobMap[tag] = new RegExp('^(' + globRegex.join('|') + ')$');
@@ -196,11 +198,36 @@ function sanitizeHtml(html, options, _recursing) {
             return;
           }
           var parsed;
+          // check allowedAttributesMap for the element and attribute and modify the value
+          // as necessary if there are specific values defined.
+          var passedAllowedAttributesMapCheck = false;
           if (!allowedAttributesMap ||
-              (has(allowedAttributesMap, name) && allowedAttributesMap[name].indexOf(a) !== -1 ) ||
-              (allowedAttributesMap['*'] && allowedAttributesMap['*'].indexOf(a) !== -1 ) ||
-              (has(allowedAttributesGlobMap, name) && allowedAttributesGlobMap[name].test(a)) ||
-              (allowedAttributesGlobMap['*'] && allowedAttributesGlobMap['*'].test(a))) {
+            (has(allowedAttributesMap, name) && allowedAttributesMap[name].indexOf(a) !== -1 ) ||
+            (allowedAttributesMap['*'] && allowedAttributesMap['*'].indexOf(a) !== -1 ) ||
+            (has(allowedAttributesGlobMap, name) && allowedAttributesGlobMap[name].test(a)) ||
+            (allowedAttributesGlobMap['*'] && allowedAttributesGlobMap['*'].test(a))) {    
+              passedAllowedAttributesMapCheck = true;
+          } else if (allowedAttributesMap && allowedAttributesMap[name]) {
+            for (const o of allowedAttributesMap[name]) {
+              if (isPlainObject(o) && o.name && (o.name === a)) {
+                passedAllowedAttributesMapCheck = true;
+                // now need to verify the value is allowed
+                const splitStrArray = value.split(' ');
+                var newValue = '';
+                for (const s of splitStrArray) {
+                  if (o.values.indexOf(s) !== -1) {
+                    if (newValue === '') {
+                      newValue = s;
+                    } else {
+                      newValue += ' ' + s;
+                    }
+                  }
+                }
+                value = newValue;
+              }
+            }
+          }
+          if (passedAllowedAttributesMapCheck) {
             if ((a === 'href') || (a === 'src')) {
               if (naughtyHref(name, value)) {
                 delete frame.attribs[a];
