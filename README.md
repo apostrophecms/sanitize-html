@@ -150,11 +150,12 @@ When configuring the attribute in `allowedAttributes` simply use an object with 
           iframe: [ 
             {
               name: 'sandbox',
+              multiple: true,
               values: ['allow-popups', 'allow-same-origin', 'allow-scripts']
             }
           ]
 ```
-Note: If you only want to allow a single specific attribute value, then `values` should only have a single string in the array.
+Note: If you only want to allow a single specific attribute value, then `values` should only have a single string in the array and `multiple` should be `false`.
 
 ### Wildcards for attributes
 
