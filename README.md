@@ -141,9 +141,9 @@ allowedTags: [],
 allowedAttributes: []
 ```
 
-### "What if I want to set specific values on some attributes?"
+### "What if I want to allow only specific values on some attributes?"
 
-When setting the attribute in `allowedAttributes` simply use an object with attribute `name` and allowed `values`:
+When configuring the attribute in `allowedAttributes` simply use an object with attribute `name` and an allowed `values` array, this will allow any combination of the `values` in the array where the `values` are separated by a space. In the following example `sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-scripts"` would become `sandbox="allow-popups allow-scripts"`:
 
 ```js
         allowedAttributes: {
@@ -154,6 +154,7 @@ When setting the attribute in `allowedAttributes` simply use an object with attr
             }
           ]
 ```
+Note: If you only want to allow a single specific attribute value, then `values` should only have a single string in the array.
 
 ### Wildcards for attributes
 
