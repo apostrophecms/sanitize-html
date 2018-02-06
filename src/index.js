@@ -211,17 +211,22 @@ function sanitizeHtml(html, options, _recursing) {
             for (const o of allowedAttributesMap[name]) {
               if (isPlainObject(o) && o.name && (o.name === a)) {
                 passedAllowedAttributesMapCheck = true;
-                // now need to verify the value is allowed
-                const splitStrArray = value.split(' ');
                 var newValue = '';
-                for (const s of splitStrArray) {
-                  if (o.values.indexOf(s) !== -1) {
-                    if (newValue === '') {
-                      newValue = s;
-                    } else {
-                      newValue += ' ' + s;
+                if (o.multiple === true) {
+                  // verify the values that are allowed
+                  const splitStrArray = value.split(' ');
+                  for (const s of splitStrArray) {
+                    if (o.values.indexOf(s) !== -1) {
+                      if (newValue === '') {
+                        newValue = s;
+                      } else {
+                        newValue += ' ' + s;
+                      }
                     }
                   }
+                } else if ((o.values.length === 1) && (o.values[0] === value)) {
+                  // verify the allowed value matches the entire attribute value
+                  newValue = value;
                 }
                 value = newValue;
               }
