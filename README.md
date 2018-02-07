@@ -155,7 +155,7 @@ When configuring the attribute in `allowedAttributes` simply use an object with 
             }
           ]
 ```
-Note: If you only want to allow a single specific attribute value, then `values` should only have a single string in the array and `multiple` should be `false`.
+With `multiple: true`, several allowed values may appear in the same attribute, separated by spaces. Otherwise the attribute must exactly match one and only one of the allowed values.
 
 ### Wildcards for attributes
 
