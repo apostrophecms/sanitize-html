@@ -224,8 +224,8 @@ function sanitizeHtml(html, options, _recursing) {
                       }
                     }
                   }
-                } else if ((o.values.length === 1) && (o.values[0] === value)) {
-                  // verify the allowed value matches the entire attribute value
+                } else if (o.values.indexOf(value) >= 0) {
+                  // verified an allowed value matches the entire attribute value
                   newValue = value;
                 }
                 value = newValue;
