@@ -690,7 +690,7 @@ describe('sanitizeHtml', function() {
         allowedSchemes: sanitizeHtml.defaults.allowedSchemes.concat([ 'tel' ]),
       }), '<q cite=\"http://www.google.com\">HTTP</q><q cite=\"https://www.google.com\">HTTPS</q><q cite=\"mailto://www.google.com\">MAILTO</q><q cite=\"tel://www.google.com\">TEL</q><q cite=\"ftp://www.google.com\">FTP</q><q>DATA</q><q>LDAP</q><q>ACROBAT</q><q>VBSCRIPT</q><q>FILE</q><q>RLOGIN</q><q>WEBCAL</q><q>JAVASCRIPT</q><q>MMS</q>');
   });
-  it('Should only allow attributes to have specific values', function() {
+  it('Should only allow attributes to have any combination of specific values', function() {
     assert.equal(
       sanitizeHtml('<iframe name=\"IFRAME\" allowfullscreen=\"true\" sandbox=\"allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation\"></iframe>',{
         allowedTags: sanitizeHtml.defaults.allowedTags.concat( ['iframe'] ),
@@ -708,17 +708,17 @@ describe('sanitizeHtml', function() {
   });
   it('Should only allow attributes that match a specific value', function() {
     assert.equal(
-      sanitizeHtml('<iframe sandbox=\"allow-popups allow-modals\"></iframe><iframe sandbox=\"allow-popups\"></iframe>',{
+      sanitizeHtml('<iframe sandbox=\"allow-popups allow-modals\"></iframe><iframe sandbox=\"allow-popups\"></iframe><iframe sandbox=\"allow-scripts\"></iframe>',{
         allowedTags: sanitizeHtml.defaults.allowedTags.concat( ['iframe'] ),
         allowedAttributes: {
           iframe: [ 
             {
               name: 'sandbox',
               multiple: false,
-              values: ['allow-popups']
+              values: ['allow-popups', 'allow-same-origin', 'allow-scripts']
             }
           ]
         }
-      }), '<iframe sandbox></iframe><iframe sandbox=\"allow-popups\"></iframe>');
+      }), '<iframe sandbox></iframe><iframe sandbox=\"allow-popups\"></iframe><iframe sandbox=\"allow-scripts\"></iframe>');
   });
 });
