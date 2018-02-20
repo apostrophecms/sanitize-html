@@ -682,4 +682,12 @@ describe('sanitizeHtml', function() {
       }), '<iframe src="https://www.vimeo.com/embed/c2IlcS7AHxM"></iframe>'
     );
   });
+  it('Should not allow cite urls that do not have an allowed scheme', function() {
+    assert.equal(
+      sanitizeHtml('<q cite=\"http://www.google.com\">HTTP</q><q cite=\"https://www.google.com\">HTTPS</q><q cite=\"mailto://www.google.com\">MAILTO</q><q cite=\"tel://www.google.com\">TEL</q><q cite=\"ftp://www.google.com\">FTP</q><q cite=\"data://www.google.com\">DATA</q><q cite=\"ldap://www.google.com\">LDAP</q><q cite=\"acrobat://www.google.com\">ACROBAT</q><q cite=\"vbscript://www.google.com\">VBSCRIPT</q><q cite=\"file://www.google.com\">FILE</q><q cite=\"rlogin://www.google.com\">RLOGIN</q><q cite=\"webcal://www.google.com\">WEBCAL</q><q cite=\"javascript://www.google.com\">JAVASCRIPT</q><q cite=\"mms://www.google.com\">MMS</q>',{
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat( ['q'] ),
+        allowedAttributes: {q: [ 'cite' ]},
+        allowedSchemes: sanitizeHtml.defaults.allowedSchemes.concat([ 'tel' ]),
+      }), '<q cite=\"http://www.google.com\">HTTP</q><q cite=\"https://www.google.com\">HTTPS</q><q cite=\"mailto://www.google.com\">MAILTO</q><q cite=\"tel://www.google.com\">TEL</q><q cite=\"ftp://www.google.com\">FTP</q><q>DATA</q><q>LDAP</q><q>ACROBAT</q><q>VBSCRIPT</q><q>FILE</q><q>RLOGIN</q><q>WEBCAL</q><q>JAVASCRIPT</q><q>MMS</q>');
+  });
 });
