@@ -474,6 +474,10 @@ The content still gets escaped properly, with the exception of the `script` and 
 
 ## Changelog
 
+1.18.1:
+
+* A file was required with incorrect case, breaking the library on case sensitive filesystems such as Linux. Fixed.
+
 1.18.0:
 
 * The new `allowedSchemesAppliedToAttributes` option. This determines which attributes are validated as URLs, replacing the old hardcoded list of `src` and `href` only. The default list now includes `cite`. Thanks to ml-dublin for this contribution.
