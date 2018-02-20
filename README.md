@@ -142,6 +142,22 @@ allowedTags: [],
 allowedAttributes: []
 ```
 
+### "What if I want to allow only specific values on some attributes?"
+
+When configuring the attribute in `allowedAttributes` simply use an object with attribute `name` and an allowed `values` array, this will allow any combination of the `values` in the array where the `values` are separated by a space. In the following example `sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-scripts"` would become `sandbox="allow-popups allow-scripts"`:
+
+```js
+        allowedAttributes: {
+          iframe: [ 
+            {
+              name: 'sandbox',
+              multiple: true,
+              values: ['allow-popups', 'allow-same-origin', 'allow-scripts']
+            }
+          ]
+```
+With `multiple: true`, several allowed values may appear in the same attribute, separated by spaces. Otherwise the attribute must exactly match one and only one of the allowed values.
+
 ### Wildcards for attributes
 
 You can use the `*` wildcard to allow all attributes with a certain prefix:
