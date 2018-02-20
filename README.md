@@ -474,6 +474,11 @@ The content still gets escaped properly, with the exception of the `script` and 
 
 ## Changelog
 
+1.18.2:
+
+* Travis tests passing.
+* Fixed another case issue — and instituted Travis CI testing so this doesn't happen again. Sorry for the hassle.
+
 1.18.1:
 
 * A file was required with incorrect case, breaking the library on case sensitive filesystems such as Linux. Fixed.
