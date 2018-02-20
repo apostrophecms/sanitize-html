@@ -118,6 +118,7 @@ selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', '
 // URL schemes we permit
 allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
 allowedSchemesByTag: {},
+allowedSchemesAppliedToAttributes: [ 'href', 'src', 'cite' ],
 allowProtocolRelative: true,
 allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
 ```
