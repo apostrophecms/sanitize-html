@@ -457,6 +457,14 @@ The content still gets escaped properly, with the exception of the `script` and 
 
 ## Changelog
 
+1.18.0:
+
+* The new `allowedSchemesAppliedToAttributes` option. This determines which attributes are validated as URLs, replacing the old hardcoded list of `src` and `href` only. The default list now includes `cite`. Thanks to ml-dublin for this contribution.
+
+* It is now easy to configure a specific list of allowed values for an attribute. When configuring `allowedAttributes`, rather than listing an attribute name, simply list an object with an attribute `name` property and an allowed `values` array property. You can also add `multiple: true` to allow multiple space-separated allowed values in the attribute, otherwise the attribute must match one and only one of the allowed values. Thanks again to ml-dublin for this contribution.
+
+* Fixed a bug in the npm test procedure.
+
 1.17.0: the new `allowedIframeHostnames` option. If present, this must be an array, and only iframe `src` URLs hostnames (complete hostnames; domain name matches are not enough) that appear on this list are allowed. You must also configure `hostname` as an allowed attribute for `iframe`. Thanks to Ryan Verys for this contribution.
 
 1.16.3: don't throw away the browserified versions before publishing them. `prepare` is not a good place to `make clean`, it runs after `prepublish`.
