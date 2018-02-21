@@ -14,7 +14,7 @@ The syntax of poorly closed `p` and `img` elements is cleaned up.
 
 `href` attributes are validated to ensure they only contain `http`, `https`, `ftp` and `mailto` URLs. Relative URLs are also allowed. Ditto for `src` attributes.
 
-Allowing particular urls as a `src` to an iframe tag by filtering hostnames is also supported. 
+Allowing particular urls as a `src` to an iframe tag by filtering hostnames is also supported.
 
 HTML comments are not preserved.
 
@@ -106,7 +106,7 @@ If you do not specify `allowedTags` or `allowedAttributes` our default list is a
 ```js
 allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
   'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
-  'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre' ],
+  'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'iframe' ],
 allowedAttributes: {
   a: [ 'href', 'name', 'target' ],
   // We don't currently allow img itself by default, but this
@@ -148,7 +148,7 @@ When configuring the attribute in `allowedAttributes` simply use an object with 
 
 ```js
         allowedAttributes: {
-          iframe: [ 
+          iframe: [
             {
               name: 'sandbox',
               multiple: true,
@@ -318,11 +318,11 @@ Note that the text passed to the `textFilter` method is already escaped for safe
 
 ### Iframe Filters
 
-If you would like to allow iframe tags but want to control the domains that are allowed through you can provide an array of hostnames that you would like to allow as iframe sources. This hostname is a property in the options object passed as an argument to the `sanitize-html` function. 
+If you would like to allow iframe tags but want to control the domains that are allowed through you can provide an array of hostnames that you would like to allow as iframe sources. This hostname is a property in the options object passed as an argument to the `sanitize-html` function.
 
-This array will be checked against the html that is passed to the function and return only `src` urls that include the allowed hostnames in the object. The url in the html that is passed must be formatted correctly (valid hostname) as an embedded iframe otherwise the module will strip out the src from the iframe. 
+This array will be checked against the html that is passed to the function and return only `src` urls that include the allowed hostnames in the object. The url in the html that is passed must be formatted correctly (valid hostname) as an embedded iframe otherwise the module will strip out the src from the iframe.
 
-Make sure to pass a valid hostname along with the domain you wish to allow, i.e.: 
+Make sure to pass a valid hostname along with the domain you wish to allow, i.e.:
 
 ```javascript
   allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
@@ -356,7 +356,7 @@ clean = sanitizeHtml('<p><iframe src="https://www.youtube.net/embed/nykIhs12345"
 });
 ```
 
-or 
+or
 
 ```javascript
 clean = sanitizeHtml('<p><iframe src="https://www.vimeo/video/12345"></iframe><p>', {
