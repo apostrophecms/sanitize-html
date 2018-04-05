@@ -682,4 +682,44 @@ describe('sanitizeHtml', function() {
       }), '<iframe src="https://www.vimeo.com/embed/c2IlcS7AHxM"></iframe>'
     );
   });
+  it('Should only allow attributes to have any combination of specific values', function() {
+    assert.equal(
+      sanitizeHtml('<iframe name=\"IFRAME\" allowfullscreen=\"true\" sandbox=\"allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation\"></iframe>',{
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat( ['iframe'] ),
+        allowedAttributes: {
+          iframe: [ 
+            {
+              name: 'sandbox',
+              multiple: true,
+              values: ['allow-popups', 'allow-same-origin', 'allow-scripts']
+            },
+            'allowfullscreen'
+          ]
+        }
+      }), '<iframe allowfullscreen=\"true\" sandbox=\"allow-popups allow-same-origin allow-scripts\"></iframe>');
+  });
+  it('Should only allow attributes that match a specific value', function() {
+    assert.equal(
+      sanitizeHtml('<iframe sandbox=\"allow-popups allow-modals\"></iframe><iframe sandbox=\"allow-popups\"></iframe><iframe sandbox=\"allow-scripts\"></iframe>',{
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat( ['iframe'] ),
+        allowedAttributes: {
+          iframe: [ 
+            {
+              name: 'sandbox',
+              multiple: false,
+              values: ['allow-popups', 'allow-same-origin', 'allow-scripts']
+            }
+          ]
+        }
+      }), '<iframe sandbox></iframe><iframe sandbox=\"allow-popups\"></iframe><iframe sandbox=\"allow-scripts\"></iframe>');
+    }
+  );
+  it('Should not allow cite urls that do not have an allowed scheme', function() {
+    assert.equal(
+      sanitizeHtml('<q cite=\"http://www.google.com\">HTTP</q><q cite=\"https://www.google.com\">HTTPS</q><q cite=\"mailto://www.google.com\">MAILTO</q><q cite=\"tel://www.google.com\">TEL</q><q cite=\"ftp://www.google.com\">FTP</q><q cite=\"data://www.google.com\">DATA</q><q cite=\"ldap://www.google.com\">LDAP</q><q cite=\"acrobat://www.google.com\">ACROBAT</q><q cite=\"vbscript://www.google.com\">VBSCRIPT</q><q cite=\"file://www.google.com\">FILE</q><q cite=\"rlogin://www.google.com\">RLOGIN</q><q cite=\"webcal://www.google.com\">WEBCAL</q><q cite=\"javascript://www.google.com\">JAVASCRIPT</q><q cite=\"mms://www.google.com\">MMS</q>',{
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat( ['q'] ),
+        allowedAttributes: {q: [ 'cite' ]},
+        allowedSchemes: sanitizeHtml.defaults.allowedSchemes.concat([ 'tel' ]),
+      }), '<q cite=\"http://www.google.com\">HTTP</q><q cite=\"https://www.google.com\">HTTPS</q><q cite=\"mailto://www.google.com\">MAILTO</q><q cite=\"tel://www.google.com\">TEL</q><q cite=\"ftp://www.google.com\">FTP</q><q>DATA</q><q>LDAP</q><q>ACROBAT</q><q>VBSCRIPT</q><q>FILE</q><q>RLOGIN</q><q>WEBCAL</q><q>JAVASCRIPT</q><q>MMS</q>');
+  });
 });

@@ -106,7 +106,7 @@ If you do not specify `allowedTags` or `allowedAttributes` our default list is a
 ```js
 allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
   'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
-  'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre' ],
+  'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'iframe' ],
 allowedAttributes: {
   a: [ 'href', 'name', 'target' ],
   // We don't currently allow img itself by default, but this
@@ -118,6 +118,7 @@ selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', '
 // URL schemes we permit
 allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
 allowedSchemesByTag: {},
+allowedSchemesAppliedToAttributes: [ 'href', 'src', 'cite' ],
 allowProtocolRelative: true,
 allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
 ```
@@ -140,6 +141,23 @@ Also simple!  Set your `allowedTag` and `allowedAttributes` to empty arrays (`[]
 allowedTags: [],
 allowedAttributes: []
 ```
+
+### "What if I want to allow only specific values on some attributes?"
+
+When configuring the attribute in `allowedAttributes` simply use an object with attribute `name` and an allowed `values` array. In the following example `sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-scripts"` would become `sandbox="allow-popups allow-scripts"`:
+
+```js
+        allowedAttributes: {
+          iframe: [
+            {
+              name: 'sandbox',
+              multiple: true,
+              values: ['allow-popups', 'allow-same-origin', 'allow-scripts']
+            }
+          ]
+```
+
+With `multiple: true`, several allowed values may appear in the same attribute, separated by spaces. Otherwise the attribute must exactly match one and only one of the allowed values.
 
 ### Wildcards for attributes
 
@@ -300,7 +318,7 @@ Note that the text passed to the `textFilter` method is already escaped for safe
 
 ### Iframe Filters
 
-If you would like to allow iframe tags but want to control the domains that are allowed through you can provide an array of hostnames that you would like to allow as iframe sources. This hostname is a property in the options object passed as an argument to the `sanitze-html` function.
+If you would like to allow iframe tags but want to control the domains that are allowed through you can provide an array of hostnames that you would like to allow as iframe sources. This hostname is a property in the options object passed as an argument to the `sanitize-html` function.
 
 This array will be checked against the html that is passed to the function and return only `src` urls that include the allowed hostnames in the object. The url in the html that is passed must be formatted correctly (valid hostname) as an embedded iframe otherwise the module will strip out the src from the iframe.
 
@@ -397,7 +415,7 @@ clean = sanitizeHtml(dirty, {
             'color': [/^\#(0x)?[0-9a-f]+$/i, /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/],
             'text-align': [/^left$/, /^right$/, /^center$/],
             // Match any number with px, em, or %
-            'font-size': [/^\d+$[px|em|\%]$/]
+            'font-size': [/^\d+(?:px|em|%)$/]
           },
           'p': {
             'font-size': [/^\d+rem$/]
@@ -461,6 +479,25 @@ Note that if you use this option you are responsible for stating the entire list
 The content still gets escaped properly, with the exception of the `script` and `style` tags. *Allowing either `script` or `style` leaves you open to XSS attacks. Don't do that* unless you have good reason to trust their origin.
 
 ## Changelog
+
+1.18.2:
+
+* Travis tests passing.
+* Fixed another case issue — and instituted Travis CI testing so this doesn't happen again. Sorry for the hassle.
+
+1.18.1:
+
+* A file was required with incorrect case, breaking the library on case sensitive filesystems such as Linux. Fixed.
+
+1.18.0:
+
+* The new `allowedSchemesAppliedToAttributes` option. This determines which attributes are validated as URLs, replacing the old hardcoded list of `src` and `href` only. The default list now includes `cite`. Thanks to ml-dublin for this contribution.
+
+* It is now easy to configure a specific list of allowed values for an attribute. When configuring `allowedAttributes`, rather than listing an attribute name, simply list an object with an attribute `name` property and an allowed `values` array property. You can also add `multiple: true` to allow multiple space-separated allowed values in the attribute, otherwise the attribute must match one and only one of the allowed values. Thanks again to ml-dublin for this contribution.
+
+* Fixed a bug in the npm test procedure.
+
+1.17.0: the new `allowedIframeHostnames` option. If present, this must be an array, and only iframe `src` URLs hostnames (complete hostnames; domain name matches are not enough) that appear on this list are allowed. You must also configure `hostname` as an allowed attribute for `iframe`. Thanks to Ryan Verys for this contribution.
 
 1.16.3: don't throw away the browserified versions before publishing them. `prepare` is not a good place to `make clean`, it runs after `prepublish`.
 
