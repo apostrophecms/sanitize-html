@@ -337,6 +337,8 @@ clean = sanitizeHtml('<p><iframe src="https://www.youtube.com/embed/nykIhs12345"
   allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
   allowedClasses: {
     'p': [ 'fancy', 'simple' ],
+  },
+  allowedAttributes: {
     'iframe': ['src']
   },
   allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
@@ -350,6 +352,8 @@ clean = sanitizeHtml('<p><iframe src="https://www.youtube.net/embed/nykIhs12345"
   allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
   allowedClasses: {
     'p': [ 'fancy', 'simple' ],
+  },
+  allowedAttributes: {
     'iframe': ['src']
   },
   allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
@@ -363,6 +367,8 @@ clean = sanitizeHtml('<p><iframe src="https://www.vimeo/video/12345"></iframe><p
   allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
   allowedClasses: {
     'p': [ 'fancy', 'simple' ],
+  },
+  allowedAttributes: {
     'iframe': ['src']
   },
   allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
