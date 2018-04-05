@@ -14,7 +14,7 @@ The syntax of poorly closed `p` and `img` elements is cleaned up.
 
 `href` attributes are validated to ensure they only contain `http`, `https`, `ftp` and `mailto` URLs. Relative URLs are also allowed. Ditto for `src` attributes.
 
-Allowing particular urls as a `src` to an iframe tag by filtering hostnames is also supported. 
+Allowing particular urls as a `src` to an iframe tag by filtering hostnames is also supported.
 
 HTML comments are not preserved.
 
@@ -300,11 +300,11 @@ Note that the text passed to the `textFilter` method is already escaped for safe
 
 ### Iframe Filters
 
-If you would like to allow iframe tags but want to control the domains that are allowed through you can provide an array of hostnames that you would like to allow as iframe sources. This hostname is a property in the options object passed as an argument to the `sanitze-html` function. 
+If you would like to allow iframe tags but want to control the domains that are allowed through you can provide an array of hostnames that you would like to allow as iframe sources. This hostname is a property in the options object passed as an argument to the `sanitze-html` function.
 
-This array will be checked against the html that is passed to the function and return only `src` urls that include the allowed hostnames in the object. The url in the html that is passed must be formatted correctly (valid hostname) as an embedded iframe otherwise the module will strip out the src from the iframe. 
+This array will be checked against the html that is passed to the function and return only `src` urls that include the allowed hostnames in the object. The url in the html that is passed must be formatted correctly (valid hostname) as an embedded iframe otherwise the module will strip out the src from the iframe.
 
-Make sure to pass a valid hostname along with the domain you wish to allow, i.e.: 
+Make sure to pass a valid hostname along with the domain you wish to allow, i.e.:
 
 ```javascript
   allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
@@ -319,6 +319,8 @@ clean = sanitizeHtml('<p><iframe src="https://www.youtube.com/embed/nykIhs12345"
   allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
   allowedClasses: {
     'p': [ 'fancy', 'simple' ],
+  },
+  allowedAttributes: {
     'iframe': ['src']
   },
   allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
@@ -332,19 +334,23 @@ clean = sanitizeHtml('<p><iframe src="https://www.youtube.net/embed/nykIhs12345"
   allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
   allowedClasses: {
     'p': [ 'fancy', 'simple' ],
+  },
+  allowedAttributes: {
     'iframe': ['src']
   },
   allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
 });
 ```
 
-or 
+or
 
 ```javascript
 clean = sanitizeHtml('<p><iframe src="https://www.vimeo/video/12345"></iframe><p>', {
   allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
   allowedClasses: {
     'p': [ 'fancy', 'simple' ],
+  },
+  allowedAttributes: {
     'iframe': ['src']
   },
   allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
