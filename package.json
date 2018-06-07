@@ -3,6 +3,7 @@
   "version": "1.18.2",
   "description": "Clean up user-submitted HTML, preserving whitelisted elements and whitelisted attributes on a per-element basis",
   "main": "dist/index.js",
+  "browser": "dist/sanitize-html.js",
   "scripts": {
     "prepare": "true",
     "build": "make clean && make all && npm run prepare && browserify dist/index.js > dist/sanitize-html.js --standalone 'sanitizeHtml'",
