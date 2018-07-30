@@ -443,7 +443,7 @@ function sanitizeHtml(html, options, _recursing) {
       return options.allowedSchemesByTag[name].indexOf(scheme) === -1;
     }
 
-    return !options.allowedSchemes || options.allowedSchemes.indexOf(scheme) === -1;
+    return options.allowedSchemes && options.allowedSchemes.indexOf(scheme) === -1;
   }
 
   /**
