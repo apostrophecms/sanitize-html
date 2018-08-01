@@ -480,6 +480,13 @@ The content still gets escaped properly, with the exception of the `script` and 
 
 ## Changelog
 
+1.18.3:
+
+* `iframe` is an allowed tag by default, to better facilitate typical use cases and the use of the `allowedIframeHostnames` option.
+* Documentation improvements.
+* More browser packaging improvements.
+* Protocol-relative URLs are properly supported for iframe tags.
+
 1.18.2:
 
 * Travis tests passing.

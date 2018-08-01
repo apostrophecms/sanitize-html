@@ -240,13 +240,10 @@ function sanitizeHtml(html, options, _recursing) {
               }
             }
             if (name === 'iframe' && a === 'src') {
-              //Check if value contains proper hostname prefix
-              if (value.substring(0, 2) === '//') {
-                var prefix = 'https:';
-                value = prefix.concat(value);            
-              }
               try {
-                parsed = url.parse(value);
+                // naughtyHref is in charge of whether protocol relative URLs
+                // are cool. We should just accept them
+                parsed = url.parse(value, false, true);
                 if (options.allowedIframeHostnames) {
                   var whitelistedHostnames = options.allowedIframeHostnames.find(function(hostname) {
                     return hostname === parsed.hostname;
