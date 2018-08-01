@@ -647,7 +647,7 @@ describe('sanitizeHtml', function() {
       }), '<span style="color:yellow;text-align:center;font-family:helvetica;"></span>'
     );
   });
-  it('Should allow only hostnames in an iframe that are whitelisted', function() {
+  it('Should allow hostnames in an iframe that are whitelisted', function() {
     assert.equal(
       sanitizeHtml('<iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
@@ -667,7 +667,7 @@ describe('sanitizeHtml', function() {
   });
   it('Should not allow iframe urls that do not have proper hostname', function() {
     assert.equal(
-      sanitizeHtml('<iframe src="//www.vimeo.com/embed/c2IlcS7AHxM"></iframe>', {
+      sanitizeHtml('<iframe src="https://www.vimeo.com/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
         allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
@@ -680,6 +680,32 @@ describe('sanitizeHtml', function() {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']}
       }), '<iframe src="https://www.vimeo.com/embed/c2IlcS7AHxM"></iframe>'
+    );
+  });
+  it('Should allow relative URLs for iframes', function() {
+    assert.equal(
+      sanitizeHtml('<iframe src="/foo"></iframe>', {
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']}
+      }), '<iframe src="/foo"></iframe>'
+    );
+  });
+  it('Should allow protocol-relative URLs for the right domain for iframes', function() {
+    assert.equal(
+      sanitizeHtml('<iframe src="//www.youtube.com/embed/c2IlcS7AHxM"></iframe>', {
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
+        allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
+      }), '<iframe src="//www.youtube.com/embed/c2IlcS7AHxM"></iframe>'
+    );
+  });
+  it('Should not allow protocol-relative iframe urls that do not have proper hostname', function() {
+    assert.equal(
+      sanitizeHtml('<iframe src="//www.vimeo.com/embed/c2IlcS7AHxM"></iframe>', {
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
+        allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
+      }), '<iframe></iframe>'
     );
   });
   it('Should only allow attributes to have any combination of specific values', function() {
