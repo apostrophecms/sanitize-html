@@ -480,6 +480,10 @@ The content still gets escaped properly, with the exception of the `script` and 
 
 ## Changelog
 
+1.18.4:
+
+* Removed incorrect `browser` key, restoring frontend build. Thanks to Felix Becker.
+
 1.18.3:
 
 * `iframe` is an allowed tag by default, to better facilitate typical use cases and the use of the `allowedIframeHostnames` option.
