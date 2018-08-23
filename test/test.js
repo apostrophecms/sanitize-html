@@ -748,4 +748,18 @@ describe('sanitizeHtml', function() {
         allowedSchemes: sanitizeHtml.defaults.allowedSchemes.concat([ 'tel' ]),
       }), '<q cite=\"http://www.google.com\">HTTP</q><q cite=\"https://www.google.com\">HTTPS</q><q cite=\"mailto://www.google.com\">MAILTO</q><q cite=\"tel://www.google.com\">TEL</q><q cite=\"ftp://www.google.com\">FTP</q><q>DATA</q><q>LDAP</q><q>ACROBAT</q><q>VBSCRIPT</q><q>FILE</q><q>RLOGIN</q><q>WEBCAL</q><q>JAVASCRIPT</q><q>MMS</q>');
   });
+  it('Should remove attribute that was invalidated by user supplied validate function', function() {
+    assert.equal(
+      sanitizeHtml('<div remove-me="with-value"></div>', {
+        allowedAttributes: { div: [{ name: 'remove-me', validate: function(value) { return value !== 'with-value'; } }] }
+      }), '<div></div>'
+    );
+  });
+  it('Should keep attribute that was validated by user supplied validate function', function() {
+    assert.equal(
+      sanitizeHtml('<div keep-me="with-value"></div>', {
+        allowedAttributes: { div: [{ name: 'keep-me', validate: function(value) { return value === 'with-value'; } }] }
+      }), '<div keep-me="with-value"></div>'
+    );
+  });
 });

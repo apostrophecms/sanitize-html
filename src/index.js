@@ -210,25 +210,29 @@ function sanitizeHtml(html, options, _recursing) {
           } else if (allowedAttributesMap && allowedAttributesMap[name]) {
             for (const o of allowedAttributesMap[name]) {
               if (isPlainObject(o) && o.name && (o.name === a)) {
-                passedAllowedAttributesMapCheck = true;
-                var newValue = '';
-                if (o.multiple === true) {
-                  // verify the values that are allowed
-                  const splitStrArray = value.split(' ');
-                  for (const s of splitStrArray) {
-                    if (o.values.indexOf(s) !== -1) {
-                      if (newValue === '') {
-                        newValue = s;
-                      } else {
-                        newValue += ' ' + s;
+                if (o.validate) {
+                  passedAllowedAttributesMapCheck = o.validate(value, a);
+                } else {
+                  passedAllowedAttributesMapCheck = true;
+                  var newValue = '';
+                  if (o.multiple === true) {
+                    // verify the values that are allowed
+                    const splitStrArray = value.split(' ');
+                    for (const s of splitStrArray) {
+                      if (o.values.indexOf(s) !== -1) {
+                        if (newValue === '') {
+                          newValue = s;
+                        } else {
+                          newValue += ' ' + s;
+                        }
                       }
                     }
+                  } else if (o.values.indexOf(value) >= 0) {
+                    // verified an allowed value matches the entire attribute value
+                    newValue = value;
                   }
-                } else if (o.values.indexOf(value) >= 0) {
-                  // verified an allowed value matches the entire attribute value
-                  newValue = value;
+                  value = newValue;
                 }
-                value = newValue;
               }
             }
           }

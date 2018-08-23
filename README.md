@@ -159,6 +159,20 @@ When configuring the attribute in `allowedAttributes` simply use an object with 
 
 With `multiple: true`, several allowed values may appear in the same attribute, separated by spaces. Otherwise the attribute must exactly match one and only one of the allowed values.
 
+Want more granular control? supply a `validate` function on the attribute:
+
+```js
+        allowedAttributes: {
+          iframe: [
+            {
+              name: 'sandbox',
+              validate: function (value) { return value.match(/^(\s?allow-[^ ]+)*\s*$/); }
+            }
+          ]
+```
+
+Note: `multiple` and `values` will be ignored if a `validate` function exists.
+
 ### Wildcards for attributes
 
 You can use the `*` wildcard to allow all attributes with a certain prefix:
