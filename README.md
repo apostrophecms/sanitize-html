@@ -480,6 +480,10 @@ The content still gets escaped properly, with the exception of the `script` and 
 
 ## Changelog
 
+2.0.0:
+
+* Stop ampersands on HTML entities when parser.decodeEntities = false
+
 1.18.4:
 
 * Removed incorrect `browser` key, restoring frontend build. Thanks to Felix Becker.

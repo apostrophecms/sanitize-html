@@ -411,7 +411,10 @@ function sanitizeHtml(html, options, _recursing) {
     if (typeof(s) !== 'string') {
       s = s + '';
     }
-    return s.replace(/\&/g, '&amp;').replace(/</g, '&lt;').replace(/\>/g, '&gt;').replace(/\"/g, '&quot;');
+    if (options.parser.decodeEntities !== false) {
+      s = s.replace(/\&/g, '&amp;')
+    }
+    return s.replace(/</g, '&lt;').replace(/\>/g, '&gt;').replace(/\"/g, '&quot;');
   }
 
   function naughtyHref(name, href) {
