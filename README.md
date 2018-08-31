@@ -480,9 +480,9 @@ The content still gets escaped properly, with the exception of the `script` and 
 
 ## Changelog
 
-2.0.0:
+1.18.5:
 
-* Stop ampersands on HTML entities when parser.decodeEntities = false
+* Stop double encoding ampersands on HTML entities
 
 1.18.4:
 
