@@ -751,13 +751,14 @@ describe('sanitizeHtml', function() {
   it('Should encode &, <, > and "', function() {
     assert.equal(sanitizeHtml('"< & >"'), '&quot;&lt; &amp; &gt;&quot;');
   });
-  it('Should not encode ampersands on HTML entities when parser.decodeEntities = false', function() {
-    var text = 'This &amp; that &reg';
+  it('Should not double encode ampersands on HTML entities', function() {
+    var textIn = 'This &amp; & that &reg';
+    var expectedResult = 'This &amp; &amp; that &reg';
     var sanitizeHtmlOptions = {
       parser: {
         decodeEntities: false
       }
     };
-    assert.equal(sanitizeHtml(text, sanitizeHtmlOptions), text);
+    assert.equal(sanitizeHtml(textIn, sanitizeHtmlOptions), expectedResult);
   });
 });
