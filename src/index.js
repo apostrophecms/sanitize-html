@@ -411,13 +411,10 @@ function sanitizeHtml(html, options, _recursing) {
     if (typeof(s) !== 'string') {
       s = s + '';
     }
-    // s = s.replace(/\&amp;/g, '&');
-    s = s.replace(/&(?![a-zA-Z0-9#]{1,7};)/g, '&amp;');
-    // s = s.replace(/&[^ ;]{2,5};/g, '&amp;amp;');
-    // if (options.parser.decodeEntities !== false) {
-    //   s = s.replace(/\&/g, '&amp;')
-    // }
-    return s.replace(/</g, '&lt;').replace(/\>/g, '&gt;').replace(/\"/g, '&quot;');
+    return s.replace(/&(?![a-zA-Z0-9#]{1,7};)/g, '&amp;') // Match ampersands not part of existing HTML entity
+      .replace(/</g, '&lt;')
+      .replace(/\>/g, '&gt;')
+      .replace(/\"/g, '&quot;');
   }
 
   function naughtyHref(name, href) {
