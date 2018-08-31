@@ -752,8 +752,8 @@ describe('sanitizeHtml', function() {
     assert.equal(sanitizeHtml('"< & >"'), '&quot;&lt; &amp; &gt;&quot;');
   });
   it('Should not double encode ampersands on HTML entities', function() {
-    var textIn = 'This &amp; & that &reg';
-    var expectedResult = 'This &amp; &amp; that &reg';
+    var textIn = 'This &amp; & that &reg; &#x0000A; &#10; &plusmn; OK?';
+    var expectedResult = 'This &amp; &amp; that &reg; &#x0000A; &#10; &plusmn; OK?';
     var sanitizeHtmlOptions = {
       parser: {
         decodeEntities: false
