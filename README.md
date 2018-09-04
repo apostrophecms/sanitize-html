@@ -480,6 +480,10 @@ The content still gets escaped properly, with the exception of the `script` and 
 
 ## Changelog
 
+1.18.5:
+
+* Stop double encoding ampersands on HTML entities
+
 1.18.4:
 
 * Removed incorrect `browser` key, restoring frontend build. Thanks to Felix Becker.

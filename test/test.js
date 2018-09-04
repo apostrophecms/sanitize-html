@@ -748,4 +748,17 @@ describe('sanitizeHtml', function() {
         allowedSchemes: sanitizeHtml.defaults.allowedSchemes.concat([ 'tel' ]),
       }), '<q cite=\"http://www.google.com\">HTTP</q><q cite=\"https://www.google.com\">HTTPS</q><q cite=\"mailto://www.google.com\">MAILTO</q><q cite=\"tel://www.google.com\">TEL</q><q cite=\"ftp://www.google.com\">FTP</q><q>DATA</q><q>LDAP</q><q>ACROBAT</q><q>VBSCRIPT</q><q>FILE</q><q>RLOGIN</q><q>WEBCAL</q><q>JAVASCRIPT</q><q>MMS</q>');
   });
+  it('Should encode &, <, > and "', function() {
+    assert.equal(sanitizeHtml('"< & >"'), '&quot;&lt; &amp; &gt;&quot;');
+  });
+  it('Should not double encode ampersands on HTML entities', function() {
+    var textIn = 'This &amp; & that &reg; &#x0000A; &#10; &plusmn; OK?';
+    var expectedResult = 'This &amp; &amp; that &reg; &#x0000A; &#10; &plusmn; OK?';
+    var sanitizeHtmlOptions = {
+      parser: {
+        decodeEntities: false
+      }
+    };
+    assert.equal(sanitizeHtml(textIn, sanitizeHtmlOptions), expectedResult);
+  });
 });

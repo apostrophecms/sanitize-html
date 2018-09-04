@@ -411,7 +411,10 @@ function sanitizeHtml(html, options, _recursing) {
     if (typeof(s) !== 'string') {
       s = s + '';
     }
-    return s.replace(/\&/g, '&amp;').replace(/</g, '&lt;').replace(/\>/g, '&gt;').replace(/\"/g, '&quot;');
+    return s.replace(/&(?![a-zA-Z0-9#]{1,7};)/g, '&amp;') // Match ampersands not part of existing HTML entity
+      .replace(/</g, '&lt;')
+      .replace(/\>/g, '&gt;')
+      .replace(/\"/g, '&quot;');
   }
 
   function naughtyHref(name, href) {
