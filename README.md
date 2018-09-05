@@ -482,7 +482,7 @@ The content still gets escaped properly, with the exception of the `script` and 
 
 1.18.5:
 
-* Stop double encoding ampersands on HTML entities
+* Stop double encoding ampersands on HTML entities. Thanks to Will Gibson.
 
 1.18.4:
 
