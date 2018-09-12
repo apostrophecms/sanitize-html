@@ -488,6 +488,10 @@ The content still gets escaped properly, with the exception of the `script` and 
 
 ## Changelog
 
+1.19.0:
+
+* New `allowIframeRelativeUrls` option. It defaults to `true` unless `allowedIframeHostnames` is present, in which case it defaults to false, for backwards compatibility with existing behavior in both cases; however you can now set the option explicitly to allow both certain hostnames and relative URLs. Thanks to Rick Martin.
+
 1.18.5:
 
 * Stop double encoding ampersands on HTML entities. Thanks to Will Gibson.
