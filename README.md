@@ -328,6 +328,14 @@ Make sure to pass a valid hostname along with the domain you wish to allow, i.e.
   allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
 ```
 
+You may also specify whether or not to allow relative URLs as iframe sources.
+
+```javascript
+  allowIframeRelativeUrls: true
+```
+
+Note that if unspecified, relative URLs will be allowed by default if no hostname filter is provided but removed by default if a hostname filter is provided.
+
 **Remember that the `iframe` tag must be allowed as well as the `src` attribute.**
 
 For example:
