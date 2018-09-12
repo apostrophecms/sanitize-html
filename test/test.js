@@ -656,7 +656,7 @@ describe('sanitizeHtml', function() {
       }), '<iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>'
     );
   });
-  it('Should remove iframe src urls that are not inlcuded in whitelisted hostnames', function() {
+  it('Should remove iframe src urls that are not included in whitelisted hostnames', function() {
     assert.equal(
       sanitizeHtml('<iframe src="https://www.embed.vevo.com/USUV71704255"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
@@ -682,12 +682,49 @@ describe('sanitizeHtml', function() {
       }), '<iframe src="https://www.vimeo.com/embed/c2IlcS7AHxM"></iframe>'
     );
   });
-  it('Should allow relative URLs for iframes', function() {
+  it('Should allow relative URLs for iframes by default', function() {
     assert.equal(
       sanitizeHtml('<iframe src="/foo"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']}
       }), '<iframe src="/foo"></iframe>'
+    );
+  });
+  it('Should allow relative URLs for iframes', function() {
+    assert.equal(
+      sanitizeHtml('<iframe src="/foo"></iframe>', {
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
+        allowIframeRelativeUrls: true,
+      }), '<iframe src="/foo"></iframe>'
+    );
+  });
+  it('Should remove relative URLs for iframes', function() {
+    assert.equal(
+      sanitizeHtml('<iframe src="/foo"></iframe>', {
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
+        allowIframeRelativeUrls: false,
+      }), '<iframe></iframe>'
+    );
+  });
+  it('Should remove relative URLs for iframes when whitelisted hostnames specified', function() {
+    assert.equal(
+      sanitizeHtml('<iframe src="/foo"></iframe><iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>', {
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
+        allowedIframeHostnames: ['www.youtube.com']
+      }), '<iframe></iframe><iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>'
+    );
+  });
+  it('Should allow relative and whitelisted hostname URLs for iframes', function() {
+    assert.equal(
+      sanitizeHtml('<iframe src="/foo"></iframe><iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>', {
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
+        allowIframeRelativeUrls: true,
+        allowedIframeHostnames: ['www.youtube.com']
+      }), '<iframe src="/foo"></iframe><iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>'
     );
   });
   it('Should allow protocol-relative URLs for the right domain for iframes', function() {
