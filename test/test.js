@@ -141,7 +141,7 @@ describe('sanitizeHtml', function() {
       }
     }}, textFilter: function (text) {
       return text.replace(/\s/g, '_');
-    }}), '<a href="http://somelink">some_text_need&quot;to&lt;be&gt;filtered</a>');
+    }}), '<a href="http://somelink">some_text_need"to&lt;be&gt;filtered</a>');
   });
 
   it('should add new text when not initially set and replace attributes when they are changed by transforming function', function () {
@@ -422,12 +422,12 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<<img src="javascript:evil"/>img src="javascript:evil"/>'
       ),
-      '&lt;img src=&quot;javascript:evil&quot;/&gt;'
+      '&lt;img src="javascript:evil"/&gt;'
     );
     assert.equal(
       sanitizeHtml('<<a href="javascript:evil"/>a href="javascript:evil"/>'
       ),
-      '&lt;<a>a href=&quot;javascript:evil&quot;/&gt;</a>'
+      '&lt;<a>a href="javascript:evil"/&gt;</a>'
     );
   });
   it('should allow attributes to be specified as globs', function() {
@@ -456,12 +456,12 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<div>"normal text"</div><script>"this is code"</script>', {
         allowedTags: [ 'script' ]
-      }), '&quot;normal text&quot;<script>"this is code"</script>'
+      }), '"normal text"<script>"this is code"</script>'
     );
     assert.equal(
       sanitizeHtml('<div>"normal text"</div><style>body { background-image: url("image.test"); }</style>', {
         allowedTags: [ 'style' ]
-      }), '&quot;normal text&quot;<style>body { background-image: url("image.test"); }</style>'
+      }), '"normal text"<style>body { background-image: url("image.test"); }</style>'
     );
   });
   it('should not unescape escapes found inside script tags', function() {
@@ -480,7 +480,7 @@ describe('sanitizeHtml', function() {
         textFilter: function(text) {
           return text.replace(' this should be removed', '');
         }
-      }), '&quot;normal text&quot;'
+      }), '"normal text"'
     );
   });
   it('should respect htmlparser2 options when passed in', function() {
@@ -785,10 +785,18 @@ describe('sanitizeHtml', function() {
         allowedSchemes: sanitizeHtml.defaults.allowedSchemes.concat([ 'tel' ]),
       }), '<q cite=\"http://www.google.com\">HTTP</q><q cite=\"https://www.google.com\">HTTPS</q><q cite=\"mailto://www.google.com\">MAILTO</q><q cite=\"tel://www.google.com\">TEL</q><q cite=\"ftp://www.google.com\">FTP</q><q>DATA</q><q>LDAP</q><q>ACROBAT</q><q>VBSCRIPT</q><q>FILE</q><q>RLOGIN</q><q>WEBCAL</q><q>JAVASCRIPT</q><q>MMS</q>');
   });
-  it('Should encode &, <, > and "', function() {
-    assert.equal(sanitizeHtml('"< & >"'), '&quot;&lt; &amp; &gt;&quot;');
+  it('Should encode &, <, > and where necessary, "', function() {
+    assert.equal(sanitizeHtml('"< & >" <span class="&#34;test&#34;">cool</span>', {
+      allowedTags: [ 'span' ],
+      allowedAttributes: {
+        span: [ 'class' ]
+      }
+    }), '"&lt; &amp; &gt;" <span class="&quot;test&quot;">cool</span>');
   });
-  it('Should not double encode ampersands on HTML entities', function() {
+  it('Should not pass through &0; unescaped if decodeEntities is true (the default)', function() {
+    assert.equal(sanitizeHtml('<img src="<0&0;0.2&" />', {allowedTags: ['img']}), '<img src="&lt;0&amp;0;0.2&amp;" />');
+  });
+  it('Should not double encode ampersands on HTML entities if decodeEntities is false (TODO more tests, this is too loose to rely upon)', function() {
     var textIn = 'This &amp; & that &reg; &#x0000A; &#10; &plusmn; OK?';
     var expectedResult = 'This &amp; &amp; that &reg; &#x0000A; &#10; &plusmn; OK?';
     var sanitizeHtmlOptions = {
@@ -798,4 +806,17 @@ describe('sanitizeHtml', function() {
     };
     assert.equal(sanitizeHtml(textIn, sanitizeHtmlOptions), expectedResult);
   });
+  // TODO: make this test and similar tests for entities that are not
+  // strictly valid pass, at which point decodeEntities: false is safe
+  // to use.
+  //
+  // it('Should not pass through &0; (a bogus entity) unescaped if decodeEntities is false', function() {
+  //   assert.equal(sanitizeHtml(
+  //     '<img src="<0&0;0.2&" />', {
+  //       allowedTags: ['img'],
+  //       parser: {
+  //         decodeEntities: false
+  //       }
+  //     }), '<img src="&lt;0&amp;0;0.2&amp;" />');
+  // });
 });

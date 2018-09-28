@@ -8,6 +8,7 @@ var isPlainObject = require('lodash.isplainobject');
 var srcset = require('srcset');
 var postcss = require('postcss');
 var url = require('url');
+var characterEntities = require('character-entities');
 
 function each(obj, cb) {
   if (obj) Object.keys(obj).forEach(function (key) {
@@ -315,7 +316,7 @@ function sanitizeHtml(html, options, _recursing) {
             }
             result += ' ' + a;
             if (value.length) {
-              result += '="' + escapeHtml(value) + '"';
+              result += '="' + escapeHtml(value, true) + '"';
             }
           } else {
             delete frame.attribs[a];
@@ -351,7 +352,7 @@ function sanitizeHtml(html, options, _recursing) {
         // which have their own collection of XSS vectors.
         result += text;
       } else {
-        var escaped = escapeHtml(text);
+        var escaped = escapeHtml(text, false);
         if (options.textFilter) {
           result += options.textFilter(escaped);
         } else {
@@ -412,14 +413,28 @@ function sanitizeHtml(html, options, _recursing) {
 
   return result;
 
-  function escapeHtml(s) {
+  function escapeHtml(s, quote) {
     if (typeof(s) !== 'string') {
       s = s + '';
     }
-    return s.replace(/&(?![a-zA-Z0-9#]{1,7};)/g, '&amp;') // Match ampersands not part of existing HTML entity
+    if (options.parser.decodeEntities) {
+      s = s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\>/g, '&gt;');
+      if (quote) {
+        s = s.replace(/\"/g, '&quot;');
+      }
+    }
+    // TODO: this is inadequate because it will pass `&0;`. This approach
+    // will not work, each & must be considered with regard to whether it
+    // is followed by a 100% syntactically valid entity or not, and escaped
+    // if it is not. If this bothers you, don't set parser.decodeEntities
+    // to false. (The default is true.)
+    s = s.replace(/&(?![a-zA-Z0-9#]{1,20};)/g, '&amp;') // Match ampersands not part of existing HTML entity
       .replace(/</g, '&lt;')
-      .replace(/\>/g, '&gt;')
-      .replace(/\"/g, '&quot;');
+      .replace(/\>/g, '&gt;');
+    if (quote) {
+      s = s.replace(/\"/g, '&quot;');
+    }
+    return s;
   }
 
   function naughtyHref(name, href) {
