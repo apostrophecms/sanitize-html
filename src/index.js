@@ -8,7 +8,6 @@ var isPlainObject = require('lodash.isplainobject');
 var srcset = require('srcset');
 var postcss = require('postcss');
 var url = require('url');
-var characterEntities = require('character-entities');
 
 function each(obj, cb) {
   if (obj) Object.keys(obj).forEach(function (key) {
