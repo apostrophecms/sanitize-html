@@ -135,7 +135,7 @@ allowedAttributes: false
 
 #### "What if I don't want to allow *any* tags?"
 
-Also simple!  Set your `allowedTag` and `allowedAttributes` to empty arrays (`[]`).
+Also simple!  Set `allowedTags` to `[]` and `allowedAttributes` to `{}`.
 
 ```js
 allowedTags: [],
