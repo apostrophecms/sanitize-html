@@ -139,7 +139,7 @@ Also simple!  Set `allowedTags` to `[]` and `allowedAttributes` to `{}`.
 
 ```js
 allowedTags: [],
-allowedAttributes: []
+allowedAttributes: {}
 ```
 
 ### "What if I want to allow only specific values on some attributes?"
