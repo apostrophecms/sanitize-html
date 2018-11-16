@@ -25,23 +25,23 @@
   "author": "P'unk Avenue LLC",
   "license": "MIT",
   "dependencies": {
-    "chalk": "^2.3.0",
-    "htmlparser2": "^3.9.0",
+    "chalk": "^2.4.1",
+    "htmlparser2": "^3.10.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.escaperegexp": "^4.1.2",
     "lodash.isplainobject": "^4.0.6",
     "lodash.isstring": "^4.0.1",
-    "lodash.mergewith": "^4.6.0",
-    "postcss": "^6.0.14",
+    "lodash.mergewith": "^4.6.1",
+    "postcss": "^7.0.5",
     "srcset": "^1.0.0",
-    "xtend": "^4.0.0"
+    "xtend": "^4.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babelify": "^8.0.0",
-    "browserify": "^13.0.1",
-    "mocha": "^2.5.3",
-    "uglify-js": "^2.6.2"
+    "babel-preset-env": "^1.7.0",
+    "babelify": "^10.0.0",
+    "browserify": "^16.2.3",
+    "mocha": "^5.2.0",
+    "uglify-js": "^3.4.9"
   }
 }
