@@ -1,5 +1,10 @@
 ## Changelog
 
+1.19.2:
+
+* Switched out the heavy `postcss` dependency for the lightweight `css-tree` module. No API changes. Thanks to Justin Braithwaite.
+* Various doc updates. Thanks to Pulkit Aggarwal and Cody Robertson.
+
 1.19.1:
 
 * `"` characters are now entity-escaped only when they appear in attribute values, reducing the verbosity of the resulting markup.
