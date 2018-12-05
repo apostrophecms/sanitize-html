@@ -1,5 +1,7 @@
 ## Changelog
 
+1.19.3: reverted to `postcss` due to a [reported issue with `css-tree` that might or might not have XSS implications](https://github.com/punkave/sanitize-html/issues/269).
+
 1.19.2:
 
 * Switched out the heavy `postcss` dependency for the lightweight `css-tree` module. No API changes. Thanks to Justin Braithwaite.
