@@ -1,5 +1,7 @@
 ## Changelog
 
+1.20.0: reduced size of npm package via the `files` key; we only need to publish what's in `dist`. Thanks to Steven. There should be zero impact on behavior, minor version bump is precautionary.
+
 1.19.3: reverted to `postcss` due to a [reported issue with `css-tree` that might or might not have XSS implications](https://github.com/punkave/sanitize-html/issues/269).
 
 1.19.2:
