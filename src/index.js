@@ -515,11 +515,11 @@ function sanitizeHtml(html, options, _recursing) {
     return filteredAST.nodes[0].nodes
       .reduce(function(extractedAttributes, attributeObject) {
         extractedAttributes.push(
-          attributeObject.prop + ':' + attributeObject.value + ';'
+          attributeObject.prop + ':' + attributeObject.value
         );
         return extractedAttributes;
       }, [])
-      .join('');
+      .join(';');
   }
 
   /**
