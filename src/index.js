@@ -456,7 +456,7 @@ function sanitizeHtml(html, options, _recursing) {
       // No scheme
       return false;
     }
-    var scheme = matches[1].toLowerCase();
+    var scheme = matches[1];
 
     if (has(options.allowedSchemesByTag, name)) {
       return options.allowedSchemesByTag[name].indexOf(scheme) === -1;
