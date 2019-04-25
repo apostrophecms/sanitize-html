@@ -408,14 +408,14 @@ describe('sanitizeHtml', function() {
               return {
                 tagName: tagName,
                 attribs: {
-                  style: 'text-align: center;'
+                  style: 'text-align: center'
                 }
               };
             }
           }
         }
       ),
-      '<p style="text-align:center;">Text</p>'
+      '<p style="text-align:center">Text</p>'
     );
   });
   it('should not be faked out by double <', function() {
@@ -580,8 +580,8 @@ describe('sanitizeHtml', function() {
     );
   });
    it('should sanitize styles correctly', function() {
-    var sanitizeString = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right;"><u>test</u></li><li style="text-align: justify;"><u>test</u></li></ol> <p><u><span style="color:#00FF00;">test</span></u></p><p><span style="color:#00FF00"><span style="font-size:36px;">TESTETESTESTES</span></span></p></blockquote>';
-    var expected = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right;"><u>test</u></li><li style="text-align: justify;"><u>test</u></li></ol> <p><u><span style="color:#00FF00;">test</span></u></p><p><span style="color:#00FF00;"><span style="font-size:36px;">TESTETESTESTES</span></span></p></blockquote>';
+    var sanitizeString = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right"><u>test</u></li><li style="text-align: justify"><u>test</u></li></ol> <p><u><span style="color:#00FF00">test</span></u></p><p><span style="color:#00FF00"><span style="font-size:36px">TESTETESTESTES</span></span></p></blockquote>';
+    var expected = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right"><u>test</u></li><li style="text-align: justify"><u>test</u></li></ol> <p><u><span style="color:#00FF00">test</span></u></p><p><span style="color:#00FF00"><span style="font-size:36px">TESTETESTESTES</span></span></p></blockquote>';
     assert.equal(
       sanitizeHtml(sanitizeString, {
         allowedTags: false,
@@ -624,12 +624,12 @@ describe('sanitizeHtml', function() {
             "text-align": [/left/]
           }
         }
-      }), '<span style="color:blue;"></span>'
+      }), '<span style="color:blue"></span>'
     );
   });
   it('Should allow a specific style from global', function() {
     assert.equal(
-      sanitizeHtml("<span style='color: yellow; text-align: center; font-family: helvetica;'></span>", {
+      sanitizeHtml("<span style='color: yellow; text-align: center; font-family: helvetica'></span>", {
         allowedTags: false,
         allowedAttributes: {
           "span": ["style"]
@@ -644,7 +644,7 @@ describe('sanitizeHtml', function() {
             "font-family": [/helvetica/]
           }
         }
-      }), '<span style="color:yellow;text-align:center;font-family:helvetica;"></span>'
+      }), '<span style="color:yellow;text-align:center;font-family:helvetica"></span>'
     );
   });
   it('Should allow hostnames in an iframe that are whitelisted', function() {
@@ -750,7 +750,7 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<iframe name=\"IFRAME\" allowfullscreen=\"true\" sandbox=\"allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation\"></iframe>',{
         allowedTags: sanitizeHtml.defaults.allowedTags.concat( ['iframe'] ),
         allowedAttributes: {
-          iframe: [ 
+          iframe: [
             {
               name: 'sandbox',
               multiple: true,
@@ -766,7 +766,7 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<iframe sandbox=\"allow-popups allow-modals\"></iframe><iframe sandbox=\"allow-popups\"></iframe><iframe sandbox=\"allow-scripts\"></iframe>',{
         allowedTags: sanitizeHtml.defaults.allowedTags.concat( ['iframe'] ),
         allowedAttributes: {
-          iframe: [ 
+          iframe: [
             {
               name: 'sandbox',
               multiple: false,

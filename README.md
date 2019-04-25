@@ -1,6 +1,8 @@
 # sanitize-html
 
-<a href="http://apostrophenow.org/"><img src="https://raw.github.com/punkave/sanitize-html/master/logos/logo-box-madefor.png" align="right" /></a>
+[![CircleCI](https://circleci.com/gh/punkave/sanitize-html/tree/master.svg?style=svg)](https://circleci.com/gh/punkave/sanitize-html/tree/master)
+
+<a href="https://apostrophecms.org/"><img src="https://raw.github.com/punkave/sanitize-html/master/logos/logo-box-madefor.png" align="right" /></a>
 
 `sanitize-html` provides a simple HTML sanitizer with a clear API.
 
