@@ -7,10 +7,9 @@
     "dist/"
   ],
   "scripts": {
-    "prepare": "true",
-    "build": "make clean && make all && npm run prepare && browserify dist/index.js > dist/sanitize-html.js --standalone 'sanitizeHtml'",
+    "build": "browserify src/index.js > dist/sanitize-html-es2015.js --standalone 'sanitizeHtml' && babel dist/sanitize-html-es2015.js --out-file dist/sanitize-html.js --presets=@babel/preset-env",
     "minify": "npm run build && uglifyjs dist/sanitize-html.js > dist/sanitize-html.min.js",
-    "prepublishOnly": "make clean && npm run minify",
+    "prepublishOnly": "npm run minify",
     "test": "npm run prepublishOnly && mocha test/test.js"
   },
   "repository": {
@@ -40,11 +39,12 @@
     "xtend": "^4.0.1"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
     "babelify": "^10.0.0",
     "browserify": "^16.2.3",
     "mocha": "^5.2.0",
-    "uglify-js": "^3.4.9"
+    "uglify-js": "^3.4.9",
+    "@babel/cli": "^7.6.0",
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.0"
   }
 }
