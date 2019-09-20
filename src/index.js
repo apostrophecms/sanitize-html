@@ -52,7 +52,6 @@ const VALID_HTML_ATTRIBUTE_NAME = /^[^\0\t\n\f\r /<=>]+$/;
 
 function sanitizeHtml(html, options, _recursing) {
   var result = '';
-  var tempResult = '';
 
   function Frame(tag, attribs) {
     var that = this;
@@ -138,7 +137,6 @@ function sanitizeHtml(html, options, _recursing) {
   var skipMap = {};
   var transformMap = {};
   var skipText = false;
-  var escapeDepth = 0;
   var skipTextDepth = 0;
 
   var parser = new htmlparser.Parser({
@@ -146,9 +144,6 @@ function sanitizeHtml(html, options, _recursing) {
       if (skipText) {
         skipTextDepth++;
         return;
-      }
-      if (escapeDepth > 0) {
-        escapeDepth++;
       }
       var frame = new Frame(name, attribs);
       stack.push(frame);
@@ -182,26 +177,16 @@ function sanitizeHtml(html, options, _recursing) {
 
       if (options.allowedTags && options.allowedTags.indexOf(name) === -1) {
         skip = true;
-        if (!options.escapeDisallowedTags) {
-          // We don't want to skip disallowedTags tags, just escape them
-          if (nonTextTagsArray.indexOf(name) !== -1) {
-            skipText = true;
-            skipTextDepth = 1;
-          }
-          skipMap[depth] = true;
+        if (nonTextTagsArray.indexOf(name) !== -1) {
+          skipText = true;
+          skipTextDepth = 1;
         }
+        skipMap[depth] = true;
       }
       depth++;
       if (skip) {
-        if (!options.escapeDisallowedTags) {
-          // We want the contents but not this tag
-          return;
-        }
-        if (escapeDepth === 0) {
-          tempResult = result;
-          result = '';
-          escapeDepth++;
-        }
+        // We want the contents but not this tag
+        return;
       }
       result += '<' + name;
       if (!allowedAttributesMap || has(allowedAttributesMap, name) || allowedAttributesMap['*']) {
@@ -339,10 +324,6 @@ function sanitizeHtml(html, options, _recursing) {
       }
       if (options.selfClosing.indexOf(name) !== -1) {
         result += " />";
-        if (escapeDepth > 0 && --escapeDepth === 0) {
-          result = tempResult + escapeHtml(result);
-          tempResult = '';
-        }
       } else {
         result += ">";
         if (frame.innerText && !hasText && !options.textFilter) {
@@ -392,7 +373,6 @@ function sanitizeHtml(html, options, _recursing) {
           return;
         }
       }
-      var shouldEscape = escapeDepth > 0 && --escapeDepth === 0;
 
       var frame = stack.pop();
       if (!frame) {
@@ -425,10 +405,6 @@ function sanitizeHtml(html, options, _recursing) {
       }
 
       result += "</" + name + ">";
-      if (shouldEscape) {
-        result = tempResult + escapeHtml(result);
-        tempResult = '';
-      }
     }
   }, options.parser);
   parser.write(html);
@@ -596,7 +572,6 @@ sanitizeHtml.defaults = {
   allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
     'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
     'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'iframe' ],
-  escapeDisallowedTags: false,
   allowedAttributes: {
     a: [ 'href', 'name', 'target' ],
     // We don't currently allow img itself by default, but this

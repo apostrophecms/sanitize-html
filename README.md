@@ -488,16 +488,6 @@ Note that if you use this option you are responsible for stating the entire list
 
 The content still gets escaped properly, with the exception of the `script` and `style` tags. *Allowing either `script` or `style` leaves you open to XSS attacks. Don't do that* unless you have good reason to trust their origin.
 
-### Escaping the content of a disallowed tag
-
-Instead of discarding, or keeping text only, you may enable escaping of the entire content:
-
-```javascript
-escapeDisallowedTags: true
-```
-
-This will transform `<disallowed>content</disallowed>` to `&lt;disallowed&gt;content&lt;/disallowed&gt;`
-
 ## About P'unk Avenue and Apostrophe
 
 `sanitize-html` was created at [P'unk Avenue](http://punkave.com) for use in ApostropheCMS, an open-source content management system built on node.js. If you like `sanitize-html` you should definitely [check out apostrophecms.org](http://apostrophecms.org).
