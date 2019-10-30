@@ -7,7 +7,7 @@
     "dist/"
   ],
   "scripts": {
-    "build": "browserify src/index.js > dist/sanitize-html-es2015.js --standalone 'sanitizeHtml' && babel dist/sanitize-html-es2015.js --out-file dist/sanitize-html.js --presets=@babel/preset-env",
+    "build": "mkdir -p dist && browserify src/index.js > dist/sanitize-html-es2015.js --standalone 'sanitizeHtml' && babel dist/sanitize-html-es2015.js --out-file dist/sanitize-html.js --presets=@babel/preset-env",
     "minify": "npm run build && uglifyjs dist/sanitize-html.js > dist/sanitize-html.min.js",
     "prepublishOnly": "npm run minify",
     "test": "npm run prepublishOnly && mocha test/test.js"
