@@ -31,6 +31,15 @@ function filter(a, cb) {
   return n;
 }
 
+function isEmptyObject(obj) {
+  for(var key in obj) {
+    if (has(obj, key)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 module.exports = sanitizeHtml;
 
 // A valid attribute name.
@@ -52,6 +61,8 @@ const VALID_HTML_ATTRIBUTE_NAME = /^[^\0\t\n\f\r /<=>]+$/;
 
 function sanitizeHtml(html, options, _recursing) {
   var result = '';
+  // Used for hot swapping the result variable with an empty string in order to "capture" the text written to it.
+  var tempResult = '';
 
   function Frame(tag, attribs) {
     var that = this;
@@ -113,7 +124,7 @@ function sanitizeHtml(html, options, _recursing) {
       allowedAttributesMap[tag].push('class');
     }
 
-    allowedClassesMap[tag] = classes;
+    allowedClassesMap[tag] = classes
   });
 
   var transformTagsMap = {};
@@ -175,18 +186,25 @@ function sanitizeHtml(html, options, _recursing) {
         }
       }
 
-      if (options.allowedTags && options.allowedTags.indexOf(name) === -1) {
+      if ((options.allowedTags && options.allowedTags.indexOf(name) === -1) || (options.disallowedTagsMode === 'recursiveEscape' && !isEmptyObject(skipMap))) {
         skip = true;
-        if (nonTextTagsArray.indexOf(name) !== -1) {
-          skipText = true;
-          skipTextDepth = 1;
+        skipMap[depth] = true;
+        if (options.disallowedTagsMode === 'discard') {
+          if (nonTextTagsArray.indexOf(name) !== -1) {
+            skipText = true;
+            skipTextDepth = 1;
+          }
         }
         skipMap[depth] = true;
       }
       depth++;
       if (skip) {
-        // We want the contents but not this tag
-        return;
+        if (options.disallowedTagsMode === 'discard') {
+          // We want the contents but not this tag
+          return;
+        }
+        tempResult = result;
+        result = '';
       }
       result += '<' + name;
       if (!allowedAttributesMap || has(allowedAttributesMap, name) || allowedAttributesMap['*']) {
@@ -205,7 +223,7 @@ function sanitizeHtml(html, options, _recursing) {
             (has(allowedAttributesMap, name) && allowedAttributesMap[name].indexOf(a) !== -1 ) ||
             (allowedAttributesMap['*'] && allowedAttributesMap['*'].indexOf(a) !== -1 ) ||
             (has(allowedAttributesGlobMap, name) && allowedAttributesGlobMap[name].test(a)) ||
-            (allowedAttributesGlobMap['*'] && allowedAttributesGlobMap['*'].test(a))) {    
+            (allowedAttributesGlobMap['*'] && allowedAttributesGlobMap['*'].test(a))) {
               passedAllowedAttributesMapCheck = true;
           } else if (allowedAttributesMap && allowedAttributesMap[name]) {
             for (const o of allowedAttributesMap[name]) {
@@ -248,7 +266,7 @@ function sanitizeHtml(html, options, _recursing) {
                 var isRelativeUrl = parsed && parsed.host === null && parsed.protocol === null;
                 if (isRelativeUrl) {
                   // default value of allowIframeRelativeUrls is true unless allowIframeHostnames specified
-                  allowed = has(options, "allowIframeRelativeUrls") ? 
+                  allowed = has(options, "allowIframeRelativeUrls") ?
                     options.allowIframeRelativeUrls : !options.allowedIframeHostnames;
                 } else if (options.allowedIframeHostnames) {
                   allowed = options.allowedIframeHostnames.find(function (hostname) {
@@ -263,7 +281,7 @@ function sanitizeHtml(html, options, _recursing) {
                 delete frame.attribs[a];
                 return;
               }
-            } 
+            }
             if (a === 'srcset') {
               try {
                 parsed = srcset.parse(value);
@@ -330,6 +348,10 @@ function sanitizeHtml(html, options, _recursing) {
           result += frame.innerText;
         }
       }
+      if (skip) {
+        result = tempResult + escapeHtml(result);
+        tempResult = '';
+      }
     },
     ontext: function(text) {
       if (skipText) {
@@ -344,7 +366,7 @@ function sanitizeHtml(html, options, _recursing) {
         text = lastFrame.innerText !== undefined ? lastFrame.innerText : text;
       }
 
-      if ((tag === 'script') || (tag === 'style')) {
+      if (options.disallowedTagsMode === 'discard' && ((tag === 'script') || (tag === 'style'))) {
         // htmlparser2 gives us these as-is. Escaping them ruins the content. Allowing
         // script tags is, by definition, game over for XSS protection, so if that's
         // your concern, don't allow them. The same is essentially true for style tags
@@ -381,10 +403,15 @@ function sanitizeHtml(html, options, _recursing) {
       }
       skipText = false;
       depth--;
-      if (skipMap[depth]) {
+      var skip = skipMap[depth];
+      if (skip) {
         delete skipMap[depth];
-        frame.updateParentNodeText();
-        return;
+        if (options.disallowedTagsMode === 'discard') {
+          frame.updateParentNodeText();
+          return;
+        }
+        tempResult = result;
+        result = '';
       }
 
       if (transformMap[depth]) {
@@ -405,6 +432,10 @@ function sanitizeHtml(html, options, _recursing) {
       }
 
       result += "</" + name + ">";
+      if (skip) {
+        result = tempResult + escapeHtml(result);
+        tempResult = '';
+      }
     }
   }, options.parser);
   parser.write(html);
@@ -572,6 +603,7 @@ sanitizeHtml.defaults = {
   allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
     'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
     'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'iframe' ],
+  disallowedTagsMode: 'discard',
   allowedAttributes: {
     a: [ 'href', 'name', 'target' ],
     // We don't currently allow img itself by default, but this
