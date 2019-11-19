@@ -205,7 +205,7 @@ function sanitizeHtml(html, options, _recursing) {
             (has(allowedAttributesMap, name) && allowedAttributesMap[name].indexOf(a) !== -1 ) ||
             (allowedAttributesMap['*'] && allowedAttributesMap['*'].indexOf(a) !== -1 ) ||
             (has(allowedAttributesGlobMap, name) && allowedAttributesGlobMap[name].test(a)) ||
-            (allowedAttributesGlobMap['*'] && allowedAttributesGlobMap['*'].test(a))) {    
+            (allowedAttributesGlobMap['*'] && allowedAttributesGlobMap['*'].test(a))) {
               passedAllowedAttributesMapCheck = true;
           } else if (allowedAttributesMap && allowedAttributesMap[name]) {
             for (const o of allowedAttributesMap[name]) {
@@ -248,7 +248,7 @@ function sanitizeHtml(html, options, _recursing) {
                 var isRelativeUrl = parsed && parsed.host === null && parsed.protocol === null;
                 if (isRelativeUrl) {
                   // default value of allowIframeRelativeUrls is true unless allowIframeHostnames specified
-                  allowed = has(options, "allowIframeRelativeUrls") ? 
+                  allowed = has(options, "allowIframeRelativeUrls") ?
                     options.allowIframeRelativeUrls : !options.allowedIframeHostnames;
                 } else if (options.allowedIframeHostnames) {
                   allowed = options.allowedIframeHostnames.find(function (hostname) {
@@ -263,7 +263,7 @@ function sanitizeHtml(html, options, _recursing) {
                 delete frame.attribs[a];
                 return;
               }
-            } 
+            }
             if (a === 'srcset') {
               try {
                 parsed = srcset.parse(value);
@@ -353,7 +353,7 @@ function sanitizeHtml(html, options, _recursing) {
       } else {
         var escaped = escapeHtml(text, false);
         if (options.textFilter) {
-          result += options.textFilter(escaped);
+          result += options.textFilter(escaped, tag);
         } else {
           result += escaped;
         }
