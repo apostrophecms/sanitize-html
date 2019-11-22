@@ -310,6 +310,8 @@ sanitizeHtml(
   '<p>some text...</p>',
   {
     textFilter: function(text, tagName) {
+      if (['a'].indexOf(tagName) > -1) return //Skip anchor tags
+
       return text.replace(/\.\.\./, '&hellip;');
     }
   }
