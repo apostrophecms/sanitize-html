@@ -109,6 +109,7 @@ If you do not specify `allowedTags` or `allowedAttributes` our default list is a
 allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
   'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
   'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'iframe' ],
+disallowedTagsMode: 'discard',
 allowedAttributes: {
   a: [ 'href', 'name', 'target' ],
   // We don't currently allow img itself by default, but this
@@ -143,6 +144,14 @@ Also simple!  Set `allowedTags` to `[]` and `allowedAttributes` to `{}`.
 allowedTags: [],
 allowedAttributes: {}
 ```
+
+### "What if I want disallowed tags to be escaped rather than discarded?"
+
+If you set `disallowedTagsMode` to `discard` (the default), disallowed tags are discarded. Any text content or subtags is still included, depending on whether the individual subtags are allowed.
+
+If you set `disallowedTagsMode` to `escape`, the disallowed tags are escaped rather than discarded. Any text or subtags is handled normally.
+
+If you set `disallowedTagsMode` to `recursiveEscape`, the disallowed tags are escaped rather than discarded, and the same treatment is applied to all subtags, whether otherwise allowed or not.
 
 ### "What if I want to allow only specific values on some attributes?"
 
