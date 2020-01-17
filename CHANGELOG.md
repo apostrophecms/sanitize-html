@@ -1,5 +1,7 @@
 ## Changelog
 
+1.21.1: fixed issue with bad `main` setting in package.json that broke 1.21.0.
+
 1.21.0: new `disallowedTagsMode` option can be set to `escape` to escape disallowed tags rather than discarding them. Any subtags are handled as usual. If you want to recursively escape them too, you can set `disallowedTagsMode` to `recursiveEscape`. Thanks to Yehonatan Zecharia for this contribution.
 
 1.20.1: Fix failing tests, add CircleCI config
