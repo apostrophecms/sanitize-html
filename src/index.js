@@ -332,7 +332,7 @@ function sanitizeHtml(html, options, _recursing) {
               }
             }
             result += ' ' + a;
-            if (value.length) {
+            if (value && value.length) {
               result += '="' + escapeHtml(value, true) + '"';
             }
           } else {
