@@ -35,7 +35,7 @@
     "lodash.isstring": "^4.0.1",
     "lodash.mergewith": "^4.6.1",
     "postcss": "^7.0.27",
-    "srcset": "^1.0.0",
+    "srcset": "^2.0.1",
     "xtend": "^4.0.1"
   },
   "devDependencies": {
