@@ -2,7 +2,7 @@ var assert = require("assert");
 describe('sanitizeHtml', function() {
   var sanitizeHtml;
   it('should be successfully initialized', function() {
-    sanitizeHtml = require('../dist/index.js');
+    sanitizeHtml = require('../dist/sanitize-html.js');
   });
   it('should pass through simple well-formed whitelisted markup', function() {
     assert.equal(sanitizeHtml('<div><p>Hello <b>there</b></p></div>'), '<div><p>Hello <b>there</b></p></div>');
@@ -18,6 +18,9 @@ describe('sanitizeHtml', function() {
   });
   it('should reject markup not whitelisted without destroying its text', function() {
     assert.equal(sanitizeHtml('<div><wiggly>Hello</wiggly></div>'), '<div>Hello</div>');
+  });
+  it('should escape markup not whitelisted', function() {
+    assert.equal(sanitizeHtml('<div><wiggly>Hello</wiggly></div>', { disallowedTagsMode: 'escape' }), '<div>&lt;wiggly&gt;Hello&lt;/wiggly&gt;</div>');
   });
   it('should accept a custom list of allowed tags', function() {
     assert.equal(sanitizeHtml('<blue><red><green>Cheese</green></red></blue>', { allowedTags: [ 'blue', 'green' ] }), '<blue><green>Cheese</green></blue>');
@@ -819,4 +822,34 @@ describe('sanitizeHtml', function() {
   //       }
   //     }), '<img src="&lt;0&amp;0;0.2&amp;" />');
   // });
+  it('should escape markup not whitelisted and all its children in recursive mode', function() {
+    assert.equal(
+        sanitizeHtml('<div><wiggly>Hello<p>World</p></wiggly></div>', { disallowedTagsMode: 'recursiveEscape' }),
+        '<div>&lt;wiggly&gt;Hello&lt;p&gt;World&lt;/p&gt;&lt;/wiggly&gt;</div>'
+    );
+  });
+  it('should escape markup not whitelisted and but not its children', function() {
+    assert.equal(
+      sanitizeHtml('<div><wiggly>Hello<p>World</p></wiggly></div>', { disallowedTagsMode: 'escape' }),
+      '<div>&lt;wiggly&gt;Hello<p>World</p>&lt;/wiggly&gt;</div>'
+    );
+  });
+  it('should escape markup even when deocdeEntities is false', function() {
+    assert.equal(
+        sanitizeHtml('<wiggly>Hello</wiggly>', { disallowedTagsMode: 'escape', parser: { decodeEntities: false } }),
+        '&lt;wiggly&gt;Hello&lt;/wiggly&gt;'
+    );
+  });
+  it('should escape markup not whitelisted even within allowed markup', function() {
+    assert.equal(
+      sanitizeHtml('<div><wiggly>Hello<p>World</p><tiggly>JS</tiggly></wiggly></div>', { disallowedTagsMode: 'recursiveEscape' }),
+      '<div>&lt;wiggly&gt;Hello&lt;p&gt;World&lt;/p&gt;&lt;tiggly&gt;JS&lt;/tiggly&gt;&lt;/wiggly&gt;</div>'
+    );
+  });
+  it('should escape markup not whitelisted even within allowed markup, but not the allowed markup itself', function() {
+    assert.equal(
+        sanitizeHtml('<div><wiggly>Hello<p>World</p><tiggly>JS</tiggly></wiggly></div>', { disallowedTagsMode: 'escape' }),
+        '<div>&lt;wiggly&gt;Hello<p>World</p>&lt;tiggly&gt;JS&lt;/tiggly&gt;&lt;/wiggly&gt;</div>'
+    );
+  });
 });

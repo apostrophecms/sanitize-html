@@ -1,5 +1,11 @@
 ## Changelog
 
+1.22.0: bumped `htmlparser2` dependency to the 4.x series. This fixes longstanding bugs and should cause no bc breaks for this module, since the only bc breaks upstream are in regard to features we don't expose in this module.
+
+1.21.1: fixed issue with bad `main` setting in package.json that broke 1.21.0.
+
+1.21.0: new `disallowedTagsMode` option can be set to `escape` to escape disallowed tags rather than discarding them. Any subtags are handled as usual. If you want to recursively escape them too, you can set `disallowedTagsMode` to `recursiveEscape`. Thanks to Yehonatan Zecharia for this contribution.
+
 1.20.1: Fix failing tests, add CircleCI config
 
 1.20.0: reduced size of npm package via the `files` key; we only need to publish what's in `dist`. Thanks to Steven. There should be zero impact on behavior, minor version bump is precautionary.
