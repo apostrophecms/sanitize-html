@@ -1,5 +1,7 @@
 ## Changelog
 
+1.22.2: Adds eslint configuration and adds eslint to test script.
+
 1.22.1: Increases the patch version of `lodash.mergewith` to enforce an audit fix.
 
 1.22.0: bumped `htmlparser2` dependency to the 4.x series. This fixes longstanding bugs and should cause no bc breaks for this module, since the only bc breaks upstream are in regard to features we don't expose in this module.

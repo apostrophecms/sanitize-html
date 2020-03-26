@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 var htmlparser = require('htmlparser2');
 var extend = require('xtend');
 var quoteRegexp = require('lodash.escaperegexp');
@@ -10,9 +11,11 @@ var postcss = require('postcss');
 var url = require('url');
 
 function each(obj, cb) {
-  if (obj) Object.keys(obj).forEach(function (key) {
-    cb(obj[key], key);
-  });
+  if (obj) {
+    Object.keys(obj).forEach(function (key) {
+      cb(obj[key], key);
+    });
+  }
 }
 
 // Avoid false positives with .__proto__, .hasOwnProperty, etc.
@@ -32,7 +35,7 @@ function filter(a, cb) {
 }
 
 function isEmptyObject(obj) {
-  for(var key in obj) {
+  for (var key in obj) {
     if (has(obj, key)) {
       return false;
     }
@@ -73,8 +76,8 @@ function sanitizeHtml(html, options, _recursing) {
 
     this.updateParentNodeText = function() {
       if (stack.length) {
-          var parentFrame = stack[stack.length - 1];
-          parentFrame.text += that.text;
+        var parentFrame = stack[stack.length - 1];
+        parentFrame.text += that.text;
       }
     };
   }
@@ -98,14 +101,14 @@ function sanitizeHtml(html, options, _recursing) {
   var nonTextTagsArray = options.nonTextTags || [ 'script', 'style', 'textarea' ];
   var allowedAttributesMap;
   var allowedAttributesGlobMap;
-  if(options.allowedAttributes) {
+  if (options.allowedAttributes) {
     allowedAttributesMap = {};
     allowedAttributesGlobMap = {};
     each(options.allowedAttributes, function(attributes, tag) {
       allowedAttributesMap[tag] = [];
       var globRegex = [];
       attributes.forEach(function(obj) {
-        if(isString(obj) && obj.indexOf('*') >= 0) {
+        if (isString(obj) && obj.indexOf('*') >= 0) {
           globRegex.push(quoteRegexp(obj).replace(/\\\*/g, '.*'));
         } else {
           allowedAttributesMap[tag].push(obj);
@@ -117,14 +120,14 @@ function sanitizeHtml(html, options, _recursing) {
   var allowedClassesMap = {};
   each(options.allowedClasses, function(classes, tag) {
     // Implicitly allows the class attribute
-    if(allowedAttributesMap) {
+    if (allowedAttributesMap) {
       if (!has(allowedAttributesMap, tag)) {
         allowedAttributesMap[tag] = [];
       }
       allowedAttributesMap[tag].push('class');
     }
 
-    allowedClassesMap[tag] = classes
+    allowedClassesMap[tag] = classes;
   });
 
   var transformTagsMap = {};
@@ -160,7 +163,7 @@ function sanitizeHtml(html, options, _recursing) {
       stack.push(frame);
 
       var skip = false;
-      var hasText = frame.text ? true : false;
+      var hasText = !!frame.text;
       var transformedTag;
       if (has(transformTagsMap, name)) {
         transformedTag = transformTagsMap[name](name, attribs);
@@ -220,11 +223,11 @@ function sanitizeHtml(html, options, _recursing) {
           // as necessary if there are specific values defined.
           var passedAllowedAttributesMapCheck = false;
           if (!allowedAttributesMap ||
-            (has(allowedAttributesMap, name) && allowedAttributesMap[name].indexOf(a) !== -1 ) ||
-            (allowedAttributesMap['*'] && allowedAttributesMap['*'].indexOf(a) !== -1 ) ||
+            (has(allowedAttributesMap, name) && allowedAttributesMap[name].indexOf(a) !== -1) ||
+            (allowedAttributesMap['*'] && allowedAttributesMap['*'].indexOf(a) !== -1) ||
             (has(allowedAttributesGlobMap, name) && allowedAttributesGlobMap[name].test(a)) ||
             (allowedAttributesGlobMap['*'] && allowedAttributesGlobMap['*'].test(a))) {
-              passedAllowedAttributesMapCheck = true;
+            passedAllowedAttributesMapCheck = true;
           } else if (allowedAttributesMap && allowedAttributesMap[name]) {
             for (const o of allowedAttributesMap[name]) {
               if (isPlainObject(o) && o.name && (o.name === a)) {
@@ -266,8 +269,8 @@ function sanitizeHtml(html, options, _recursing) {
                 var isRelativeUrl = parsed && parsed.host === null && parsed.protocol === null;
                 if (isRelativeUrl) {
                   // default value of allowIframeRelativeUrls is true unless allowIframeHostnames specified
-                  allowed = has(options, "allowIframeRelativeUrls") ?
-                    options.allowIframeRelativeUrls : !options.allowedIframeHostnames;
+                  allowed = has(options, "allowIframeRelativeUrls")
+                    ? options.allowIframeRelativeUrls : !options.allowedIframeHostnames;
                 } else if (options.allowedIframeHostnames) {
                   allowed = options.allowedIframeHostnames.find(function (hostname) {
                     return hostname === parsed.hostname;
@@ -322,7 +325,7 @@ function sanitizeHtml(html, options, _recursing) {
 
                 value = stringifyStyleAttributes(filteredAST);
 
-                if(value.length === 0) {
+                if (value.length === 0) {
                   delete frame.attribs[a];
                   return;
                 }
@@ -357,7 +360,7 @@ function sanitizeHtml(html, options, _recursing) {
       if (skipText) {
         return;
       }
-      var lastFrame = stack[stack.length-1];
+      var lastFrame = stack[stack.length - 1];
       var tag;
 
       if (lastFrame) {
@@ -381,8 +384,8 @@ function sanitizeHtml(html, options, _recursing) {
         }
       }
       if (stack.length) {
-           var frame = stack[stack.length - 1];
-           frame.text += text;
+        var frame = stack[stack.length - 1];
+        frame.text += text;
       }
     },
     onclosetag: function(name) {
@@ -420,15 +423,15 @@ function sanitizeHtml(html, options, _recursing) {
       }
 
       if (options.exclusiveFilter && options.exclusiveFilter(frame)) {
-         result = result.substr(0, frame.tagPosition);
-         return;
+        result = result.substr(0, frame.tagPosition);
+        return;
       }
 
       frame.updateParentNodeText();
 
       if (options.selfClosing.indexOf(name) !== -1) {
-         // Already output />
-         return;
+        // Already output />
+        return;
       }
 
       result += "</" + name + ">";
@@ -444,7 +447,7 @@ function sanitizeHtml(html, options, _recursing) {
   return result;
 
   function escapeHtml(s, quote) {
-    if (typeof(s) !== 'string') {
+    if (typeof (s) !== 'string') {
       s = s + '';
     }
     if (options.parser.decodeEntities) {
@@ -471,6 +474,7 @@ function sanitizeHtml(html, options, _recursing) {
     // Browsers ignore character codes of 32 (space) and below in a surprising
     // number of situations. Start reading here:
     // https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Embedded_tab
+    // eslint-disable-next-line no-control-regex
     href = href.replace(/[\x00-\x20]+/g, '');
     // Clobber any comments in URLs, which the browser might
     // interpret inside an XML data island, allowing

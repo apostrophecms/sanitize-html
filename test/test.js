@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 var assert = require("assert");
 describe('sanitizeHtml', function() {
   var sanitizeHtml;
@@ -29,10 +30,12 @@ describe('sanitizeHtml', function() {
     assert.equal(sanitizeHtml('<a href="foo.html" whizbang="whangle">foo</a>'), '<a href="foo.html">foo</a>');
   });
   it('should accept a custom list of allowed attributes per element', function() {
-    assert.equal(sanitizeHtml('<a href="foo.html" whizbang="whangle">foo</a>', { allowedAttributes: { a: [ 'href', 'whizbang' ] } } ), '<a href="foo.html" whizbang="whangle">foo</a>');
+    assert.equal(sanitizeHtml('<a href="foo.html" whizbang="whangle">foo</a>', { allowedAttributes: { a: [ 'href', 'whizbang' ] } }), '<a href="foo.html" whizbang="whangle">foo</a>');
   });
   it('should clean up unclosed img tags and p tags', function() {
-    assert.equal(sanitizeHtml('<img src="foo.jpg"><p>Whee<p>Again<p>Wow<b>cool</b>', { allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ])}), '<img src="foo.jpg" /><p>Whee</p><p>Again</p><p>Wow<b>cool</b></p>');
+    assert.equal(sanitizeHtml('<img src="foo.jpg"><p>Whee<p>Again<p>Wow<b>cool</b>', {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ])
+    }), '<img src="foo.jpg" /><p>Whee</p><p>Again</p><p>Wow<b>cool</b></p>');
   });
   it('should reject hrefs that are not relative, ftp, http, https or mailto', function() {
     assert.equal(sanitizeHtml('<a href="http://google.com">google</a><a href="https://google.com">https google</a><a href="ftp://example.com">ftp</a><a href="mailto:test@test.com">mailto</a><a href="/relative.html">relative</a><a href="javascript:alert(0)">javascript</a>'), '<a href="http://google.com">google</a><a href="https://google.com">https google</a><a href="ftp://example.com">ftp</a><a href="mailto:test@test.com">mailto</a><a href="/relative.html">relative</a><a>javascript</a>');
@@ -107,117 +110,148 @@ describe('sanitizeHtml', function() {
     assert.equal(sanitizeHtml('<ol><li>Hello world</li></ol>', { transformTags: {ol: 'ul'} }), '<ul><li>Hello world</li></ul>');
   });
   it('should replace ol to ul and add class attribute with foo value', function() {
-    assert.equal(sanitizeHtml('<ol><li>Hello world</li></ol>', { transformTags: {ol: sanitizeHtml.simpleTransform('ul', {class: 'foo'})}, allowedAttributes: { ul: ['class'] } }), '<ul class="foo"><li>Hello world</li></ul>');
+    assert.equal(sanitizeHtml('<ol><li>Hello world</li></ol>', {
+      transformTags: {ol: sanitizeHtml.simpleTransform('ul', {class: 'foo'})},
+      allowedAttributes: { ul: ['class'] }
+    }), '<ul class="foo"><li>Hello world</li></ul>');
   });
   it('should replace ol to ul, left attributes foo and bar untouched, remove baz attribute and add class attributte with foo value', function() {
-    assert.equal(sanitizeHtml('<ol foo="foo" bar="bar" baz="baz"><li>Hello world</li></ol>', { transformTags: {ol: sanitizeHtml.simpleTransform('ul', {class: 'foo'})}, allowedAttributes: { ul: ['foo', 'bar', 'class'] } }), '<ul foo="foo" bar="bar" class="foo"><li>Hello world</li></ul>');
+    assert.equal(sanitizeHtml('<ol foo="foo" bar="bar" baz="baz"><li>Hello world</li></ol>', {
+      transformTags: {ol: sanitizeHtml.simpleTransform('ul', {class: 'foo'})},
+      allowedAttributes: { ul: ['foo', 'bar', 'class'] }
+    }), '<ul foo="foo" bar="bar" class="foo"><li>Hello world</li></ul>');
   });
   it('should replace ol to ul and replace all attributes to class attribute with foo value', function() {
-    assert.equal(sanitizeHtml('<ol foo="foo" bar="bar" baz="baz"><li>Hello world</li></ol>', { transformTags: {ol: sanitizeHtml.simpleTransform('ul', {class: 'foo'}, false)}, allowedAttributes: { ul: ['foo', 'bar', 'class'] } }), '<ul class="foo"><li>Hello world</li></ul>');
+    assert.equal(sanitizeHtml('<ol foo="foo" bar="bar" baz="baz"><li>Hello world</li></ol>', {
+      transformTags: {ol: sanitizeHtml.simpleTransform('ul', {class: 'foo'}, false)},
+      allowedAttributes: { ul: ['foo', 'bar', 'class'] }
+    }), '<ul class="foo"><li>Hello world</li></ul>');
   });
   it('should replace ol to ul and add attribute class with foo value and attribute bar with bar value', function() {
-    assert.equal(sanitizeHtml('<ol><li>Hello world</li></ol>', { transformTags: {ol: function(tagName, attribs){
-      attribs.class = 'foo';
-      attribs.bar = 'bar';
-      return {
-        tagName: 'ul',
-        attribs: attribs
-      }
-    }}, allowedAttributes: { ul: ['bar', 'class'] } }), '<ul class="foo" bar="bar"><li>Hello world</li></ul>');
+    assert.equal(sanitizeHtml('<ol><li>Hello world</li></ol>', {
+      transformTags: {
+        ol: function(tagName, attribs) {
+          attribs.class = 'foo';
+          attribs.bar = 'bar';
+          return {
+            tagName: 'ul',
+            attribs: attribs
+          };
+        }
+      },
+      allowedAttributes: { ul: ['bar', 'class'] }
+    }), '<ul class="foo" bar="bar"><li>Hello world</li></ul>');
   });
 
   it('should replace text and attributes when they are changed by transforming function', function () {
-    assert.equal(sanitizeHtml('<a href="http://somelink">some text</a>', { transformTags: {a: function (tagName, attribs) {
-      return {
-        tagName: tagName,
-        attribs: attribs,
-        text: ''
+    assert.equal(sanitizeHtml('<a href="http://somelink">some text</a>', {
+      transformTags: {
+        a: function (tagName, attribs) {
+          return {
+            tagName: tagName,
+            attribs: attribs,
+            text: ''
+          };
+        }
       }
-    }}}), '<a href="http://somelink"></a>');
+    }), '<a href="http://somelink"></a>');
   });
   it('should replace text and attributes when they are changed by transforming function and textFilter is set', function () {
-    assert.equal(sanitizeHtml('<a href="http://somelink">some text</a>', { transformTags: {a: function (tagName, attribs) {
-      return {
-        tagName: tagName,
-        attribs: attribs,
-        text: 'some text need"to<be>filtered'
+    assert.equal(sanitizeHtml('<a href="http://somelink">some text</a>', {
+      transformTags: {
+        a: function (tagName, attribs) {
+          return {
+            tagName: tagName,
+            attribs: attribs,
+            text: 'some text need"to<be>filtered'
+          };
+        }
+      },
+      textFilter: function (text) {
+        return text.replace(/\s/g, '_');
       }
-    }}, textFilter: function (text) {
-      return text.replace(/\s/g, '_');
-    }}), '<a href="http://somelink">some_text_need"to&lt;be&gt;filtered</a>');
+    }), '<a href="http://somelink">some_text_need"to&lt;be&gt;filtered</a>');
   });
 
   it('should add new text when not initially set and replace attributes when they are changed by transforming function', function () {
-    assert.equal(sanitizeHtml('<a href="http://somelink"></a>', { transformTags: {a: function (tagName, attribs) {
-      return {
-        tagName: tagName,
-        attribs: attribs,
-        text: 'some new text'
+    assert.equal(sanitizeHtml('<a href="http://somelink"></a>', {
+      transformTags: {
+        a: function (tagName, attribs) {
+          return {
+            tagName: tagName,
+            attribs: attribs,
+            text: 'some new text'
+          };
+        }
       }
-    }}}), '<a href="http://somelink">some new text</a>');
+    }), '<a href="http://somelink">some new text</a>');
   });
 
   it('should preserve text when initially set and replace attributes when they are changed by transforming function', function () {
-    assert.equal(sanitizeHtml('<a href="http://somelink">some initial text</a>', { transformTags: {a: function (tagName, attribs) {
-      return {
-        tagName: tagName,
-        attribs: attribs
+    assert.equal(sanitizeHtml('<a href="http://somelink">some initial text</a>', {
+      transformTags: {
+        a: function (tagName, attribs) {
+          return {
+            tagName: tagName,
+            attribs: attribs
+          };
+        }
       }
-    }}}), '<a href="http://somelink">some initial text</a>');
+    }), '<a href="http://somelink">some initial text</a>');
   });
 
   it('should skip an empty link', function() {
-     assert.strictEqual(
-     sanitizeHtml('<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>', {
-             exclusiveFilter: function (frame) {
-                 return frame.tag === 'a' && !frame.text.trim();
-             }
-         }),
-         '<p>This is <br />Linux</p>'
-        );
-    });
+    assert.strictEqual(
+      sanitizeHtml('<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>', {
+        exclusiveFilter: function (frame) {
+          return frame.tag === 'a' && !frame.text.trim();
+        }
+      }),
+      '<p>This is <br />Linux</p>'
+    );
+  });
 
-    it("Should expose a node's inner text and inner HTML to the filter", function() {
-        assert.strictEqual(
-            sanitizeHtml('<p>12<a href="http://www.linux.org"><br/>3<br></a><span>4</span></p>', {
-                exclusiveFilter : function(frame) {
-                    if (frame.tag === 'p') {
-                        assert.strictEqual(frame.text, '124');
-                    } else if (frame.tag === 'a') {
-                        assert.strictEqual(frame.text, '3');
-                        return true;
-                    } else if (frame.tag === 'br') {
-                        assert.strictEqual(frame.text, '');
-                    } else {
-                        assert.fail('p, a, br', frame.tag);
-                    }
-                    return false;
-                }
-            }),
-            '<p>124</p>'
-        );
-    });
+  it("Should expose a node's inner text and inner HTML to the filter", function() {
+    assert.strictEqual(
+      sanitizeHtml('<p>12<a href="http://www.linux.org"><br/>3<br></a><span>4</span></p>', {
+        exclusiveFilter: function(frame) {
+          if (frame.tag === 'p') {
+            assert.strictEqual(frame.text, '124');
+          } else if (frame.tag === 'a') {
+            assert.strictEqual(frame.text, '3');
+            return true;
+          } else if (frame.tag === 'br') {
+            assert.strictEqual(frame.text, '');
+          } else {
+            assert.fail('p, a, br', frame.tag);
+          }
+          return false;
+        }
+      }),
+      '<p>124</p>'
+    );
+  });
 
   it('Should collapse nested empty elements', function() {
-        assert.strictEqual(
-            sanitizeHtml('<p><a href="http://www.linux.org"><br/></a></p>', {
-                    exclusiveFilter : function(frame) {
-                        return (frame.tag === 'a' || frame.tag === 'p' ) && !frame.text.trim();
-                    }
-                }),
-            ''
-        );
+    assert.strictEqual(
+      sanitizeHtml('<p><a href="http://www.linux.org"><br/></a></p>', {
+        exclusiveFilter: function(frame) {
+          return (frame.tag === 'a' || frame.tag === 'p') && !frame.text.trim();
+        }
+      }),
+      ''
+    );
   });
   it('Exclusive filter should not affect elements which do not match the filter condition', function () {
-      assert.strictEqual(
-          sanitizeHtml('I love <a href="www.linux.org" target="_hplink">Linux</a> OS',
-              {
-                  exclusiveFilter: function (frame) {
-                      return (frame.tag === 'a') && !frame.text.trim();
-                  }
-              }),
-          'I love <a href="www.linux.org" target="_hplink">Linux</a> OS'
-      );
+    assert.strictEqual(
+      sanitizeHtml('I love <a href="www.linux.org" target="_hplink">Linux</a> OS',
+        {
+          exclusiveFilter: function (frame) {
+            return (frame.tag === 'a') && !frame.text.trim();
+          }
+        }),
+      'I love <a href="www.linux.org" target="_hplink">Linux</a> OS'
+    );
   });
   it('should disallow data URLs with default allowedSchemes', function() {
     assert.equal(
@@ -331,16 +365,16 @@ describe('sanitizeHtml', function() {
   });
   it('should allow only whitelisted attributes, but to any tags, if tag is declared as  "*"', function() {
     assert.equal(
-        sanitizeHtml(
-            '<table bgcolor="1" align="left" notlisted="0"><img src="1.gif" align="center" alt="not listed too"/></table>',
-            {
-              allowedTags: [ 'table', 'img' ],
-              allowedAttributes: {
-                '*': [ 'bgcolor', 'align', 'src' ]
-              }
-            }
-        ),
-        '<table bgcolor="1" align="left"><img src="1.gif" align="center" /></table>'
+      sanitizeHtml(
+        '<table bgcolor="1" align="left" notlisted="0"><img src="1.gif" align="center" alt="not listed too"/></table>',
+        {
+          allowedTags: [ 'table', 'img' ],
+          allowedAttributes: {
+            '*': [ 'bgcolor', 'align', 'src' ]
+          }
+        }
+      ),
+      '<table bgcolor="1" align="left"><img src="1.gif" align="center" /></table>'
     );
   });
   it('should not filter if exclusive filter does not match after transforming tags', function() {
@@ -349,11 +383,12 @@ describe('sanitizeHtml', function() {
         '<a href="test.html">test</a>',
         {
           allowedTags: [ 'a' ],
-          allowedAttributes: { a: ['href', 'target']},
+          allowedAttributes: { a: ['href', 'target'] },
           transformTags: {
             'a': function (tagName, attribs) {
-              if (!attribs.href)
+              if (!attribs.href) {
                 return false;
+              }
               return {
                 tagName: tagName,
                 attribs: {
@@ -364,12 +399,12 @@ describe('sanitizeHtml', function() {
             }
           },
           exclusiveFilter: function(frame) {
-            return frame.tag === 'a' && frame.text.trim() == 'blah';
+            return frame.tag === 'a' && frame.text.trim() === 'blah';
           }
         }
       ),
       '<a target="_blank" href="test.html">test</a>'
-    )
+    );
   });
   it('should filter if exclusive filter does match after transforming tags', function() {
     assert.equal(
@@ -380,8 +415,9 @@ describe('sanitizeHtml', function() {
           allowedAttributes: {a: ['href', 'target']},
           transformTags: {
             'a': function (tagName, attribs) {
-              if (!attribs.href)
+              if (!attribs.href) {
                 return false;
+              }
               return {
                 tagName: tagName,
                 attribs: {
@@ -392,7 +428,7 @@ describe('sanitizeHtml', function() {
             }
           },
           exclusiveFilter: function(frame) {
-            return frame.tag === 'a' && frame.text.trim() == 'blah';
+            return frame.tag === 'a' && frame.text.trim() === 'blah';
           }
         }
       ),
@@ -475,7 +511,7 @@ describe('sanitizeHtml', function() {
         }
       ),
       '<script>alert("&quot;This is cool but just ironically so I quoted it&quot;")</script>'
-    )
+    );
   });
   it('should process text nodes with provided function', function() {
     assert.equal(
@@ -490,7 +526,7 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml("<Archer><Sterling>I am</Sterling></Archer>", {
         allowedTags: false,
-        allowedAttributes: false,
+        allowedAttributes: false
       }),
       "<archer><sterling>I am</sterling></archer>"
     );
@@ -508,7 +544,7 @@ describe('sanitizeHtml', function() {
   it('should not crash due to tag names that are properties of the universal Object prototype', function() {
     assert.equal(
       sanitizeHtml("!<__proto__>!"),
-    "!!");
+      "!!");
   });
   it('should correctly maintain escaping when allowing a nonTextTags tag other than script or style', function() {
     assert.equal(
@@ -582,7 +618,7 @@ describe('sanitizeHtml', function() {
       '<span>alert(1)//&gt;</span>'
     );
   });
-   it('should sanitize styles correctly', function() {
+  it('should sanitize styles correctly', function() {
     var sanitizeString = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right"><u>test</u></li><li style="text-align: justify"><u>test</u></li></ol> <p><u><span style="color:#00FF00">test</span></u></p><p><span style="color:#00FF00"><span style="font-size:36px">TESTETESTESTES</span></span></p></blockquote>';
     var expected = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right"><u>test</u></li><li style="text-align: justify"><u>test</u></li></ol> <p><u><span style="color:#00FF00">test</span></u></p><p><span style="color:#00FF00"><span style="font-size:36px">TESTETESTESTES</span></span></p></blockquote>';
     assert.equal(
@@ -602,8 +638,8 @@ describe('sanitizeHtml', function() {
             'font-size': [/36px/]
           }
         }
-      }).replace(/ /g,''), expected.replace(/ /g,'')
-    )
+      }).replace(/ /g, ''), expected.replace(/ /g, '')
+    );
   });
   it('Should remove empty style tags', function() {
     assert.equal(
@@ -653,69 +689,101 @@ describe('sanitizeHtml', function() {
   it('Should allow hostnames in an iframe that are whitelisted', function() {
     assert.equal(
       sanitizeHtml('<iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>', {
-        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
-        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
-        allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {
+          'iframe': ['src', 'href'],
+          'a': ['src', 'href'],
+          'img': ['src']
+        },
+        allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
       }), '<iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>'
     );
   });
   it('Should remove iframe src urls that are not included in whitelisted hostnames', function() {
     assert.equal(
       sanitizeHtml('<iframe src="https://www.embed.vevo.com/USUV71704255"></iframe>', {
-        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
-        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
-        allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {
+          'iframe': ['src', 'href'],
+          'a': ['src', 'href'],
+          'img': ['src']
+        },
+        allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
       }), '<iframe></iframe>'
     );
   });
   it('Should not allow iframe urls that do not have proper hostname', function() {
     assert.equal(
       sanitizeHtml('<iframe src="https://www.vimeo.com/embed/c2IlcS7AHxM"></iframe>', {
-        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
-        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
-        allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {
+          'iframe': ['src', 'href'],
+          'a': ['src', 'href'],
+          'img': ['src']
+        },
+        allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
       }), '<iframe></iframe>'
     );
   });
   it('Should allow iframe through if no hostname option is set', function() {
     assert.equal(
       sanitizeHtml('<iframe src="https://www.vimeo.com/embed/c2IlcS7AHxM"></iframe>', {
-        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
-        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']}
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {
+          'iframe': ['src', 'href'],
+          'a': ['src', 'href'],
+          'img': ['src']
+        }
       }), '<iframe src="https://www.vimeo.com/embed/c2IlcS7AHxM"></iframe>'
     );
   });
   it('Should allow relative URLs for iframes by default', function() {
     assert.equal(
       sanitizeHtml('<iframe src="/foo"></iframe>', {
-        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
-        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']}
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {
+          'iframe': ['src', 'href'],
+          'a': ['src', 'href'],
+          'img': ['src']
+        }
       }), '<iframe src="/foo"></iframe>'
     );
   });
   it('Should allow relative URLs for iframes', function() {
     assert.equal(
       sanitizeHtml('<iframe src="/foo"></iframe>', {
-        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
-        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
-        allowIframeRelativeUrls: true,
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {
+          'iframe': ['src', 'href'],
+          'a': ['src', 'href'],
+          'img': ['src']
+        },
+        allowIframeRelativeUrls: true
       }), '<iframe src="/foo"></iframe>'
     );
   });
   it('Should remove relative URLs for iframes', function() {
     assert.equal(
       sanitizeHtml('<iframe src="/foo"></iframe>', {
-        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
-        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
-        allowIframeRelativeUrls: false,
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {
+          'iframe': ['src', 'href'],
+          'a': ['src', 'href'],
+          'img': ['src']
+        },
+        allowIframeRelativeUrls: false
       }), '<iframe></iframe>'
     );
   });
   it('Should remove relative URLs for iframes when whitelisted hostnames specified', function() {
     assert.equal(
       sanitizeHtml('<iframe src="/foo"></iframe><iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>', {
-        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
-        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {
+          'iframe': ['src', 'href'],
+          'a': ['src', 'href'],
+          'img': ['src']
+        },
         allowedIframeHostnames: ['www.youtube.com']
       }), '<iframe></iframe><iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>'
     );
@@ -723,8 +791,12 @@ describe('sanitizeHtml', function() {
   it('Should allow relative and whitelisted hostname URLs for iframes', function() {
     assert.equal(
       sanitizeHtml('<iframe src="/foo"></iframe><iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>', {
-        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
-        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {
+          'iframe': ['src', 'href'],
+          'a': ['src', 'href'],
+          'img': ['src']
+        },
         allowIframeRelativeUrls: true,
         allowedIframeHostnames: ['www.youtube.com']
       }), '<iframe src="/foo"></iframe><iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>'
@@ -733,25 +805,33 @@ describe('sanitizeHtml', function() {
   it('Should allow protocol-relative URLs for the right domain for iframes', function() {
     assert.equal(
       sanitizeHtml('<iframe src="//www.youtube.com/embed/c2IlcS7AHxM"></iframe>', {
-        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
-        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
-        allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {
+          'iframe': ['src', 'href'],
+          'a': ['src', 'href'],
+          'img': ['src']
+        },
+        allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
       }), '<iframe src="//www.youtube.com/embed/c2IlcS7AHxM"></iframe>'
     );
   });
   it('Should not allow protocol-relative iframe urls that do not have proper hostname', function() {
     assert.equal(
       sanitizeHtml('<iframe src="//www.vimeo.com/embed/c2IlcS7AHxM"></iframe>', {
-        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
-        allowedAttributes: {'iframe': ['src', 'href'], 'a': ['src', 'href'], 'img': ['src']},
-        allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {
+          'iframe': ['src', 'href'],
+          'a': ['src', 'href'],
+          'img': ['src']
+        },
+        allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
       }), '<iframe></iframe>'
     );
   });
   it('Should only allow attributes to have any combination of specific values', function() {
     assert.equal(
-      sanitizeHtml('<iframe name=\"IFRAME\" allowfullscreen=\"true\" sandbox=\"allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation\"></iframe>',{
-        allowedTags: sanitizeHtml.defaults.allowedTags.concat( ['iframe'] ),
+      sanitizeHtml('<iframe name=\"IFRAME\" allowfullscreen=\"true\" sandbox=\"allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation\"></iframe>', {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['iframe']),
         allowedAttributes: {
           iframe: [
             {
@@ -766,8 +846,8 @@ describe('sanitizeHtml', function() {
   });
   it('Should only allow attributes that match a specific value', function() {
     assert.equal(
-      sanitizeHtml('<iframe sandbox=\"allow-popups allow-modals\"></iframe><iframe sandbox=\"allow-popups\"></iframe><iframe sandbox=\"allow-scripts\"></iframe>',{
-        allowedTags: sanitizeHtml.defaults.allowedTags.concat( ['iframe'] ),
+      sanitizeHtml('<iframe sandbox=\"allow-popups allow-modals\"></iframe><iframe sandbox=\"allow-popups\"></iframe><iframe sandbox=\"allow-scripts\"></iframe>', {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['iframe']),
         allowedAttributes: {
           iframe: [
             {
@@ -778,14 +858,14 @@ describe('sanitizeHtml', function() {
           ]
         }
       }), '<iframe sandbox></iframe><iframe sandbox=\"allow-popups\"></iframe><iframe sandbox=\"allow-scripts\"></iframe>');
-    }
+  }
   );
   it('Should not allow cite urls that do not have an allowed scheme', function() {
     assert.equal(
-      sanitizeHtml('<q cite=\"http://www.google.com\">HTTP</q><q cite=\"https://www.google.com\">HTTPS</q><q cite=\"mailto://www.google.com\">MAILTO</q><q cite=\"tel://www.google.com\">TEL</q><q cite=\"ftp://www.google.com\">FTP</q><q cite=\"data://www.google.com\">DATA</q><q cite=\"ldap://www.google.com\">LDAP</q><q cite=\"acrobat://www.google.com\">ACROBAT</q><q cite=\"vbscript://www.google.com\">VBSCRIPT</q><q cite=\"file://www.google.com\">FILE</q><q cite=\"rlogin://www.google.com\">RLOGIN</q><q cite=\"webcal://www.google.com\">WEBCAL</q><q cite=\"javascript://www.google.com\">JAVASCRIPT</q><q cite=\"mms://www.google.com\">MMS</q>',{
-        allowedTags: sanitizeHtml.defaults.allowedTags.concat( ['q'] ),
+      sanitizeHtml('<q cite=\"http://www.google.com\">HTTP</q><q cite=\"https://www.google.com\">HTTPS</q><q cite=\"mailto://www.google.com\">MAILTO</q><q cite=\"tel://www.google.com\">TEL</q><q cite=\"ftp://www.google.com\">FTP</q><q cite=\"data://www.google.com\">DATA</q><q cite=\"ldap://www.google.com\">LDAP</q><q cite=\"acrobat://www.google.com\">ACROBAT</q><q cite=\"vbscript://www.google.com\">VBSCRIPT</q><q cite=\"file://www.google.com\">FILE</q><q cite=\"rlogin://www.google.com\">RLOGIN</q><q cite=\"webcal://www.google.com\">WEBCAL</q><q cite=\"javascript://www.google.com\">JAVASCRIPT</q><q cite=\"mms://www.google.com\">MMS</q>', {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['q']),
         allowedAttributes: {q: [ 'cite' ]},
-        allowedSchemes: sanitizeHtml.defaults.allowedSchemes.concat([ 'tel' ]),
+        allowedSchemes: sanitizeHtml.defaults.allowedSchemes.concat([ 'tel' ])
       }), '<q cite=\"http://www.google.com\">HTTP</q><q cite=\"https://www.google.com\">HTTPS</q><q cite=\"mailto://www.google.com\">MAILTO</q><q cite=\"tel://www.google.com\">TEL</q><q cite=\"ftp://www.google.com\">FTP</q><q>DATA</q><q>LDAP</q><q>ACROBAT</q><q>VBSCRIPT</q><q>FILE</q><q>RLOGIN</q><q>WEBCAL</q><q>JAVASCRIPT</q><q>MMS</q>');
   });
   it('Should encode &, <, > and where necessary, "', function() {
@@ -824,8 +904,8 @@ describe('sanitizeHtml', function() {
   // });
   it('should escape markup not whitelisted and all its children in recursive mode', function() {
     assert.equal(
-        sanitizeHtml('<div><wiggly>Hello<p>World</p></wiggly></div>', { disallowedTagsMode: 'recursiveEscape' }),
-        '<div>&lt;wiggly&gt;Hello&lt;p&gt;World&lt;/p&gt;&lt;/wiggly&gt;</div>'
+      sanitizeHtml('<div><wiggly>Hello<p>World</p></wiggly></div>', { disallowedTagsMode: 'recursiveEscape' }),
+      '<div>&lt;wiggly&gt;Hello&lt;p&gt;World&lt;/p&gt;&lt;/wiggly&gt;</div>'
     );
   });
   it('should escape markup not whitelisted and but not its children', function() {
@@ -836,8 +916,11 @@ describe('sanitizeHtml', function() {
   });
   it('should escape markup even when deocdeEntities is false', function() {
     assert.equal(
-        sanitizeHtml('<wiggly>Hello</wiggly>', { disallowedTagsMode: 'escape', parser: { decodeEntities: false } }),
-        '&lt;wiggly&gt;Hello&lt;/wiggly&gt;'
+      sanitizeHtml('<wiggly>Hello</wiggly>', {
+        disallowedTagsMode: 'escape',
+        parser: { decodeEntities: false }
+      }),
+      '&lt;wiggly&gt;Hello&lt;/wiggly&gt;'
     );
   });
   it('should escape markup not whitelisted even within allowed markup', function() {
@@ -848,8 +931,8 @@ describe('sanitizeHtml', function() {
   });
   it('should escape markup not whitelisted even within allowed markup, but not the allowed markup itself', function() {
     assert.equal(
-        sanitizeHtml('<div><wiggly>Hello<p>World</p><tiggly>JS</tiggly></wiggly></div>', { disallowedTagsMode: 'escape' }),
-        '<div>&lt;wiggly&gt;Hello<p>World</p>&lt;tiggly&gt;JS&lt;/tiggly&gt;&lt;/wiggly&gt;</div>'
+      sanitizeHtml('<div><wiggly>Hello<p>World</p><tiggly>JS</tiggly></wiggly></div>', { disallowedTagsMode: 'escape' }),
+      '<div>&lt;wiggly&gt;Hello<p>World</p>&lt;tiggly&gt;JS&lt;/tiggly&gt;&lt;/wiggly&gt;</div>'
     );
   });
 });
