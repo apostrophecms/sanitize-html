@@ -1,5 +1,13 @@
 ## Changelog
 
+1.22.1: Increases the patch version of `lodash.mergewith` to enforce an audit fix.
+
+1.22.0: bumped `htmlparser2` dependency to the 4.x series. This fixes longstanding bugs and should cause no bc breaks for this module, since the only bc breaks upstream are in regard to features we don't expose in this module.
+
+1.21.1: fixed issue with bad `main` setting in package.json that broke 1.21.0.
+
+1.21.0: new `disallowedTagsMode` option can be set to `escape` to escape disallowed tags rather than discarding them. Any subtags are handled as usual. If you want to recursively escape them too, you can set `disallowedTagsMode` to `recursiveEscape`. Thanks to Yehonatan Zecharia for this contribution.
+
 1.20.1: Fix failing tests, add CircleCI config
 
 1.20.0: reduced size of npm package via the `files` key; we only need to publish what's in `dist`. Thanks to Steven. There should be zero impact on behavior, minor version bump is precautionary.
@@ -77,7 +85,7 @@ Please note that running `sanitize-html` in the browser is usually a security ho
 
 1.14.2: protocol-relative URL detection must spot URLs starting with `\\` rather than `//` due to ages-old tolerance features of web browsers, intended for sleepy Windows developers. Thanks to Martin Bajanik.
 
-1.14.1: documented `allowProtocolRelative` option. No code changes from 1.14.0, released a few moments ago.  
+1.14.1: documented `allowProtocolRelative` option. No code changes from 1.14.0, released a few moments ago.
 
 1.14.0: the new `allowProtocolRelative` option, which is set to `true` by default, allows you to decline to accept URLs that start with `//` and thus point to a different host using the current protocol. If you do **not** want to permit this, set this option to `false`. This is fully backwards compatible because the default behavior is to allow them. Thanks to Luke Bernard.
 
