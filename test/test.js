@@ -167,7 +167,7 @@ describe('sanitizeHtml', function() {
           };
         }
       },
-      textFilter: function (text) {
+      textFilter: function (text, tagName) {
         return text.replace(/\s/g, '_');
       }
     }), '<a href="http://somelink">some_text_need"to&lt;be&gt;filtered</a>');
@@ -516,10 +516,22 @@ describe('sanitizeHtml', function() {
   it('should process text nodes with provided function', function() {
     assert.equal(
       sanitizeHtml('"normal text this should be removed"', {
-        textFilter: function(text) {
+        textFilter: function(text, tagName) {
           return text.replace(' this should be removed', '');
         }
       }), '"normal text"'
+    );
+  });
+  it('should skip text nodes based on tagName', function() {
+    assert.equal(
+      sanitizeHtml('<a>normal text this should be removed</a><b>normal text this should be removed</b>', {
+        textFilter: function(text, tagName) {
+          if (tagName == 'a') {
+            return text;
+          };
+          return text.replace(' this should be removed', '');
+        }
+      }), '<a>normal text this should be removed</a><b>normal text</b>'
     );
   });
   it('should respect htmlparser2 options when passed in', function() {

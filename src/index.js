@@ -378,7 +378,7 @@ function sanitizeHtml(html, options, _recursing) {
       } else {
         var escaped = escapeHtml(text, false);
         if (options.textFilter) {
-          result += options.textFilter(escaped);
+          result += options.textFilter(escaped, tag);
         } else {
           result += escaped;
         }

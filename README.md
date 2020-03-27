@@ -1,8 +1,8 @@
 # sanitize-html
 
-[![CircleCI](https://circleci.com/gh/punkave/sanitize-html/tree/master.svg?style=svg)](https://circleci.com/gh/punkave/sanitize-html/tree/master)
+[![CircleCI](https://circleci.com/gh/apostrophecms/sanitize-html/tree/master.svg?style=svg)](https://circleci.com/gh/apostrophecms/sanitize-html/tree/master)
 
-<a href="https://apostrophecms.org/"><img src="https://raw.github.com/punkave/sanitize-html/master/logos/logo-box-madefor.png" align="right" /></a>
+<a href="https://apostrophecms.com/"><img src="https://raw.github.com/apostrophecms/sanitize-html/master/logos/logo-box-madefor.png" align="right" /></a>
 
 `sanitize-html` provides a simple HTML sanitizer with a clear API.
 
@@ -318,7 +318,9 @@ We can do that with the following filter:
 sanitizeHtml(
   '<p>some text...</p>',
   {
-    textFilter: function(text) {
+    textFilter: function(text, tagName) {
+      if (['a'].indexOf(tagName) > -1) return //Skip anchor tags
+
       return text.replace(/\.\.\./, '&hellip;');
     }
   }
@@ -515,10 +517,10 @@ Valid values are: `'discard'` (default), `'escape'` (escape the tag) and `'recur
 
 ## Changelog
 
-[The changelog is now in a separate file for readability.](https://github.com/punkave/sanitize-html/blob/master/CHANGELOG.md)
+[The changelog is now in a separate file for readability.](https://github.com/apostrophecms/sanitize-html/blob/master/CHANGELOG.md)
 
 ## Support
 
-Feel free to open issues on [github](http://github.com/punkave/sanitize-html).
+Feel free to open issues on [github](http://github.com/apostrophecms/sanitize-html).
 
-<a href="http://punkave.com/"><img src="https://raw.github.com/punkave/sanitize-html/master/logos/logo-box-builtby.png" /></a>
+<a href="http://apostrophecms.com/"><img src="https://raw.github.com/apostrophecms/sanitize-html/master/logos/logo-box-builtby.png" /></a>

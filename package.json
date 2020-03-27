@@ -2,6 +2,7 @@
   "name": "sanitize-html",
   "version": "1.22.2",
   "description": "Clean up user-submitted HTML, preserving whitelisted elements and whitelisted attributes on a per-element basis",
+  "sideEffects": false,
   "main": "dist/sanitize-html.js",
   "files": [
     "dist/"
@@ -14,17 +15,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/punkave/sanitize-html.git"
+    "url": "https://github.com/apostrophecms/sanitize-html.git"
   },
   "keywords": [
     "html",
     "parser",
     "sanitizer",
-    "html",
-    "sanitizer",
-    "apostrophe"
+    "apostrophecms"
   ],
-  "author": "P'unk Avenue LLC",
+  "author": "Apostrophe Technologies, Inc.",
   "license": "MIT",
   "dependencies": {
     "chalk": "^2.4.1",
