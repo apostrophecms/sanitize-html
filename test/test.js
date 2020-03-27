@@ -526,7 +526,7 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<a>normal text this should be removed</a><b>normal text this should be removed</b>', {
         textFilter: function(text, tagName) {
-          if (tagName == 'a') {
+          if (tagName === 'a') {
             return text;
           };
           return text.replace(' this should be removed', '');
