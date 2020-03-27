@@ -318,7 +318,9 @@ We can do that with the following filter:
 sanitizeHtml(
   '<p>some text...</p>',
   {
-    textFilter: function(text) {
+    textFilter: function(text, tagName) {
+      if (['a'].indexOf(tagName) > -1) return //Skip anchor tags
+
       return text.replace(/\.\.\./, '&hellip;');
     }
   }
