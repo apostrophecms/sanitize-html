@@ -1,6 +1,9 @@
 ## Changelog
 
-1.22.2: Adds eslint configuration and adds eslint to test script.
+1.23.0:
+- Adds eslint configuration and adds eslint to test script.
+- Sets `sideEffects: false` on package.json to allow module bundlers like webpack tree-shake this module and all the dependencies from client build. Thanks to [Egor Voronov](https://github.com/egorvoronov) for the contribution.
+- Adds the `tagName` (HTML element name) as a second parameter passed to `textFilter`. Thanks to [Slava](https://github.com/slavaGanzin) for the contribution.
 
 1.22.1: Increases the patch version of `lodash.mergewith` to enforce an audit fix.
 
