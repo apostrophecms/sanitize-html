@@ -435,6 +435,16 @@ describe('sanitizeHtml', function() {
       ''
     );
   });
+  it('should not remove paragraphs containing only an <img> tag', () => {
+    assert.equal(
+      sanitizeHtml('<p><img src="http://blah.net/blah.png" /></p>', {
+        exclusiveFilter: function (frame) {
+          return frame.tag === 'p' && !frame.text.trim();
+        }
+      }),
+      '<p><img src="http://blah.net/blah.png" /></p>'
+    );
+  });
   it('should allow transform on all tags using \'*\'', function () {
     assert.equal(
       sanitizeHtml(
