@@ -431,6 +431,10 @@ function sanitizeHtml(html, options, _recursing) {
 
       if (options.selfClosing.indexOf(name) !== -1) {
         // Already output />
+        if (skip) {
+          result = tempResult;
+          tempResult = '';
+        }
         return;
       }
 
