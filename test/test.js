@@ -211,6 +211,19 @@ describe('sanitizeHtml', function() {
     );
   });
 
+  it('should escape exclusiveFilter', () => {
+    assert.equal(sanitizeHtml('<a href="a">a</a> <a href="b">b</a> <a href="c"></a>', {
+      disallowedTagsMode: 'escape',
+      allowedTags: [ 'a' ],
+      allowedAttributes: {
+        'a': [ 'href' ]
+      },
+      exclusiveFilter: function (frame) {
+        return (frame.tag === 'a' && frame.attribs.href === 'b');
+      }
+    }), '<a href="a">a</a> &lt;a href="b"&gt;b&lt;/a&gt; <a href="c"></a>');
+  });
+  
   it("Should expose a node's inner text and inner HTML to the filter", function() {
     assert.strictEqual(
       sanitizeHtml('<p>12<a href="http://www.linux.org"><br/>3<br></a><span>4</span></p>', {
