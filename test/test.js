@@ -5,6 +5,13 @@ describe('sanitizeHtml', function() {
   it('should be successfully initialized', function() {
     sanitizeHtml = require('../dist/sanitize-html.js');
   });
+  it('should escape self closing tags', () => {
+    assert.equal(sanitizeHtml('before <img src="test.png" /> after', {
+      disallowedTagsMode: 'escape',
+      allowedTags: [],
+      allowedAttributes: false
+    }), 'before &lt;img src="test.png" /&gt; after');
+  });
   it('should pass through simple well-formed whitelisted markup', function() {
     assert.equal(sanitizeHtml('<div><p>Hello <b>there</b></p></div>'), '<div><p>Hello <b>there</b></p></div>');
   });
