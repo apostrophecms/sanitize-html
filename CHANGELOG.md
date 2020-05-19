@@ -1,5 +1,10 @@
 ## Changelog
 
+1.24.0:
+- Fixes a bug where self-closing tags resulted in deletion with `disallowedTagsMode: 'escape'` set. Thanks to [Thiago Negri](https://github.com/thiago-negri) for the contribution.
+- Adds `abbr` to the default `allowedTags` for better accessibility support. Thanks to [Will Farrell](https://github.com/willfarrell) for the contribution.
+- Adds a `mediaChildren` property to the `frame` object in custom filters. This allows you to check for links or other parent tags that contain self-contained media to prevent collapse, regardless of whether there is also text inside. Thanks to [axdg](https://github.com/axdg) for the initial implementation and [Marco Arduini](https://github.com/nerfologist) for a failing test contribution.
+
 1.23.0:
 - Adds eslint configuration and adds eslint to test script.
 - Sets `sideEffects: false` on package.json to allow module bundlers like webpack tree-shake this module and all the dependencies from client build. Thanks to [Egor Voronov](https://github.com/egorvoronov) for the contribution.
