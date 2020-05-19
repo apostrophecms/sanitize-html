@@ -301,10 +301,11 @@ sanitizeHtml(
 
 The `frame` object supplied to the callback provides the following attributes:
 
- - `tag`: The tag name, i.e. `'img'`.
- - `attribs`: The tag's attributes, i.e. `{ src: "/path/to/tux.png" }`.
- - `text`: The text content of the tag.
- - `tagPosition`: The index of the tag's position in the result string.
+- `tag`: The tag name, i.e. `'img'`.
+- `attribs`: The tag's attributes, i.e. `{ src: "/path/to/tux.png" }`.
+- `text`: The text content of the tag.
+- `mediaChildren`: Immediate child tags that are likely to represent self-contained media (e.g., `img`, `video`, `picture`, `iframe`). See the `mediaTags` variable in `src/index.js` for the full list.
+- `tagPosition`: The index of the tag's position in the result string.
 
 You can also process all text content with a provided filter function. Let's say we want an ellipsis instead of three dots.
 

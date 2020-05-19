@@ -9,6 +9,11 @@ var isPlainObject = require('lodash.isplainobject');
 var srcset = require('srcset');
 var postcss = require('postcss');
 var url = require('url');
+// Tags that can conceivably represent stand-alone media.
+var mediaTags = [
+  'img', 'audio', 'video', 'picture', 'svg',
+  'object', 'map', 'iframe', 'embed'
+];
 
 function each(obj, cb) {
   if (obj) {
@@ -73,11 +78,19 @@ function sanitizeHtml(html, options, _recursing) {
     this.attribs = attribs || {};
     this.tagPosition = result.length;
     this.text = ''; // Node inner text
+    this.mediaChildren = [];
 
     this.updateParentNodeText = function() {
       if (stack.length) {
         var parentFrame = stack[stack.length - 1];
         parentFrame.text += that.text;
+      }
+    };
+
+    this.updateParentNodeMediaChildren = function() {
+      if (stack.length && mediaTags.includes(this.tag)) {
+        var parentFrame = stack[stack.length - 1];
+        parentFrame.mediaChildren.push(this.tag);
       }
     };
   }
@@ -427,6 +440,7 @@ function sanitizeHtml(html, options, _recursing) {
         return;
       }
 
+      frame.updateParentNodeMediaChildren();
       frame.updateParentNodeText();
 
       if (options.selfClosing.indexOf(name) !== -1) {

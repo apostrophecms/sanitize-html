@@ -249,6 +249,25 @@ describe('sanitizeHtml', function() {
       ''
     );
   });
+
+  it('Should find child media elements that are in allowedTags', function() {
+    var markup = '<a href="http://www.linux.org"><img /><video></video></a>';
+    var sansVideo = '<a href="http://www.linux.org"><img /></a>';
+    var sanitizedMarkup = sanitizeHtml(markup, {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
+      exclusiveFilter: function(frame) {
+        if (frame.tag === 'a') {
+          console.log(frame);
+          assert(frame.mediaChildren.length === 1);
+        }
+
+        return (frame.tag === 'a') && !frame.text.trim() && !frame.mediaChildren.length;
+      }
+    });
+
+    assert.strictEqual(sanitizedMarkup, sansVideo);
+  });
+
   it('Exclusive filter should not affect elements which do not match the filter condition', function () {
     assert.strictEqual(
       sanitizeHtml('I love <a href="www.linux.org" target="_hplink">Linux</a> OS',
