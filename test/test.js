@@ -389,6 +389,17 @@ describe('sanitizeHtml', function() {
       '<img src="onmouseover=&quot;alert(\'XSS\');&quot;" />'
     );
   });
+
+  it('should deliver a warning if using vulnerable tags', function() {
+    sanitizeHtml(
+      '<style></style>',
+      {
+        allowedTags: [ 'style' ]
+      }
+    );
+    // TODO Use mocha-sinon to check for console.warn
+  });
+
   it('should allow only whitelisted attributes, but to any tags, if tag is declared as  "*"', function() {
     assert.equal(
       sanitizeHtml(
