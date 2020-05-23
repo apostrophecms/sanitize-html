@@ -763,6 +763,32 @@ describe('sanitizeHtml', function() {
       }), '<iframe></iframe>'
     );
   });
+  it('Should allow iframe urls matched to regex', function() {
+    assert.equal(
+      sanitizeHtml('<iframe src="https://us02web.zoom.us/embed/c2IlcS7AHxM"></iframe>', {
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {
+          'iframe': ['src', 'href'],
+          'a': ['src', 'href'],
+          'img': ['src']
+        },
+        allowedIframeHostnames: [/^.+\.zoom\.us$/]
+      }), '<iframe src="https://us02web.zoom.us/embed/c2IlcS7AHxM"></iframe>'
+    );
+  });
+  it('Should not allow iframe urls that do not matched to regex', function() {
+    assert.equal(
+      sanitizeHtml('<iframe src="https://us02web.zoom.us/embed/c2IlcS7AHxM"></iframe>', {
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {
+          'iframe': ['src', 'href'],
+          'a': ['src', 'href'],
+          'img': ['src']
+        },
+        allowedIframeHostnames: [/^.+\.zoom\.com/]
+      }), '<iframe></iframe>'
+    );
+  });
   it('Should allow iframe through if no hostname option is set', function() {
     assert.equal(
       sanitizeHtml('<iframe src="https://www.vimeo.com/embed/c2IlcS7AHxM"></iframe>', {

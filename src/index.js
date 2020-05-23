@@ -286,7 +286,7 @@ function sanitizeHtml(html, options, _recursing) {
                     ? options.allowIframeRelativeUrls : !options.allowedIframeHostnames;
                 } else if (options.allowedIframeHostnames) {
                   allowed = options.allowedIframeHostnames.find(function (hostname) {
-                    return hostname === parsed.hostname;
+                    return new RegExp(hostname).test(parsed.hostname);
                   });
                 }
               } catch (e) {
