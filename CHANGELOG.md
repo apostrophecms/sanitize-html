@@ -1,5 +1,8 @@
 ## Changelog
 
+1.25.0:
+- Adds `enforceHtmlBoundary` option to process code bounded by the `html` tag, discarding any code outside of those tags.
+
 1.24.0:
 - Fixes a bug where self-closing tags resulted in deletion with `disallowedTagsMode: 'escape'` set. Thanks to [Thiago Negri](https://github.com/thiago-negri) for the contribution.
 - Adds `abbr` to the default `allowedTags` for better accessibility support. Thanks to [Will Farrell](https://github.com/willfarrell) for the contribution.
