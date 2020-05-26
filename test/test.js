@@ -17,20 +17,20 @@ describe('sanitizeHtml', function() {
   });
   it('should not pass through any text outside html tag boundary since html tag is found and option is ON', function() {
     assert.equal(sanitizeHtml('Text before html tag<html><div><p>Hello <b>there</b></p></div></html>Text after html tag!P�X��[<p>paragraph after closing html</p>', {
-        enforceHtmlBoundary: true
-      }
+      enforceHtmlBoundary: true
+    }
     ), '<div><p>Hello <b>there</b></p></div>');
   });
   it('should pass through text outside html tag boundary since option is OFF', function() {
     assert.equal(sanitizeHtml('Text before html tag<html><div><p>Hello <b>there</b></p></div></html>Text after html tag!P�X��[<p>paragraph after closing html</p>', {
-        enforceHtmlBoundary: false
-      }
+      enforceHtmlBoundary: false
+    }
     ), 'Text before html tag<div><p>Hello <b>there</b></p></div>Text after html tag!P�X��[<p>paragraph after closing html</p>');
   });
   it('should pass through text outside html tag boundary since option is ON but html tag is not found', function() {
     assert.equal(sanitizeHtml('Text before div tag<div><p>Hello <b>there</b></p></div>Text after div tag!P�X��[<p>paragraph after closing div</p>', {
-        enforceHtmlBoundary: true
-      }
+      enforceHtmlBoundary: true
+    }
     ), 'Text before div tag<div><p>Hello <b>there</b></p></div>Text after div tag!P�X��[<p>paragraph after closing div</p>');
   });
   it('should pass through all markup if allowedTags and allowedAttributes are set to false', function() {
