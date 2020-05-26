@@ -5,4 +5,3 @@ node_modules
 dist
 # We do not commit CSS, only LESS
 public/css/*.css
-workspace.xml
