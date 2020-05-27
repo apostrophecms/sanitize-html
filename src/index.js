@@ -166,16 +166,6 @@ function sanitizeHtml(html, options, _recursing) {
   var skipText;
   var skipTextDepth;
 
-  var initializeState = function() {
-    result = '';
-    depth = 0;
-    stack = [];
-    skipMap = {};
-    transformMap = {};
-    skipText = false;
-    skipTextDepth = 0;
-  };
-
   initializeState();
 
   var parser = new htmlparser.Parser({
@@ -481,6 +471,16 @@ function sanitizeHtml(html, options, _recursing) {
   parser.end();
 
   return result;
+
+  function initializeState() {
+    result = '';
+    depth = 0;
+    stack = [];
+    skipMap = {};
+    transformMap = {};
+    skipText = false;
+    skipTextDepth = 0;
+  }
 
   function escapeHtml(s, quote) {
     if (typeof (s) !== 'string') {
