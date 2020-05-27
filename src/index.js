@@ -159,15 +159,23 @@ function sanitizeHtml(html, options, _recursing) {
     }
   });
 
-  var depth = 0;
-  var stack = [];
-  var skipMap = {};
-  var transformMap = {};
-  var skipText = false;
-  var skipTextDepth = 0;
+  var depth;
+  var stack;
+  var skipMap;
+  var transformMap;
+  var skipText;
+  var skipTextDepth;
+
+  initializeState();
 
   var parser = new htmlparser.Parser({
     onopentag: function(name, attribs) {
+      // If `enforceHtmlBoundary` is `true` and this has found the opening
+      // `html` tag, reset the state.
+      if (options.enforceHtmlBoundary && name === 'html') {
+        initializeState();
+      }
+
       if (skipText) {
         skipTextDepth++;
         return;
@@ -417,7 +425,7 @@ function sanitizeHtml(html, options, _recursing) {
         // Do not crash on bad markup
         return;
       }
-      skipText = false;
+      skipText = options.enforceHtmlBoundary ? name === 'html' : false;
       depth--;
       var skip = skipMap[depth];
       if (skip) {
@@ -463,6 +471,16 @@ function sanitizeHtml(html, options, _recursing) {
   parser.end();
 
   return result;
+
+  function initializeState() {
+    result = '';
+    depth = 0;
+    stack = [];
+    skipMap = {};
+    transformMap = {};
+    skipText = false;
+    skipTextDepth = 0;
+  }
 
   function escapeHtml(s, quote) {
     if (typeof (s) !== 'string') {
@@ -639,7 +657,8 @@ sanitizeHtml.defaults = {
   allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
   allowedSchemesByTag: {},
   allowedSchemesAppliedToAttributes: [ 'href', 'src', 'cite' ],
-  allowProtocolRelative: true
+  allowProtocolRelative: true,
+  enforceHtmlBoundary: false
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {

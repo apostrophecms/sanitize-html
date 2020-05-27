@@ -123,7 +123,8 @@ selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', '
 allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
 allowedSchemesByTag: {},
 allowedSchemesAppliedToAttributes: [ 'href', 'src', 'cite' ],
-allowProtocolRelative: true
+allowProtocolRelative: true,
+enforceHtmlBoundary: false
 ```
 
 #### "What if I want to allow all tags or all attributes?"
@@ -186,6 +187,15 @@ Also you can use the `*` as name for a tag, to allow listed attributes to be val
 allowedAttributes: {
   '*': [ 'href', 'align', 'alt', 'center', 'bgcolor' ]
 }
+```
+### Discarding text outside of ```<html></html>``` tags
+
+Some text editing applications generate HTML to allow copying over to a web application. These can sometimes include undesireable control characters after terminating `html` tag. By default sanitize-html will not discard these characters, instead returning them in sanitized string. This behaviour can be modified using `enforceHtmlBoundary` option.
+
+Setting this option to true will instruct sanitize-html to discard all characters outside of `html` tag boundaries -- before `<html>` and after `</html>` tags.
+
+```javascript
+enforceHtmlBoundary: true
 ```
 
 ### htmlparser2 Options
