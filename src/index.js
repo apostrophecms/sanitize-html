@@ -279,15 +279,24 @@ function sanitizeHtml(html, options, _recursing) {
                 // naughtyHref is in charge of whether protocol relative URLs
                 // are cool. We should just accept them
                 parsed = url.parse(value, false, true);
+                parsed.domain = parsed.hostname && parsed.hostname.substring(
+                  parsed.hostname.lastIndexOf('.', parsed.hostname.lastIndexOf('.') - 1) + 1
+                );
                 var isRelativeUrl = parsed && parsed.host === null && parsed.protocol === null;
                 if (isRelativeUrl) {
-                  // default value of allowIframeRelativeUrls is true unless allowIframeHostnames specified
+                  // default value of allowIframeRelativeUrls is true
+                  // unless allowedIframeHostnames or allowedIframeDomains specified
                   allowed = has(options, "allowIframeRelativeUrls")
-                    ? options.allowIframeRelativeUrls : !options.allowedIframeHostnames;
-                } else if (options.allowedIframeHostnames) {
-                  allowed = options.allowedIframeHostnames.find(function (hostname) {
+                    ? options.allowIframeRelativeUrls
+                    : (!options.allowedIframeHostnames && !options.allowedIframeDomains);
+                } else if (options.allowedIframeHostnames || options.allowedIframeDomains) {
+                  var allowedHostname = (options.allowedIframeHostnames || []).find(function (hostname) {
                     return hostname === parsed.hostname;
                   });
+                  var allowedDomain = (options.allowedIframeDomains || []).find(function(domain) {
+                    return domain === parsed.domain;
+                  });
+                  allowed = allowedHostname || allowedDomain;
                 }
               } catch (e) {
                 // Unparseable iframe src
