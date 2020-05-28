@@ -110,7 +110,10 @@ function sanitizeHtml(html, options, _recursing) {
   }
   // vulnerableTags
   vulnerableTags.forEach(function (tag) {
-    if (options.allowedTags.includes(tag) && !options.allowVulnerableTags) {
+    if (
+      options.allowedTags && options.allowedTags.includes(tag) &&
+      !options.allowVulnerableTags
+    ) {
       console.warn(`\n\n⚠️ Your \`allowedTags\` option includes, \`${tag}\`, which is inherently\nvulnerable to XSS attacks. Please remove it from \`allowedTags\`.\nOr, to disable this warning, add the \`allowVulnerableTags\` option\nand ensure you are accounting for this risk.\n\n`);
     }
   });

@@ -1,5 +1,7 @@
 /* eslint-disable no-useless-escape */
 var assert = require("assert");
+const sinon = require('sinon');
+
 describe('sanitizeHtml', function() {
   var sanitizeHtml;
   it('should be successfully initialized', function() {
@@ -391,13 +393,35 @@ describe('sanitizeHtml', function() {
   });
 
   it('should deliver a warning if using vulnerable tags', function() {
+    const spy = sinon.spy(console, 'warn');
+    const message = `\n\n⚠️ Your \`allowedTags\` option includes, \`style\`, which is inherently\nvulnerable to XSS attacks. Please remove it from \`allowedTags\`.\nOr, to disable this warning, add the \`allowVulnerableTags\` option\nand ensure you are accounting for this risk.\n\n`;
+
     sanitizeHtml(
       '<style></style>',
       {
         allowedTags: [ 'style' ]
       }
     );
-    // TODO Use mocha-sinon to check for console.warn
+
+    assert(spy.calledWith(message));
+    // Restore the spied-upon method
+    console.warn.restore();
+  });
+
+  it('should not deliver a warning if using the allowVulnerableTags option', function() {
+    const spy = sinon.spy(console, 'warn');
+
+    sanitizeHtml(
+      '<style></style>',
+      {
+        allowVulnerableTags: true,
+        allowedTags: [ 'style' ]
+      }
+    );
+
+    assert(spy.notCalled);
+    // Restore the spied-upon method
+    console.warn.restore();
   });
 
   it('should allow only whitelisted attributes, but to any tags, if tag is declared as  "*"', function() {
