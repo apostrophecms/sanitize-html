@@ -1,11 +1,11 @@
 /* eslint-disable no-useless-escape */
 var htmlparser = require('htmlparser2');
 var extend = require('xtend');
-var quoteRegexp = require('lodash.escaperegexp');
-var cloneDeep = require('lodash.clonedeep');
-var mergeWith = require('lodash.mergewith');
-var isString = require('lodash.isstring');
-var isPlainObject = require('lodash.isplainobject');
+var quoteRegexp = require('lodash/escapeRegExp');
+var cloneDeep = require('lodash/cloneDeep');
+var mergeWith = require('lodash/mergeWith');
+var isString = require('lodash/isString');
+var isPlainObject = require('lodash/isPlainObject');
 var srcset = require('srcset');
 var postcss = require('postcss');
 var url = require('url');
@@ -114,6 +114,7 @@ function sanitizeHtml(html, options, _recursing) {
       options.allowedTags && options.allowedTags.includes(tag) &&
       !options.allowVulnerableTags
     ) {
+      // eslint-disable-next-line no-console
       console.warn(`\n\n⚠️ Your \`allowedTags\` option includes, \`${tag}\`, which is inherently\nvulnerable to XSS attacks. Please remove it from \`allowedTags\`.\nOr, to disable this warning, add the \`allowVulnerableTags\` option\nand ensure you are accounting for this risk.\n\n`);
     }
   });
@@ -170,15 +171,23 @@ function sanitizeHtml(html, options, _recursing) {
     }
   });
 
-  var depth = 0;
-  var stack = [];
-  var skipMap = {};
-  var transformMap = {};
-  var skipText = false;
-  var skipTextDepth = 0;
+  var depth;
+  var stack;
+  var skipMap;
+  var transformMap;
+  var skipText;
+  var skipTextDepth;
+
+  initializeState();
 
   var parser = new htmlparser.Parser({
     onopentag: function(name, attribs) {
+      // If `enforceHtmlBoundary` is `true` and this has found the opening
+      // `html` tag, reset the state.
+      if (options.enforceHtmlBoundary && name === 'html') {
+        initializeState();
+      }
+
       if (skipText) {
         skipTextDepth++;
         return;
@@ -428,7 +437,7 @@ function sanitizeHtml(html, options, _recursing) {
         // Do not crash on bad markup
         return;
       }
-      skipText = false;
+      skipText = options.enforceHtmlBoundary ? name === 'html' : false;
       depth--;
       var skip = skipMap[depth];
       if (skip) {
@@ -474,6 +483,16 @@ function sanitizeHtml(html, options, _recursing) {
   parser.end();
 
   return result;
+
+  function initializeState() {
+    result = '';
+    depth = 0;
+    stack = [];
+    skipMap = {};
+    transformMap = {};
+    skipText = false;
+    skipTextDepth = 0;
+  }
 
   function escapeHtml(s, quote) {
     if (typeof (s) !== 'string') {
@@ -650,7 +669,8 @@ sanitizeHtml.defaults = {
   allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
   allowedSchemesByTag: {},
   allowedSchemesAppliedToAttributes: [ 'href', 'src', 'cite' ],
-  allowProtocolRelative: true
+  allowProtocolRelative: true,
+  enforceHtmlBoundary: false
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {
