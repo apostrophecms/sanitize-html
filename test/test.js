@@ -77,6 +77,9 @@ describe('sanitizeHtml', function() {
   it('should drop the content of textarea elements', function() {
     assert.equal(sanitizeHtml('<textarea>Nifty</textarea><p>Paragraph</p>'), '<p>Paragraph</p>');
   });
+  it('should drop the content of option elements', function() {
+    assert.equal(sanitizeHtml('<select><option>one</option><option>two</option></select><p>Paragraph</p>'), '<p>Paragraph</p>');
+  });
   it('should drop the content of textarea elements but keep the closing parent tag, when nested', function() {
     assert.equal(sanitizeHtml('<p>Paragraph<textarea>Nifty</textarea></p>'), '<p>Paragraph</p>');
   });

@@ -111,7 +111,12 @@ function sanitizeHtml(html, options, _recursing) {
   // the text when the tag is disallowed makes sense for other reasons.
   // If we are not allowing these tags, we should drop their content too.
   // For other tags you would drop the tag but keep its content.
-  var nonTextTagsArray = options.nonTextTags || [ 'script', 'style', 'textarea' ];
+  var nonTextTagsArray = options.nonTextTags || [
+    'script',
+    'style',
+    'textarea',
+    'option'
+  ];
   var allowedAttributesMap;
   var allowedAttributesGlobMap;
   if (options.allowedAttributes) {
