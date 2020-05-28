@@ -1,6 +1,6 @@
 ## Changelog
 
-1.25.1:
+1.26.0:
 - Adds the `option` element to the default `nonTextTagsArray` of tags with contents that aren't meant to be displayed visually as text. This can be overridden with the `nonTextTags` option.
 
 1.25.0:
