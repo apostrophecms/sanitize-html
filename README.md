@@ -10,7 +10,9 @@
 
 `sanitize-html` allows you to specify the tags you want to permit, and the permitted attributes for each of those tags.
 
-If a tag is not permitted, the contents of the tag are still kept, except for `script`, `style` and `textarea` tags.
+If a tag is not permitted, the contents of the tag are not discarded. There are
+some exceptions to this, discussed below in the "Discarding the entire contents
+of a disallowed tag" section.
 
 The syntax of poorly closed `p` and `img` elements is cleaned up.
 
@@ -498,12 +500,13 @@ Normally, with a few exceptions, if a tag is not allowed, all of the text within
 
 The exceptions are:
 
-`style`, `script`, `textarea`
+`style`, `script`, `textarea`, `option`
 
-If you wish to expand this list, for instance to discard whatever is found inside a `noscript` tag, use the `nonTextTags` option:
+If you wish to replace this list, for instance to discard whatever is found
+inside a `noscript` tag, use the `nonTextTags` option:
 
 ```javascript
-nonTextTags: [ 'style', 'script', 'textarea', 'noscript' ]
+nonTextTags: [ 'style', 'script', 'textarea', 'option', 'noscript' ]
 ```
 
 Note that if you use this option you are responsible for stating the entire list. This gives you the power to retain the content of `textarea`, if you want to.
