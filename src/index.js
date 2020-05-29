@@ -14,6 +14,8 @@ var mediaTags = [
   'img', 'audio', 'video', 'picture', 'svg',
   'object', 'map', 'iframe', 'embed'
 ];
+// Tags that are inherently vulnerable to being used in XSS attacks.
+var vulnerableTags = [ 'script', 'style' ];
 
 function each(obj, cb) {
   if (obj) {
@@ -106,6 +108,16 @@ function sanitizeHtml(html, options, _recursing) {
       options.parser = htmlParserDefaults;
     }
   }
+  // vulnerableTags
+  vulnerableTags.forEach(function (tag) {
+    if (
+      options.allowedTags && options.allowedTags.includes(tag) &&
+      !options.allowVulnerableTags
+    ) {
+      // eslint-disable-next-line no-console
+      console.warn(`\n\n⚠️ Your \`allowedTags\` option includes, \`${tag}\`, which is inherently\nvulnerable to XSS attacks. Please remove it from \`allowedTags\`.\nOr, to disable this warning, add the \`allowVulnerableTags\` option\nand ensure you are accounting for this risk.\n\n`);
+    }
+  });
 
   // Tags that contain something other than HTML, or where discarding
   // the text when the tag is disallowed makes sense for other reasons.
