@@ -508,7 +508,11 @@ nonTextTags: [ 'style', 'script', 'textarea', 'noscript' ]
 
 Note that if you use this option you are responsible for stating the entire list. This gives you the power to retain the content of `textarea`, if you want to.
 
-The content still gets escaped properly, with the exception of the `script` and `style` tags. *Allowing either `script` or `style` leaves you open to XSS attacks. Don't do that* unless you have good reason to trust their origin.
+The content still gets escaped properly, with the exception of the `script` and
+`style` tags. *Allowing either `script` or `style` leaves you open to XSS
+attacks. Don't do that* unless you have good reason to trust their origin.
+sanitize-html will log a warning if these tags are allowed, which can be
+disabled with the `allowVulnerableTags: true` option.
 
 ### Choose what to do with disallowed tags
 
