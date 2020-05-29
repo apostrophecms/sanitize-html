@@ -3,6 +3,7 @@
 1.25.0:
 - Adds `enforceHtmlBoundary` option to process code bounded by the `html` tag, discarding any code outside of those tags.
 - Migrates to the main lodash package from the per method packages since they are deprecated and cause code duplication. Thanks to [Merceyz](https://github.com/merceyz) for the contribution.
+- Adds a warning when `style` and `script` tags are allowed, as they are inherently vulnerable to being used in XSS attacks. That warning can be disabled by including the option `allowVulnerableTags: true` so this choice is knowing and explicit.
 
 1.24.0:
 - Fixes a bug where self-closing tags resulted in deletion with `disallowedTagsMode: 'escape'` set. Thanks to [Thiago Negri](https://github.com/thiago-negri) for the contribution.
