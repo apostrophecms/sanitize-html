@@ -279,9 +279,6 @@ function sanitizeHtml(html, options, _recursing) {
                 // naughtyHref is in charge of whether protocol relative URLs
                 // are cool. We should just accept them
                 parsed = url.parse(value, false, true);
-                parsed.domain = parsed.hostname && parsed.hostname.substring(
-                  parsed.hostname.lastIndexOf('.', parsed.hostname.lastIndexOf('.') - 1) + 1
-                );
                 var isRelativeUrl = parsed && parsed.host === null && parsed.protocol === null;
                 if (isRelativeUrl) {
                   // default value of allowIframeRelativeUrls is true
@@ -294,7 +291,7 @@ function sanitizeHtml(html, options, _recursing) {
                     return hostname === parsed.hostname;
                   });
                   var allowedDomain = (options.allowedIframeDomains || []).find(function(domain) {
-                    return domain === parsed.domain;
+                    return parsed.hostname.endsWith(domain);
                   });
                   allowed = allowedHostname || allowedDomain;
                 }

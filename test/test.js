@@ -777,7 +777,7 @@ describe('sanitizeHtml', function() {
   });
   it('Should allow domains in an iframe that are whitelisted', function() {
     assert.equal(
-      sanitizeHtml('<iframe src="https://www.us02web.zoom.us/embed/c2IlcS7AHxM"></iframe>', {
+      sanitizeHtml('<iframe src="https://www.foo.us02web.zoom.us/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {
           'iframe': ['src', 'href'],
@@ -785,12 +785,12 @@ describe('sanitizeHtml', function() {
           'img': ['src']
         },
         allowedIframeDomains: ['zoom.us']
-      }), '<iframe src="https://www.us02web.zoom.us/embed/c2IlcS7AHxM"></iframe>'
+      }), '<iframe src="https://www.foo.us02web.zoom.us/embed/c2IlcS7AHxM"></iframe>'
     );
   });
   it('Should remove iframe src urls that are not included in whitelisted domains', function() {
     assert.equal(
-      sanitizeHtml('<iframe src="https://www.us02web.zoom.us/embed/c2IlcS7AHxM"></iframe>', {
+      sanitizeHtml('<iframe src="https://www.prefix.us02web.zoom.us/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {
           'iframe': ['src', 'href'],
