@@ -1,5 +1,8 @@
 ## Changelog
 
+1.26.0:
+- Adds the `option` element to the default `nonTextTagsArray` of tags with contents that aren't meant to be displayed visually as text. This can be overridden with the `nonTextTags` option.
+
 1.25.0:
 - Adds `enforceHtmlBoundary` option to process code bounded by the `html` tag, discarding any code outside of those tags.
 - Migrates to the main lodash package from the per method packages since they are deprecated and cause code duplication. Thanks to [Merceyz](https://github.com/merceyz) for the contribution.
