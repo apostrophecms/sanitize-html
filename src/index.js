@@ -1,6 +1,5 @@
 /* eslint-disable no-useless-escape */
 var htmlparser = require('htmlparser2');
-var extend = require('xtend');
 var quoteRegexp = require('lodash/escapeRegExp');
 var cloneDeep = require('lodash/cloneDeep');
 var mergeWith = require('lodash/mergeWith');
@@ -101,9 +100,9 @@ function sanitizeHtml(html, options, _recursing) {
     options = sanitizeHtml.defaults;
     options.parser = htmlParserDefaults;
   } else {
-    options = extend(sanitizeHtml.defaults, options);
+    options = Object.assign({}, sanitizeHtml.defaults, options);
     if (options.parser) {
-      options.parser = extend(htmlParserDefaults, options.parser);
+      options.parser = Object.assign({}, htmlParserDefaults, options.parser);
     } else {
       options.parser = htmlParserDefaults;
     }
