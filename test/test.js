@@ -703,6 +703,15 @@ describe('sanitizeHtml', function() {
       '<img src="fallback.jpg" srcset="foo.jpg 100w, bar.jpg 200w" />'
     );
   });
+  it('should accept srcset with urls containing commas', function() {
+    assert.equal(
+      sanitizeHtml('<img src="fallback.jpg" srcset="/upload/f_auto,q_auto:eco,c_fit,w_1460,h_2191/abc.jpg 1460w, /upload/f_auto,q_auto:eco,c_fit,w_1360,h_2041/abc.jpg" />', {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
+        allowedAttributes: { img: [ 'src', 'srcset' ] }
+      }),
+      '<img src="fallback.jpg" srcset="/upload/f_auto,q_auto:eco,c_fit,w_1460,h_2191/abc.jpg 1460w, /upload/f_auto,q_auto:eco,c_fit,w_1360,h_2041/abc.jpg" />'
+    );
+  });
   it('drop attribute names with meta-characters', function() {
     assert.equal(
       sanitizeHtml('<span data-<script>alert(1)//>', {
