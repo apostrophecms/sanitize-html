@@ -788,6 +788,33 @@ describe('sanitizeHtml', function() {
       }), '<iframe src="https://www.foo.us02web.zoom.us/embed/c2IlcS7AHxM"></iframe>'
     );
   });
+  it('Should allow second-level domains in an iframe that are whitelisted', function() {
+    assert.equal(
+      sanitizeHtml('<iframe src="https://zoom.us/embed/c2IlcS7AHxM"></iframe>', {
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {
+          'iframe': ['src', 'href'],
+          'a': ['src', 'href'],
+          'img': ['src']
+        },
+        allowedIframeDomains: ['zoom.us']
+      }), '<iframe src="https://zoom.us/embed/c2IlcS7AHxM"></iframe>'
+    );
+  });
+  it('Should remove iframe src urls that are included in whitelisted domains ' +
+     'as a top-level domain', function() {
+    assert.equal(
+      sanitizeHtml('<iframe src="https://zoom.us/embed/c2IlcS7AHxM"></iframe>', {
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {
+          'iframe': ['src', 'href'],
+          'a': ['src', 'href'],
+          'img': ['src']
+        },
+        allowedIframeDomains: ['us']
+      }), '<iframe></iframe>'
+    );
+  });
   it('Should remove iframe src urls that are not included in whitelisted domains', function() {
     assert.equal(
       sanitizeHtml('<iframe src="https://www.prefix.us02web.zoom.us/embed/c2IlcS7AHxM"></iframe>', {
@@ -798,6 +825,20 @@ describe('sanitizeHtml', function() {
           'img': ['src']
         },
         allowedIframeDomains: ['vimeo.com']
+      }), '<iframe></iframe>'
+    );
+  });
+  it('Should remove iframe src urls with host that ends as whitelisted domains ' +
+     ' but not preceeded with a dot', function() {
+    assert.equal(
+      sanitizeHtml('<iframe src="https://www.zoomzoom.us/embed/c2IlcS7AHxM"></iframe>', {
+        allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
+        allowedAttributes: {
+          'iframe': ['src', 'href'],
+          'a': ['src', 'href'],
+          'img': ['src']
+        },
+        allowedIframeDomains: ['zoom.us']
       }), '<iframe></iframe>'
     );
   });
