@@ -291,11 +291,6 @@ function sanitizeHtml(html, options, _recursing) {
                     return hostname === parsed.hostname;
                   });
                   var allowedDomain = (options.allowedIframeDomains || []).find(function(domain) {
-                    // avoid top-level domains
-                    if (domain.split('.').length < 2) {
-                      return false;
-                    }
-
                     return parsed.hostname === domain || parsed.hostname.endsWith(`.${domain}`);
                   });
                   allowed = allowedHostname || allowedDomain;
