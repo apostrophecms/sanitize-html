@@ -344,14 +344,15 @@ Note that the text passed to the `textFilter` method is already escaped for safe
 
 ### Iframe Filters
 
-If you would like to allow iframe tags but want to control the domains that are allowed through you can provide an array of hostnames that you would like to allow as iframe sources. This hostname is a property in the options object passed as an argument to the `sanitize-html` function.
+If you would like to allow iframe tags but want to control the domains that are allowed through you can provide an array of hostnames and(or) array of domains that you would like to allow as iframe sources. This hostname is a property in the options object passed as an argument to the `sanitize-html` function.
 
-This array will be checked against the html that is passed to the function and return only `src` urls that include the allowed hostnames in the object. The url in the html that is passed must be formatted correctly (valid hostname) as an embedded iframe otherwise the module will strip out the src from the iframe.
+These arrays will be checked against the html that is passed to the function and return only `src` urls that include the allowed hostnames or domains in the object. The url in the html that is passed must be formatted correctly (valid hostname) as an embedded iframe otherwise the module will strip out the src from the iframe.
 
 Make sure to pass a valid hostname along with the domain you wish to allow, i.e.:
 
 ```javascript
-  allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
+  allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com'],
+  allowedIframeDomains: ['zoom.us']
 ```
 
 You may also specify whether or not to allow relative URLs as iframe sources.
@@ -360,7 +361,7 @@ You may also specify whether or not to allow relative URLs as iframe sources.
   allowIframeRelativeUrls: true
 ```
 
-Note that if unspecified, relative URLs will be allowed by default if no hostname filter is provided but removed by default if a hostname filter is provided.
+Note that if unspecified, relative URLs will be allowed by default if no hostname or domain filter is provided but removed by default if a hostname or domain filter is provided.
 
 **Remember that the `iframe` tag must be allowed as well as the `src` attribute.**
 
@@ -410,6 +411,24 @@ clean = sanitizeHtml('<p><iframe src="https://www.vimeo/video/12345"></iframe><p
 ```
 
 will return an empty iframe tag.
+
+If you want to allow any subdomain of any level you can provide the domain in `allowedIframeDomains`
+
+```javascript
+clean = sanitizeHtml('<p><iframe src="https://us02web.zoom.us/embed/12345"></iframe><p>', {
+  allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
+  allowedClasses: {
+    'p': [ 'fancy', 'simple' ],
+  },
+  allowedAttributes: {
+    'iframe': ['src']
+  },
+  allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com'],
+  allowedIframeDomains: ['zoom.us']
+});
+```
+
+will pass through as safe.
 
 ### Allowed CSS Classes
 
