@@ -1,5 +1,8 @@
 ## Changelog
 
+1.27.0:
+- Adds the `allowedIframeDomains` option. This works similar to `allowedIframeHostnames`, where you would set it to an array of web domains. It would then permit any hostname on those domains to be used in iframe `src` attributes. Thanks to [Stanislav Kravchenko](https://github.com/StanisLove) for the contribution.
+
 1.26.0:
 - Adds the `option` element to the default `nonTextTagsArray` of tags with contents that aren't meant to be displayed visually as text. This can be overridden with the `nonTextTags` option.
 
