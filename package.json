@@ -26,8 +26,11 @@
   "author": "Apostrophe Technologies, Inc.",
   "license": "MIT",
   "dependencies": {
+    "deepmerge": "^4.2.2",
+    "escape-string-regexp": "^4.0.0",
     "htmlparser2": "^4.1.0",
-    "lodash": "^4.17.15",
+    "is-plain-object": "^3.0.1",
+    "klona": "^1.1.2",
     "postcss": "^7.0.27",
     "srcset": "^2.0.1"
   },
