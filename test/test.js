@@ -1,9 +1,9 @@
 /* eslint-disable no-useless-escape */
-var assert = require("assert");
+const assert = require('assert');
 const sinon = require('sinon');
 
 describe('sanitizeHtml', function() {
-  var sanitizeHtml;
+  let sanitizeHtml;
   it('should be successfully initialized', function() {
     sanitizeHtml = require('../dist/sanitize-html.js');
   });
@@ -241,7 +241,7 @@ describe('sanitizeHtml', function() {
     );
   });
 
-  it("Should expose a node's inner text and inner HTML to the filter", function() {
+  it('Should expose a node\'s inner text and inner HTML to the filter', function() {
     assert.strictEqual(
       sanitizeHtml('<p>12<a href="http://www.linux.org"><br/>3<br></a><span>4</span></p>', {
         exclusiveFilter: function(frame) {
@@ -274,9 +274,9 @@ describe('sanitizeHtml', function() {
   });
 
   it('Should find child media elements that are in allowedTags', function() {
-    var markup = '<a href="http://www.linux.org"><img /><video></video></a>';
-    var sansVideo = '<a href="http://www.linux.org"><img /></a>';
-    var sanitizedMarkup = sanitizeHtml(markup, {
+    const markup = '<a href="http://www.linux.org"><img /><video></video></a>';
+    const sansVideo = '<a href="http://www.linux.org"><img /></a>';
+    const sanitizedMarkup = sanitizeHtml(markup, {
       allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
       exclusiveFilter: function(frame) {
         if (frame.tag === 'a') {
@@ -390,7 +390,7 @@ describe('sanitizeHtml', function() {
   it('should not crash on bad markup', function() {
     assert.equal(
       sanitizeHtml(
-        "<p a"
+        '<p a'
       ),
       ''
     );
@@ -415,7 +415,7 @@ describe('sanitizeHtml', function() {
 
   it('should deliver a warning if using vulnerable tags', function() {
     const spy = sinon.spy(console, 'warn');
-    const message = `\n\n⚠️ Your \`allowedTags\` option includes, \`style\`, which is inherently\nvulnerable to XSS attacks. Please remove it from \`allowedTags\`.\nOr, to disable this warning, add the \`allowVulnerableTags\` option\nand ensure you are accounting for this risk.\n\n`;
+    const message = '\n\n⚠️ Your `allowedTags` option includes, `style`, which is inherently\nvulnerable to XSS attacks. Please remove it from `allowedTags`.\nOr, to disable this warning, add the `allowVulnerableTags` option\nand ensure you are accounting for this risk.\n\n';
 
     sanitizeHtml(
       '<style></style>',
@@ -618,27 +618,27 @@ describe('sanitizeHtml', function() {
   });
   it('should respect htmlparser2 options when passed in', function() {
     assert.equal(
-      sanitizeHtml("<Archer><Sterling>I am</Sterling></Archer>", {
+      sanitizeHtml('<Archer><Sterling>I am</Sterling></Archer>', {
         allowedTags: false,
         allowedAttributes: false
       }),
-      "<archer><sterling>I am</sterling></archer>"
+      '<archer><sterling>I am</sterling></archer>'
     );
     assert.equal(
-      sanitizeHtml("<Archer><Sterling>I am</Sterling></Archer>", {
+      sanitizeHtml('<Archer><Sterling>I am</Sterling></Archer>', {
         allowedTags: false,
         allowedAttributes: false,
         parser: {
           lowerCaseTags: false
         }
       }),
-      "<Archer><Sterling>I am</Sterling></Archer>"
+      '<Archer><Sterling>I am</Sterling></Archer>'
     );
   });
   it('should not crash due to tag names that are properties of the universal Object prototype', function() {
     assert.equal(
-      sanitizeHtml("!<__proto__>!"),
-      "!!");
+      sanitizeHtml('!<__proto__>!'),
+      '!!');
   });
   it('should correctly maintain escaping when allowing a nonTextTags tag other than script or style', function() {
     assert.equal(
@@ -713,16 +713,16 @@ describe('sanitizeHtml', function() {
     );
   });
   it('should sanitize styles correctly', function() {
-    var sanitizeString = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right"><u>test</u></li><li style="text-align: justify"><u>test</u></li></ol> <p><u><span style="color:#00FF00">test</span></u></p><p><span style="color:#00FF00"><span style="font-size:36px">TESTETESTESTES</span></span></p></blockquote>';
-    var expected = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right"><u>test</u></li><li style="text-align: justify"><u>test</u></li></ol> <p><u><span style="color:#00FF00">test</span></u></p><p><span style="color:#00FF00"><span style="font-size:36px">TESTETESTESTES</span></span></p></blockquote>';
+    const sanitizeString = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right"><u>test</u></li><li style="text-align: justify"><u>test</u></li></ol> <p><u><span style="color:#00FF00">test</span></u></p><p><span style="color:#00FF00"><span style="font-size:36px">TESTETESTESTES</span></span></p></blockquote>';
+    const expected = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right"><u>test</u></li><li style="text-align: justify"><u>test</u></li></ol> <p><u><span style="color:#00FF00">test</span></u></p><p><span style="color:#00FF00"><span style="font-size:36px">TESTETESTESTES</span></span></p></blockquote>';
     assert.equal(
       sanitizeHtml(sanitizeString, {
         allowedTags: false,
         allowedAttributes: {
-          '*': ["dir"],
-          p: ["dir", "style"],
-          li: ["style"],
-          span: ["style"]
+          '*': ['dir'],
+          p: ['dir', 'style'],
+          li: ['style'],
+          span: ['style']
         },
         allowedStyles: {
           '*': {
@@ -737,24 +737,24 @@ describe('sanitizeHtml', function() {
   });
   it('Should remove empty style tags', function() {
     assert.equal(
-      sanitizeHtml("<span style=''></span>", {
+      sanitizeHtml('<span style=\'\'></span>', {
         allowedTags: false,
         allowedAttributes: false
       }),
-      "<span></span>"
+      '<span></span>'
     );
   });
   it('Should remote invalid styles', function() {
     assert.equal(
-      sanitizeHtml("<span style='color: blue; text-align: justify'></span>", {
+      sanitizeHtml('<span style=\'color: blue; text-align: justify\'></span>', {
         allowedTags: false,
         allowedAttributes: {
-          "span": ["style"]
+          'span': ['style']
         },
         allowedStyles: {
           'span': {
-            "color": [/blue/],
-            "text-align": [/left/]
+            'color': [/blue/],
+            'text-align': [/left/]
           }
         }
       }), '<span style="color:blue"></span>'
@@ -762,19 +762,19 @@ describe('sanitizeHtml', function() {
   });
   it('Should allow a specific style from global', function() {
     assert.equal(
-      sanitizeHtml("<span style='color: yellow; text-align: center; font-family: helvetica'></span>", {
+      sanitizeHtml('<span style=\'color: yellow; text-align: center; font-family: helvetica\'></span>', {
         allowedTags: false,
         allowedAttributes: {
-          "span": ["style"]
+          'span': ['style']
         },
         allowedStyles: {
           '*': {
-            "color": [/yellow/],
-            "text-align": [/center/]
+            'color': [/yellow/],
+            'text-align': [/center/]
           },
           'span': {
-            "color": [/green/],
-            "font-family": [/helvetica/]
+            'color': [/green/],
+            'font-family': [/helvetica/]
           }
         }
       }), '<span style="color:yellow;text-align:center;font-family:helvetica"></span>'
@@ -1057,9 +1057,9 @@ describe('sanitizeHtml', function() {
     assert.equal(sanitizeHtml('<img src="<0&0;0.2&" />', {allowedTags: ['img']}), '<img src="&lt;0&amp;0;0.2&amp;" />');
   });
   it('Should not double encode ampersands on HTML entities if decodeEntities is false (TODO more tests, this is too loose to rely upon)', function() {
-    var textIn = 'This &amp; & that &reg; &#x0000A; &#10; &plusmn; OK?';
-    var expectedResult = 'This &amp; &amp; that &reg; &#x0000A; &#10; &plusmn; OK?';
-    var sanitizeHtmlOptions = {
+    const textIn = 'This &amp; & that &reg; &#x0000A; &#10; &plusmn; OK?';
+    const expectedResult = 'This &amp; &amp; that &reg; &#x0000A; &#10; &plusmn; OK?';
+    const sanitizeHtmlOptions = {
       parser: {
         decodeEntities: false
       }

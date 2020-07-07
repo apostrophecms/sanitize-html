@@ -1,6 +1,7 @@
 {
   "extends": "apostrophe",
   "rules": {
-    "no-useless-escape": 1
+    "no-useless-escape": 1,
+    "no-var": 2
   }
 }
