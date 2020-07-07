@@ -26,7 +26,6 @@
   "author": "Apostrophe Technologies, Inc.",
   "license": "MIT",
   "dependencies": {
-    "chalk": "^2.4.1",
     "htmlparser2": "^4.1.0",
     "lodash": "^4.17.15",
     "postcss": "^7.0.27",
