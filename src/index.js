@@ -208,6 +208,8 @@ function sanitizeHtml(html, options, _recursing) {
         frame.attribs = attribs = transformedTag.attribs;
 
         if (transformedTag.text !== undefined) {
+          // Text first replaced here. Should this set `skipText` to `true`?
+          // That's probably too simplistic.
           frame.innerText = transformedTag.text;
         }
 
@@ -423,6 +425,7 @@ function sanitizeHtml(html, options, _recursing) {
         if (options.textFilter) {
           result += options.textFilter(escaped, tag);
         } else {
+          // Text duplicated here.
           result += escaped;
         }
       }

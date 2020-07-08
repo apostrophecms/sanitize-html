@@ -217,6 +217,20 @@ describe('sanitizeHtml', function() {
     }), '<a href="http://somelink">some new text</a>');
   });
 
+  it('should not duplicate transform tag text when textFilter is not set', function () {
+    assert.equal(sanitizeHtml('<a href="http://somelink">some text</a>', {
+      transformTags: {
+        a: function (tagName, attribs) {
+          return {
+            tagName: tagName,
+            attribs: attribs,
+            text: 'some other text'
+          };
+        }
+      }
+    }), '<a href="http://somelink">some other text</a>');
+  });
+
   it('should preserve text when initially set and replace attributes when they are changed by transforming function', function () {
     assert.equal(sanitizeHtml('<a href="http://somelink">some initial text</a>', {
       transformTags: {
