@@ -1,8 +1,8 @@
 # sanitize-html
 
-[![CircleCI](https://circleci.com/gh/apostrophecms/sanitize-html/tree/master.svg?style=svg)](https://circleci.com/gh/apostrophecms/sanitize-html/tree/master)
+[![CircleCI](https://circleci.com/gh/apostrophecms/sanitize-html/tree/main.svg?style=svg)](https://circleci.com/gh/apostrophecms/sanitize-html/tree/main)
 
-<a href="https://apostrophecms.com/"><img src="https://raw.github.com/apostrophecms/sanitize-html/master/logos/logo-box-madefor.png" align="right" /></a>
+<a href="https://apostrophecms.com/"><img src="https://raw.githubusercontent.com/apostrophecms/sanitize-html/main/logos/logo-box-madefor.png" align="right" /></a>
 
 `sanitize-html` provides a simple HTML sanitizer with a clear API.
 
@@ -554,10 +554,10 @@ Valid values are: `'discard'` (default), `'escape'` (escape the tag) and `'recur
 
 ## Changelog
 
-[The changelog is now in a separate file for readability.](https://github.com/apostrophecms/sanitize-html/blob/master/CHANGELOG.md)
+[The changelog is now in a separate file for readability.](https://github.com/apostrophecms/sanitize-html/blob/main/CHANGELOG.md)
 
 ## Support
 
 Feel free to open issues on [github](http://github.com/apostrophecms/sanitize-html).
 
-<a href="http://apostrophecms.com/"><img src="https://raw.github.com/apostrophecms/sanitize-html/master/logos/logo-box-builtby.png" /></a>
+<a href="http://apostrophecms.com/"><img src="https://raw.githubusercontent.com/apostrophecms/sanitize-html/main/logos/logo-box-builtby.png" /></a>
