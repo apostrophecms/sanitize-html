@@ -1,6 +1,8 @@
 # sanitize-html
 
-<a href="http://apostrophenow.org/"><img src="https://raw.github.com/punkave/sanitize-html/master/logos/logo-box-madefor.png" align="right" /></a>
+[![CircleCI](https://circleci.com/gh/apostrophecms/sanitize-html/tree/master.svg?style=svg)](https://circleci.com/gh/apostrophecms/sanitize-html/tree/master)
+
+<a href="https://apostrophecms.com/"><img src="https://raw.github.com/apostrophecms/sanitize-html/master/logos/logo-box-madefor.png" align="right" /></a>
 
 `sanitize-html` provides a simple HTML sanitizer with a clear API.
 
@@ -8,11 +10,15 @@
 
 `sanitize-html` allows you to specify the tags you want to permit, and the permitted attributes for each of those tags.
 
-If a tag is not permitted, the contents of the tag are still kept, except for `script`, `style` and `textarea` tags.
+If a tag is not permitted, the contents of the tag are not discarded. There are
+some exceptions to this, discussed below in the "Discarding the entire contents
+of a disallowed tag" section.
 
 The syntax of poorly closed `p` and `img` elements is cleaned up.
 
 `href` attributes are validated to ensure they only contain `http`, `https`, `ftp` and `mailto` URLs. Relative URLs are also allowed. Ditto for `src` attributes.
+
+Allowing particular urls as a `src` to an iframe tag by filtering hostnames is also supported.
 
 HTML comments are not preserved.
 
@@ -22,7 +28,7 @@ HTML comments are not preserved.
 
 ## How to use
 
-### Browser 
+### Browser
 
 *Think first: why do you want to use it in the browser?* Remember, *servers must never trust browsers.* You can't sanitize HTML for saving on the server anywhere else but on the server.
 
@@ -82,7 +88,8 @@ clean = sanitizeHtml(dirty, {
   allowedTags: [ 'b', 'i', 'em', 'strong', 'a' ],
   allowedAttributes: {
     'a': [ 'href' ]
-  }
+  },
+  allowedIframeHostnames: ['www.youtube.com']
 });
 ```
 
@@ -102,12 +109,14 @@ If you do not specify `allowedTags` or `allowedAttributes` our default list is a
 
 ```js
 allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
-  'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
-  'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre' ],
+  'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'abbr', 'code', 'hr', 'br', 'div',
+  'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'iframe' ],
+disallowedTagsMode: 'discard',
 allowedAttributes: {
   a: [ 'href', 'name', 'target' ],
   // We don't currently allow img itself by default, but this
-  // would make sense if we did
+  // would make sense if we did. You could add srcset here,
+  // and if you do the URL is checked for safety
   img: [ 'src' ]
 },
 // Lots of these won't come up by default because we don't allow them
@@ -115,7 +124,9 @@ selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', '
 // URL schemes we permit
 allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
 allowedSchemesByTag: {},
-allowProtocolRelative: true
+allowedSchemesAppliedToAttributes: [ 'href', 'src', 'cite' ],
+allowProtocolRelative: true,
+enforceHtmlBoundary: false
 ```
 
 #### "What if I want to allow all tags or all attributes?"
@@ -130,12 +141,37 @@ allowedAttributes: false
 
 #### "What if I don't want to allow *any* tags?"
 
-Also simple!  Set your `allowedTag` and `allowedAttributes` to empty arrays (`[]`).
+Also simple!  Set `allowedTags` to `[]` and `allowedAttributes` to `{}`.
 
 ```js
 allowedTags: [],
-allowedAttributes: []
+allowedAttributes: {}
 ```
+
+### "What if I want disallowed tags to be escaped rather than discarded?"
+
+If you set `disallowedTagsMode` to `discard` (the default), disallowed tags are discarded. Any text content or subtags is still included, depending on whether the individual subtags are allowed.
+
+If you set `disallowedTagsMode` to `escape`, the disallowed tags are escaped rather than discarded. Any text or subtags is handled normally.
+
+If you set `disallowedTagsMode` to `recursiveEscape`, the disallowed tags are escaped rather than discarded, and the same treatment is applied to all subtags, whether otherwise allowed or not.
+
+### "What if I want to allow only specific values on some attributes?"
+
+When configuring the attribute in `allowedAttributes` simply use an object with attribute `name` and an allowed `values` array. In the following example `sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-scripts"` would become `sandbox="allow-popups allow-scripts"`:
+
+```js
+        allowedAttributes: {
+          iframe: [
+            {
+              name: 'sandbox',
+              multiple: true,
+              values: ['allow-popups', 'allow-same-origin', 'allow-scripts']
+            }
+          ]
+```
+
+With `multiple: true`, several allowed values may appear in the same attribute, separated by spaces. Otherwise the attribute must exactly match one and only one of the allowed values.
 
 ### Wildcards for attributes
 
@@ -153,6 +189,15 @@ Also you can use the `*` as name for a tag, to allow listed attributes to be val
 allowedAttributes: {
   '*': [ 'href', 'align', 'alt', 'center', 'bgcolor' ]
 }
+```
+### Discarding text outside of ```<html></html>``` tags
+
+Some text editing applications generate HTML to allow copying over to a web application. These can sometimes include undesireable control characters after terminating `html` tag. By default sanitize-html will not discard these characters, instead returning them in sanitized string. This behaviour can be modified using `enforceHtmlBoundary` option.
+
+Setting this option to true will instruct sanitize-html to discard all characters outside of `html` tag boundaries -- before `<html>` and after `</html>` tags.
+
+```javascript
+enforceHtmlBoundary: true
 ```
 
 ### htmlparser2 Options
@@ -268,10 +313,11 @@ sanitizeHtml(
 
 The `frame` object supplied to the callback provides the following attributes:
 
- - `tag`: The tag name, i.e. `'img'`.
- - `attribs`: The tag's attributes, i.e. `{ src: "/path/to/tux.png" }`.
- - `text`: The text content of the tag.
- - `tagPosition`: The index of the tag's position in the result string.
+- `tag`: The tag name, i.e. `'img'`.
+- `attribs`: The tag's attributes, i.e. `{ src: "/path/to/tux.png" }`.
+- `text`: The text content of the tag.
+- `mediaChildren`: Immediate child tags that are likely to represent self-contained media (e.g., `img`, `video`, `picture`, `iframe`). See the `mediaTags` variable in `src/index.js` for the full list.
+- `tagPosition`: The index of the tag's position in the result string.
 
 You can also process all text content with a provided filter function. Let's say we want an ellipsis instead of three dots.
 
@@ -285,7 +331,9 @@ We can do that with the following filter:
 sanitizeHtml(
   '<p>some text...</p>',
   {
-    textFilter: function(text) {
+    textFilter: function(text, tagName) {
+      if (['a'].indexOf(tagName) > -1) return //Skip anchor tags
+
       return text.replace(/\.\.\./, '&hellip;');
     }
   }
@@ -293,6 +341,94 @@ sanitizeHtml(
 ```
 
 Note that the text passed to the `textFilter` method is already escaped for safe display as HTML. You may add markup and use entity escape sequences in your `textFilter`.
+
+### Iframe Filters
+
+If you would like to allow iframe tags but want to control the domains that are allowed through you can provide an array of hostnames and(or) array of domains that you would like to allow as iframe sources. This hostname is a property in the options object passed as an argument to the `sanitize-html` function.
+
+These arrays will be checked against the html that is passed to the function and return only `src` urls that include the allowed hostnames or domains in the object. The url in the html that is passed must be formatted correctly (valid hostname) as an embedded iframe otherwise the module will strip out the src from the iframe.
+
+Make sure to pass a valid hostname along with the domain you wish to allow, i.e.:
+
+```javascript
+  allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com'],
+  allowedIframeDomains: ['zoom.us']
+```
+
+You may also specify whether or not to allow relative URLs as iframe sources.
+
+```javascript
+  allowIframeRelativeUrls: true
+```
+
+Note that if unspecified, relative URLs will be allowed by default if no hostname or domain filter is provided but removed by default if a hostname or domain filter is provided.
+
+**Remember that the `iframe` tag must be allowed as well as the `src` attribute.**
+
+For example:
+
+```javascript
+clean = sanitizeHtml('<p><iframe src="https://www.youtube.com/embed/nykIhs12345"></iframe><p>', {
+  allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
+  allowedClasses: {
+    'p': [ 'fancy', 'simple' ],
+  },
+  allowedAttributes: {
+    'iframe': ['src']
+  },
+  allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
+});
+```
+
+will pass through as safe whereas:
+
+```javascript
+clean = sanitizeHtml('<p><iframe src="https://www.youtube.net/embed/nykIhs12345"></iframe><p>', {
+  allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
+  allowedClasses: {
+    'p': [ 'fancy', 'simple' ],
+  },
+  allowedAttributes: {
+    'iframe': ['src']
+  },
+  allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
+});
+```
+
+or
+
+```javascript
+clean = sanitizeHtml('<p><iframe src="https://www.vimeo/video/12345"></iframe><p>', {
+  allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
+  allowedClasses: {
+    'p': [ 'fancy', 'simple' ],
+  },
+  allowedAttributes: {
+    'iframe': ['src']
+  },
+  allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
+});
+```
+
+will return an empty iframe tag.
+
+If you want to allow any subdomain of any level you can provide the domain in `allowedIframeDomains`
+
+```javascript
+clean = sanitizeHtml('<p><iframe src="https://us02web.zoom.us/embed/12345"></iframe><p>', {
+  allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
+  allowedClasses: {
+    'p': [ 'fancy', 'simple' ],
+  },
+  allowedAttributes: {
+    'iframe': ['src']
+  },
+  allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com'],
+  allowedIframeDomains: ['zoom.us']
+});
+```
+
+will pass through as safe.
 
 ### Allowed CSS Classes
 
@@ -308,6 +444,37 @@ clean = sanitizeHtml(dirty, {
     'p': [ 'fancy', 'simple' ]
   }
 });
+```
+
+### Allowed CSS Styles
+
+If you wish to allow specific CSS _styles_ on a particular element, you can do that with the `allowedStyles` option. Simply declare your desired attributes as regular expression options within an array for the given attribute. Specific elements will inherit whitelisted attributes from the global (\*) attribute. Any other CSS classes are discarded.
+
+**You must also use `allowedAttributes`** to activate the `style` attribute for the relevant elements. Otherwise this feature will never come into play.
+
+**When constructing regular expressions, don't forget `^` and `$`.** It's not enough to say "the string should contain this." It must also say "and only this."
+
+**URLs in inline styles are NOT filtered by any mechanism other than your regular expression.**
+
+```javascript
+clean = sanitizeHtml(dirty, {
+        allowedTags: ['p'],
+        allowedAttributes: {
+          'p': ["style"],
+        },
+        allowedStyles: {
+          '*': {
+            // Match HEX and RGB
+            'color': [/^#(0x)?[0-9a-f]+$/i, /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/],
+            'text-align': [/^left$/, /^right$/, /^center$/],
+            // Match any number with px, em, or %
+            'font-size': [/^\d+(?:px|em|%)$/]
+          },
+          'p': {
+            'font-size': [/^\d+rem$/]
+          }
+        }
+      });
 ```
 
 ### Allowed URL schemes
@@ -352,130 +519,45 @@ Normally, with a few exceptions, if a tag is not allowed, all of the text within
 
 The exceptions are:
 
-`style`, `script`, `textarea`
+`style`, `script`, `textarea`, `option`
 
-If you wish to expand this list, for instance to discard whatever is found inside a `noscript` tag, use the `nonTextTags` option:
+If you wish to replace this list, for instance to discard whatever is found
+inside a `noscript` tag, use the `nonTextTags` option:
 
 ```javascript
-nonTextTags: [ 'style', 'script', 'textarea', 'noscript' ]
+nonTextTags: [ 'style', 'script', 'textarea', 'option', 'noscript' ]
 ```
 
 Note that if you use this option you are responsible for stating the entire list. This gives you the power to retain the content of `textarea`, if you want to.
 
-The content still gets escaped properly, with the exception of the `script` and `style` tags. *Allowing either `script` or `style` leaves you open to XSS attacks. Don't do that* unless you have good reason to trust their origin.
+The content still gets escaped properly, with the exception of the `script` and
+`style` tags. *Allowing either `script` or `style` leaves you open to XSS
+attacks. Don't do that* unless you have good reason to trust their origin.
+sanitize-html will log a warning if these tags are allowed, which can be
+disabled with the `allowVulnerableTags: true` option.
 
-## Changelog
+### Choose what to do with disallowed tags
 
-1.15.0: if configured as an allowed attribute (not the default), check for naughty URLs in `srcset` attributes. Thanks to Mike Samuel for the nudge to do this and to Sindre Sorhus for the `srcset` module.
-1.14.3: inadvertent removal of lodash regexp quote dependency in 1.14.2 has been corrected.
-1.14.2: protocol-relative URL detection must spot URLs starting with `\\` rather than `//` due to ages-old tolerance features of web browsers, intended for sleepy Windows developers. Thanks to Martin Bajanik.
-1.14.1: documented `allowProtocolRelative` option. No code changes from 1.14.0, released a few moments ago.  
-1.14.0: the new `allowProtocolRelative` option, which is set to `true` by default, allows you to decline to accept URLs that start with `//` and thus point to a different host using the current protocol. If you do **not** want to permit this, set this option to `false`. This is fully backwards compatible because the default behavior is to allow them. Thanks to Luke Bernard.
+Instead of discarding, or keeping text only, you may enable escaping of the entire content:
 
-1.13.0: `transformTags` can now add text to an element that initially had none. Thanks to Dushyant Singh.
+```javascript
+disallowedTagsMode: 'escape'
+```
 
-1.12.0: option to build for browser-side use. Thanks to Michael Blum.
+This will transform `<disallowed>content</disallowed>` to `&lt;disallowed&gt;content&lt;/disallowed&gt;`
 
-1.11.4: fixed crash when `__proto__` is a tag name. Now using a safe check for the existence of properties in all cases. Thanks to Andrew Krasichkov.
-
-Fixed XSS attack vector via `textarea` tags (when explicitly allowed). Decided that `script` (obviously) and `style` (due to its own XSS vectors) cannot realistically be afforded any XSS protection if allowed, unless we add a full CSS parser. Thanks again to Andrew Krasichkov.
-
-1.11.3: bumped `htmlparser2` version to address crashing bug in older version. Thanks to e-jigsaw.
-
-1.11.2: fixed README typo that interfered with readability due to markdown issues. No code changes. Thanks to Mikael Korpela. Also improved code block highlighting in README. Thanks to Alex Siman.
-
-1.11.1: fixed a regression introduced in 1.11.0 which caused the closing tag of the parent of a `textarea` tag to be lost. Thanks to Stefano Sala, who contributed the missing test.
-
-1.11.0: added the `nonTextTags` option, with tests.
-
-1.10.1: documentation cleanup. No code changes. Thanks to Rex Schrader.
-
-1.10.0: `allowedAttributes` now allows you to allow attributes for all tags by specifying `*` as the tag name. Thanks to Zdravko Georgiev.
-
-1.9.0: `parser` option allows options to be passed directly to `htmlparser`. Thanks to Danny Scott.
-
-1.8.0:
-
-* `transformTags` now accepts the `*` wildcard to transform all tags. Thanks to Jamy Timmermans.
-
-* Text that has been modified by `transformTags` is then passed through `textFilter`. Thanks to Pavlo Yurichuk.
-
-* Content inside `textarea` is discarded if `textarea` is not allowed. I don't know why it took me this long to see that this is just common sense. Thanks to David Frank.
-
-1.7.2: removed `array-includes` dependency in favor of `indexOf`, which is a little more verbose but slightly faster and doesn't require a shim. Thanks again to Joseph Dykstra.
-
-1.7.1: removed lodash dependency, adding lighter dependencies and polyfills in its place. Thanks to Joseph Dykstra.
-
-1.7.0: introduced `allowedSchemesByTag` option. Thanks to Cameron Will.
-
-1.6.1: the string `'undefined'` (as opposed to `undefined`) is perfectly valid text and shouldn't be expressly converted to the empty string.
-
-1.6.0: added `textFilter` option. Thanks to Csaba Palfi.
-
-1.5.3: do not escape special characters inside a script or style element, if they are allowed. This is consistent with the way browsers parse them; nothing closes them except the appropriate closing tag for the entire element. Of course, this only comes into play if you actually choose to allow those tags. Thanks to aletorrado.
-
-1.5.2: guard checks for allowed attributes correctly to avoid an undefined property error. Thanks to Zeke.
-
-1.5.1: updated to htmlparser2 1.8.x. Started using the `decodeEntities` option, which allows us to pass our filter evasion tests without the need to recursively invoke the filter.
-
-1.5.0: support for `*` wildcards in allowedAttributes. With tests. Thanks to Calvin Montgomery.
-
-1.4.3: invokes itself recursively until the markup stops changing to guard against [this issue](https://github.com/fb55/htmlparser2/issues/105). Bump to htmlparser2 version 3.7.x.
-
-1.4.1, 1.4.2: more tests.
-
-1.4.0: ability to  allow all attributes or tags through by setting `allowedAttributes` and/or `allowedTags` to false. Thanks to Anand Thakker.
-
-1.3.0: `attribs` now available on frames passed to exclusive filter.
-
-1.2.3: fixed another possible XSS attack vector; no definitive exploit was found but it looks possible. [See this issue.](https://github.com/punkave/sanitize-html/pull/20) Thanks to Jim O'Brien.
-
-1.2.2: reject `javascript:` URLs when disguised with an internal comment. This is probably not respected by browsers anyway except when inside an XML data island element, which you almost certainly are not allowing in your `allowedTags`, but we aim to be thorough. Thanks to Jim O'Brien.
-
-1.2.1: fixed crashing bug when presented with bad markup. The bug was in the `exclusiveFilter` mechanism. Unit test added. Thanks to Ilya Kantor for catching it.
-
-1.2.0:
-
-* The `allowedClasses` option now allows you to permit CSS classes in a fine-grained way.
-
-* Text passed to your `exclusiveFilter` function now includes the text of child elements, making it more useful for identifying elements that truly lack any inner text.
-
-1.1.7: use `he` for entity decoding, because it is more actively maintained.
-
-1.1.6: `allowedSchemes` option for those who want to permit `data` URLs and such.
-
-1.1.5: just a packaging thing.
-
-1.1.4: custom exclusion filter.
-
-1.1.3: moved to lodash. 1.1.2 pointed to the wrong version of lodash.
-
-1.1.0: the `transformTags` option was added. Thanks to [kl3ryk](https://github.com/kl3ryk).
-
-1.0.3: fixed several more javascript URL attack vectors after [studying the XSS filter evasion cheat sheet](https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet) to better understand my enemy. Whitespace characters (codes from 0 to 32), which browsers ignore in URLs in certain cases allowing the "javascript" scheme to be snuck in, are now stripped out when checking for naughty URLs. Thanks again to [pinpickle](https://github.com/pinpickle).
-
-1.0.2: fixed a javascript URL attack vector. naughtyHref must entity-decode URLs and also check for mixed-case scheme names. Thanks to [pinpickle](https://github.com/pinpickle).
-
-1.0.1: Doc tweaks.
-
-1.0.0: If the style tag is disallowed, then its content should be dumped, so that it doesn't appear as text. We were already doing this for script tags, however in both cases the content is now preserved if the tag is explicitly allowed.
-
-We're rocking our tests and have been working great in production for months, so: declared 1.0.0 stable.
-
-0.1.3: do not double-escape entities in attributes or text. Turns out the "text" provided by htmlparser2 is already escaped.
-
-0.1.2: packaging error meant it wouldn't install properly.
-
-0.1.1: discard the text of script tags.
-
-0.1.0: initial release.
+Valid values are: `'discard'` (default), `'escape'` (escape the tag) and `'recursiveEscape'` (to escape the tag and all its content).
 
 ## About P'unk Avenue and Apostrophe
 
-`sanitize-html` was created at [P'unk Avenue](http://punkave.com) for use in Apostrophe, an open-source content management system built on node.js. If you like `sanitize-html` you should definitely [check out apostrophenow.org](http://apostrophenow.org). Also be sure to visit us on [github](http://github.com/punkave).
+`sanitize-html` was created at [P'unk Avenue](http://punkave.com) for use in ApostropheCMS, an open-source content management system built on node.js. If you like `sanitize-html` you should definitely [check out apostrophecms.org](http://apostrophecms.org).
+
+## Changelog
+
+[The changelog is now in a separate file for readability.](https://github.com/apostrophecms/sanitize-html/blob/master/CHANGELOG.md)
 
 ## Support
 
-Feel free to open issues on [github](http://github.com/punkave/sanitize-html).
+Feel free to open issues on [github](http://github.com/apostrophecms/sanitize-html).
 
-<a href="http://punkave.com/"><img src="https://raw.github.com/punkave/sanitize-html/master/logos/logo-box-builtby.png" /></a>
+<a href="http://apostrophecms.com/"><img src="https://raw.github.com/apostrophecms/sanitize-html/master/logos/logo-box-builtby.png" /></a>
