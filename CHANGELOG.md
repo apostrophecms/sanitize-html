@@ -1,5 +1,8 @@
 ## Changelog
 
+2.0.0-beta:
+- Replaces lodash with utility packages: klona, is-plain-object, deepmerge, escape-string-regexp.
+
 1.27.1 (2020-07-15):
 - Removes the unused chalk dependency.
 - Adds configuration for a Github stale bot.
