@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-escape */
 const htmlparser = require('htmlparser2');
 const escapeStringRegexp = require('escape-string-regexp');
 const klona = require('klona');
@@ -508,9 +507,9 @@ function sanitizeHtml(html, options, _recursing) {
       s = s + '';
     }
     if (options.parser.decodeEntities) {
-      s = s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\>/g, '&gt;');
+      s = s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       if (quote) {
-        s = s.replace(/\"/g, '&quot;');
+        s = s.replace(/"/g, '&quot;');
       }
     }
     // TODO: this is inadequate because it will pass `&0;`. This approach
@@ -520,9 +519,9 @@ function sanitizeHtml(html, options, _recursing) {
     // to false. (The default is true.)
     s = s.replace(/&(?![a-zA-Z0-9#]{1,20};)/g, '&amp;') // Match ampersands not part of existing HTML entity
       .replace(/</g, '&lt;')
-      .replace(/\>/g, '&gt;');
+      .replace(/>/g, '&gt;');
     if (quote) {
-      s = s.replace(/\"/g, '&quot;');
+      s = s.replace(/"/g, '&quot;');
     }
     return s;
   }
@@ -536,12 +535,12 @@ function sanitizeHtml(html, options, _recursing) {
     // Clobber any comments in URLs, which the browser might
     // interpret inside an XML data island, allowing
     // a javascript: URL to be snuck through
-    href = href.replace(/<\!\-\-.*?\-\-\>/g, '');
+    href = href.replace(/<!--.*?-->/g, '');
     // Case insensitive so we don't get faked out by JAVASCRIPT #1
-    const matches = href.match(/^([a-zA-Z]+)\:/);
+    const matches = href.match(/^([a-zA-Z]+):/);
     if (!matches) {
       // Protocol-relative URL starting with any combination of '/' and '\'
-      if (href.match(/^[\/\\]{2}/)) {
+      if (href.match(/^[/\\]{2}/)) {
         return !options.allowProtocolRelative;
       }
 
