@@ -1,11 +1,9 @@
 /* eslint-disable no-useless-escape */
 var htmlparser = require('htmlparser2');
-var extend = require('xtend');
-var quoteRegexp = require('lodash/escapeRegExp');
-var cloneDeep = require('lodash/cloneDeep');
-var mergeWith = require('lodash/mergeWith');
-var isString = require('lodash/isString');
-var isPlainObject = require('lodash/isPlainObject');
+var escapeStringRegexp = require('escape-string-regexp');
+var klona = require('klona');
+var deepmerge = require('deepmerge');
+var isPlainObject = require('is-plain-object');
 var srcset = require('srcset');
 var postcss = require('postcss');
 var url = require('url');
@@ -101,9 +99,9 @@ function sanitizeHtml(html, options, _recursing) {
     options = sanitizeHtml.defaults;
     options.parser = htmlParserDefaults;
   } else {
-    options = extend(sanitizeHtml.defaults, options);
+    options = Object.assign({}, sanitizeHtml.defaults, options);
     if (options.parser) {
-      options.parser = extend(htmlParserDefaults, options.parser);
+      options.parser = Object.assign({}, htmlParserDefaults, options.parser);
     } else {
       options.parser = htmlParserDefaults;
     }
@@ -138,8 +136,8 @@ function sanitizeHtml(html, options, _recursing) {
       allowedAttributesMap[tag] = [];
       var globRegex = [];
       attributes.forEach(function(obj) {
-        if (isString(obj) && obj.indexOf('*') >= 0) {
-          globRegex.push(quoteRegexp(obj).replace(/\\\*/g, '.*'));
+        if (typeof obj === 'string' && obj.indexOf('*') >= 0) {
+          globRegex.push(escapeStringRegexp(obj).replace(/\\\*/g, '.*'));
         } else {
           allowedAttributesMap[tag].push(obj);
         }
@@ -572,20 +570,15 @@ function sanitizeHtml(html, options, _recursing) {
       return abstractSyntaxTree;
     }
 
-    var filteredAST = cloneDeep(abstractSyntaxTree);
+    var filteredAST = klona(abstractSyntaxTree);
     var astRules = abstractSyntaxTree.nodes[0];
     var selectedRule;
 
     // Merge global and tag-specific styles into new AST.
     if (allowedStyles[astRules.selector] && allowedStyles['*']) {
-      selectedRule = mergeWith(
-        cloneDeep(allowedStyles[astRules.selector]),
-        allowedStyles['*'],
-        function(objValue, srcValue) {
-          if (Array.isArray(objValue)) {
-            return objValue.concat(srcValue);
-          }
-        }
+      selectedRule = deepmerge(
+        allowedStyles[astRules.selector],
+        allowedStyles['*']
       );
     } else {
       selectedRule = allowedStyles[astRules.selector] || allowedStyles['*'];
