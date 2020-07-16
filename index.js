@@ -299,8 +299,8 @@ function sanitizeHtml(html, options, _recursing) {
               try {
                 // naughtyHref is in charge of whether protocol relative URLs
                 // are cool. We should just accept them
-                // TEMP
-                // eslint-disable-next-line
+                // TODO: Replace deprecated `url.parse`
+                // eslint-disable-next-line node/no-deprecated-api
                 parsed = url.parse(value, false, true);
                 const isRelativeUrl = parsed && parsed.host === null && parsed.protocol === null;
                 if (isRelativeUrl) {
