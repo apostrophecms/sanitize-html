@@ -1,6 +1,6 @@
 # sanitize-html
 
-[![CircleCI](https://circleci.com/gh/apostrophecms/sanitize-html/tree/master.svg?style=svg)](https://circleci.com/gh/apostrophecms/sanitize-html/tree/master)
+[![CircleCI](https://circleci.com/gh/apostrophecms/sanitize-html/tree/main.svg?style=svg)](https://circleci.com/gh/apostrophecms/sanitize-html/tree/main)
 
 <a href="https://apostrophecms.com/"><img src="https://raw.github.com/apostrophecms/sanitize-html/master/logos/logo-box-madefor.png" align="right" /></a>
 
@@ -34,28 +34,20 @@ HTML comments are not preserved.
 
 But, perhaps you'd like to display sanitized HTML immediately in the browser for preview. Or ask the browser to do the sanitization work on every page load. You can if you want to!
 
-* Clone repository
-* Run npm install and build / minify:
+* Clone repository and install via npm
+* Run npm install and :
 
 ```bash
-npm install
-npm run minify
+npm install sanitize-html # yarn install sanitize-html
 ```
 
-You'll find the minified and unminified versions of sanitize-html (with all its dependencies included) in the dist/ directory.
+The primary change in the 2.x version of sanitize-html is that it no longer includes a build that is ready for browser use. Developers are expected to include sanitize-html in their project builds as they would any other dependency. So while sanitize-html is no longer ready to link to directly in HTML, developers can now more easily process it according to their needs.
 
-Use it in the browser:
-
-```html
-<html>
-    <body>
-        <script type="text/javascript"  src="dist/sanitize-html.js"></script>
-        <script type="text/javascript" src="demo.js"></script>
-    </body>
-</html>
-```
+Once built and linked in the browser with other project Javascript it can be used to sanitize HTML strings in front end code:
 
 ```javascript
+import sanitizeHtml from 'sanitize-html';
+
 var html = "<strong>hello world</strong>";
 console.log(sanitizeHtml(html));
 console.log(sanitizeHtml("<img src=x onerror=alert('img') />"));
@@ -94,6 +86,8 @@ clean = sanitizeHtml(dirty, {
 ```
 
 Boom!
+
+### Example use cases
 
 #### "I like your set but I want to add one more tag. Is there a convenient way?" Sure:
 
@@ -148,7 +142,7 @@ allowedTags: [],
 allowedAttributes: {}
 ```
 
-### "What if I want disallowed tags to be escaped rather than discarded?"
+#### "What if I want disallowed tags to be escaped rather than discarded?"
 
 If you set `disallowedTagsMode` to `discard` (the default), disallowed tags are discarded. Any text content or subtags is still included, depending on whether the individual subtags are allowed.
 
@@ -156,7 +150,7 @@ If you set `disallowedTagsMode` to `escape`, the disallowed tags are escaped rat
 
 If you set `disallowedTagsMode` to `recursiveEscape`, the disallowed tags are escaped rather than discarded, and the same treatment is applied to all subtags, whether otherwise allowed or not.
 
-### "What if I want to allow only specific values on some attributes?"
+#### "What if I want to allow only specific values on some attributes?"
 
 When configuring the attribute in `allowedAttributes` simply use an object with attribute `name` and an allowed `values` array. In the following example `sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-scripts"` would become `sandbox="allow-popups allow-scripts"`:
 
