@@ -111,7 +111,6 @@ function sanitizeHtml(html, options, _recursing) {
       options.allowedTags && options.allowedTags.includes(tag) &&
       !options.allowVulnerableTags
     ) {
-      // eslint-disable-next-line no-console
       console.warn(`\n\n⚠️ Your \`allowedTags\` option includes, \`${tag}\`, which is inherently\nvulnerable to XSS attacks. Please remove it from \`allowedTags\`.\nOr, to disable this warning, add the \`allowVulnerableTags\` option\nand ensure you are accounting for this risk.\n\n`);
     }
   });
