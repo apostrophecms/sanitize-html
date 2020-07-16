@@ -72,11 +72,11 @@ var dirty = 'some really tacky HTML';
 var clean = sanitizeHtml(dirty);
 ```
 
-That will allow our default list of allowed tags and attributes through. It's a nice set, but probably not quite what you want. So:
+That will allow our [default list of allowed tags and attributes](#default-options) through. It's a nice set, but probably not quite what you want. So:
 
 ```js
 // Allow only a super restricted set of tags and attributes
-clean = sanitizeHtml(dirty, {
+const clean = sanitizeHtml(dirty, {
   allowedTags: [ 'b', 'i', 'em', 'strong', 'a' ],
   allowedAttributes: {
     'a': [ 'href' ]
@@ -87,19 +87,7 @@ clean = sanitizeHtml(dirty, {
 
 Boom!
 
-### Example use cases
-
-#### "I like your set but I want to add one more tag. Is there a convenient way?" Sure:
-
-```js
-clean = sanitizeHtml(dirty, {
-  allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ])
-});
-```
-
-If you do not specify `allowedTags` or `allowedAttributes` our default list is applied. So if you really want an empty list, specify one.
-
-#### "What are the default options?"
+### Default options
 
 ```js
 allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
@@ -122,6 +110,18 @@ allowedSchemesAppliedToAttributes: [ 'href', 'src', 'cite' ],
 allowProtocolRelative: true,
 enforceHtmlBoundary: false
 ```
+
+### Common use cases
+
+#### "I like your set but I want to add one more tag. Is there a convenient way?" Sure:
+
+```js
+const clean = sanitizeHtml(dirty, {
+  allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ])
+});
+```
+
+If you do not specify `allowedTags` or `allowedAttributes` our default list is applied. So if you really want an empty list, specify one.
 
 #### "What if I want to allow all tags or all attributes?"
 
@@ -155,14 +155,14 @@ If you set `disallowedTagsMode` to `recursiveEscape`, the disallowed tags are es
 When configuring the attribute in `allowedAttributes` simply use an object with attribute `name` and an allowed `values` array. In the following example `sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-scripts"` would become `sandbox="allow-popups allow-scripts"`:
 
 ```js
-        allowedAttributes: {
-          iframe: [
-            {
-              name: 'sandbox',
-              multiple: true,
-              values: ['allow-popups', 'allow-same-origin', 'allow-scripts']
-            }
-          ]
+allowedAttributes: {
+  iframe: [
+    {
+      name: 'sandbox',
+      multiple: true,
+      values: ['allow-popups', 'allow-same-origin', 'allow-scripts']
+    }
+  ]
 ```
 
 With `multiple: true`, several allowed values may appear in the same attribute, separated by spaces. Otherwise the attribute must exactly match one and only one of the allowed values.
@@ -184,6 +184,56 @@ allowedAttributes: {
   '*': [ 'href', 'align', 'alt', 'center', 'bgcolor' ]
 }
 ```
+
+## Additional options
+
+### Allowed CSS Classes
+
+If you wish to allow specific CSS classes on a particular element, you can do so with the `allowedClasses` option. Any other CSS classes are discarded.
+
+This implies that the `class` attribute is allowed on that element.
+
+```javascript
+// Allow only a restricted set of CSS classes and only on the p tag
+const clean = sanitizeHtml(dirty, {
+  allowedTags: [ 'p', 'em', 'strong' ],
+  allowedClasses: {
+    'p': [ 'fancy', 'simple' ]
+  }
+});
+```
+
+### Allowed CSS Styles
+
+If you wish to allow specific CSS _styles_ on a particular element, you can do that with the `allowedStyles` option. Simply declare your desired attributes as regular expression options within an array for the given attribute. Specific elements will inherit whitelisted attributes from the global (\*) attribute. Any other CSS classes are discarded.
+
+**You must also use `allowedAttributes`** to activate the `style` attribute for the relevant elements. Otherwise this feature will never come into play.
+
+**When constructing regular expressions, don't forget `^` and `$`.** It's not enough to say "the string should contain this." It must also say "and only this."
+
+**URLs in inline styles are NOT filtered by any mechanism other than your regular expression.**
+
+```javascript
+const clean = sanitizeHtml(dirty, {
+        allowedTags: ['p'],
+        allowedAttributes: {
+          'p': ["style"],
+        },
+        allowedStyles: {
+          '*': {
+            // Match HEX and RGB
+            'color': [/^#(0x)?[0-9a-f]+$/i, /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/],
+            'text-align': [/^left$/, /^right$/, /^center$/],
+            // Match any number with px, em, or %
+            'font-size': [/^\d+(?:px|em|%)$/]
+          },
+          'p': {
+            'font-size': [/^\d+rem$/]
+          }
+        }
+      });
+```
+
 ### Discarding text outside of ```<html></html>``` tags
 
 Some text editing applications generate HTML to allow copying over to a web application. These can sometimes include undesireable control characters after terminating `html` tag. By default sanitize-html will not discard these characters, instead returning them in sanitized string. This behaviour can be modified using `enforceHtmlBoundary` option.
@@ -199,7 +249,7 @@ enforceHtmlBoundary: true
 `santizeHtml` is built on `htmlparser2`. By default the only option passed down is `decodeEntities: true` You can set the options to pass by using the parser option.
 
 ```javascript
-clean = sanitizeHtml(dirty, {
+const clean = sanitizeHtml(dirty, {
   allowedTags: ['a'],
   parser: {
     lowerCaseTags: true
@@ -215,7 +265,7 @@ What if you want to add or change an attribute? What if you want to transform on
 The easiest way (will change all `ol` tags to `ul` tags):
 
 ```js
-clean = sanitizeHtml(dirty, {
+const clean = sanitizeHtml(dirty, {
   transformTags: {
     'ol': 'ul',
   }
@@ -225,11 +275,10 @@ clean = sanitizeHtml(dirty, {
 The most advanced usage:
 
 ```js
-clean = sanitizeHtml(dirty, {
+const clean = sanitizeHtml(dirty, {
   transformTags: {
     'ol': function(tagName, attribs) {
         // My own custom magic goes here
-
         return {
             tagName: 'ul',
             attribs: {
@@ -246,7 +295,7 @@ You can specify the `*` wildcard instead of a tag name to transform all tags.
 There is also a helper method which should be enough for simple cases in which you want to change the tag and/or add some attributes:
 
 ```js
-clean = sanitizeHtml(dirty, {
+const clean = sanitizeHtml(dirty, {
   transformTags: {
     'ol': sanitizeHtml.simpleTransform('ul', {class: 'foo'}),
   }
@@ -264,7 +313,7 @@ The last parameter (`shouldMerge`) is set to `true` by default. When `true`, `si
 You can also add or modify the text contents of a tag:
 
 ```js
-clean = sanitizeHtml(dirty, {
+const clean = sanitizeHtml(dirty, {
   transformTags: {
     'a': function(tagName, attribs) {
         return {
@@ -362,7 +411,7 @@ Note that if unspecified, relative URLs will be allowed by default if no hostnam
 For example:
 
 ```javascript
-clean = sanitizeHtml('<p><iframe src="https://www.youtube.com/embed/nykIhs12345"></iframe><p>', {
+const clean = sanitizeHtml('<p><iframe src="https://www.youtube.com/embed/nykIhs12345"></iframe><p>', {
   allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
   allowedClasses: {
     'p': [ 'fancy', 'simple' ],
@@ -377,7 +426,7 @@ clean = sanitizeHtml('<p><iframe src="https://www.youtube.com/embed/nykIhs12345"
 will pass through as safe whereas:
 
 ```javascript
-clean = sanitizeHtml('<p><iframe src="https://www.youtube.net/embed/nykIhs12345"></iframe><p>', {
+const clean = sanitizeHtml('<p><iframe src="https://www.youtube.net/embed/nykIhs12345"></iframe><p>', {
   allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
   allowedClasses: {
     'p': [ 'fancy', 'simple' ],
@@ -392,7 +441,7 @@ clean = sanitizeHtml('<p><iframe src="https://www.youtube.net/embed/nykIhs12345"
 or
 
 ```javascript
-clean = sanitizeHtml('<p><iframe src="https://www.vimeo/video/12345"></iframe><p>', {
+const clean = sanitizeHtml('<p><iframe src="https://www.vimeo/video/12345"></iframe><p>', {
   allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
   allowedClasses: {
     'p': [ 'fancy', 'simple' ],
@@ -409,7 +458,8 @@ will return an empty iframe tag.
 If you want to allow any subdomain of any level you can provide the domain in `allowedIframeDomains`
 
 ```javascript
-clean = sanitizeHtml('<p><iframe src="https://us02web.zoom.us/embed/12345"></iframe><p>', {
+// This iframe markup will pass through as safe.
+const clean = sanitizeHtml('<p><iframe src="https://us02web.zoom.us/embed/12345"></iframe><p>', {
   allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
   allowedClasses: {
     'p': [ 'fancy', 'simple' ],
@@ -420,55 +470,6 @@ clean = sanitizeHtml('<p><iframe src="https://us02web.zoom.us/embed/12345"></ifr
   allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com'],
   allowedIframeDomains: ['zoom.us']
 });
-```
-
-will pass through as safe.
-
-### Allowed CSS Classes
-
-If you wish to allow specific CSS classes on a particular element, you can do so with the `allowedClasses` option. Any other CSS classes are discarded.
-
-This implies that the `class` attribute is allowed on that element.
-
-```javascript
-// Allow only a restricted set of CSS classes and only on the p tag
-clean = sanitizeHtml(dirty, {
-  allowedTags: [ 'p', 'em', 'strong' ],
-  allowedClasses: {
-    'p': [ 'fancy', 'simple' ]
-  }
-});
-```
-
-### Allowed CSS Styles
-
-If you wish to allow specific CSS _styles_ on a particular element, you can do that with the `allowedStyles` option. Simply declare your desired attributes as regular expression options within an array for the given attribute. Specific elements will inherit whitelisted attributes from the global (\*) attribute. Any other CSS classes are discarded.
-
-**You must also use `allowedAttributes`** to activate the `style` attribute for the relevant elements. Otherwise this feature will never come into play.
-
-**When constructing regular expressions, don't forget `^` and `$`.** It's not enough to say "the string should contain this." It must also say "and only this."
-
-**URLs in inline styles are NOT filtered by any mechanism other than your regular expression.**
-
-```javascript
-clean = sanitizeHtml(dirty, {
-        allowedTags: ['p'],
-        allowedAttributes: {
-          'p': ["style"],
-        },
-        allowedStyles: {
-          '*': {
-            // Match HEX and RGB
-            'color': [/^#(0x)?[0-9a-f]+$/i, /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/],
-            'text-align': [/^left$/, /^right$/, /^center$/],
-            // Match any number with px, em, or %
-            'font-size': [/^\d+(?:px|em|%)$/]
-          },
-          'p': {
-            'font-size': [/^\d+rem$/]
-          }
-        }
-      });
 ```
 
 ### Allowed URL schemes
@@ -542,16 +543,10 @@ This will transform `<disallowed>content</disallowed>` to `&lt;disallowed&gt;con
 
 Valid values are: `'discard'` (default), `'escape'` (escape the tag) and `'recursiveEscape'` (to escape the tag and all its content).
 
-## About P'unk Avenue and Apostrophe
+## About ApostropheCMS
 
-`sanitize-html` was created at [P'unk Avenue](http://punkave.com) for use in ApostropheCMS, an open-source content management system built on node.js. If you like `sanitize-html` you should definitely [check out apostrophecms.org](http://apostrophecms.org).
-
-## Changelog
-
-[The changelog is now in a separate file for readability.](https://github.com/apostrophecms/sanitize-html/blob/master/CHANGELOG.md)
+`sanitize-html` was created at [P'unk Avenue](https://punkave.com) for use in [ApostropheCMS](https://apostrophecms.com), an open-source content management system built on Node.js. If you like `sanitize-html` you should definitely check out ApostropheCMS.
 
 ## Support
 
-Feel free to open issues on [github](http://github.com/apostrophecms/sanitize-html).
-
-<a href="http://apostrophecms.com/"><img src="https://raw.github.com/apostrophecms/sanitize-html/master/logos/logo-box-builtby.png" /></a>
+Feel free to open issues on [github](https://github.com/apostrophecms/sanitize-html).
