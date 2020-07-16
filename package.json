@@ -4,9 +4,6 @@
   "description": "Clean up user-submitted HTML, preserving whitelisted elements and whitelisted attributes on a per-element basis",
   "sideEffects": false,
   "main": "index.js",
-  "files": [
-    "dist/"
-  ],
   "scripts": {
     "test": "npx eslint . && mocha test/test.js"
   },
