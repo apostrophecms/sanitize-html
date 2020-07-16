@@ -3,6 +3,9 @@
 2.0.0-beta:
 - Moves the `index.js` file to the project root and removes all build steps within the package. Going forward, it is up to the developer to include sanitize-html in their project builds as-needed. This removes major points of conflict with project code and frees this module to not worry about myriad build-related questions.
 - Replaces lodash with utility packages: klona, is-plain-object, deepmerge, escape-string-regexp.
+- Makes custom tag transformations less error-prone by escaping frame `innerText`. Thanks to [Mike Samuel](https://github.com/mikesamuel) for the contribution.
+Prior to this patch, tag transformations which turned an attribute
+value into a text node could be vulnerable to code execution.
 
 1.27.1 (2020-07-15):
 - Removes the unused chalk dependency.
