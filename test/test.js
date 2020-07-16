@@ -1,9 +1,9 @@
 /* eslint-disable no-useless-escape */
-var assert = require('assert');
+const assert = require('assert');
 const sinon = require('sinon');
 
 describe('sanitizeHtml', function() {
-  var sanitizeHtml;
+  let sanitizeHtml;
   it('should be successfully initialized', function() {
     sanitizeHtml = require('../index.js');
   });
@@ -274,9 +274,9 @@ describe('sanitizeHtml', function() {
   });
 
   it('Should find child media elements that are in allowedTags', function() {
-    var markup = '<a href="http://www.linux.org"><img /><video></video></a>';
-    var sansVideo = '<a href="http://www.linux.org"><img /></a>';
-    var sanitizedMarkup = sanitizeHtml(markup, {
+    const markup = '<a href="http://www.linux.org"><img /><video></video></a>';
+    const sansVideo = '<a href="http://www.linux.org"><img /></a>';
+    const sanitizedMarkup = sanitizeHtml(markup, {
       allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
       exclusiveFilter: function(frame) {
         if (frame.tag === 'a') {
@@ -705,13 +705,13 @@ describe('sanitizeHtml', function() {
   });
 
   it('text from transformTags should not specify tags', function() {
-    var input = '<input value="&lt;script&gt;alert(1)&lt;/script&gt;">';
-    var want = '<u class="inlined-input">&lt;script&gt;alert(1)&lt;/script&gt;</u>';
+    const input = '<input value="&lt;script&gt;alert(1)&lt;/script&gt;">';
+    const want = '<u class="inlined-input">&lt;script&gt;alert(1)&lt;/script&gt;</u>';
     // Runs the sanitizer with a policy that turns an attribute into
     // text.  A policy like this might be used to turn inputs into
     // inline elements that look like the original but which do not
     // affect form submissions.
-    var got = sanitizeHtml(
+    const got = sanitizeHtml(
       input,
       {
         allowedTags: [ 'u' ],
@@ -738,8 +738,8 @@ describe('sanitizeHtml', function() {
     );
   });
   it('should sanitize styles correctly', function() {
-    var sanitizeString = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right"><u>test</u></li><li style="text-align: justify"><u>test</u></li></ol> <p><u><span style="color:#00FF00">test</span></u></p><p><span style="color:#00FF00"><span style="font-size:36px">TESTETESTESTES</span></span></p></blockquote>';
-    var expected = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right"><u>test</u></li><li style="text-align: justify"><u>test</u></li></ol> <p><u><span style="color:#00FF00">test</span></u></p><p><span style="color:#00FF00"><span style="font-size:36px">TESTETESTESTES</span></span></p></blockquote>';
+    const sanitizeString = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right"><u>test</u></li><li style="text-align: justify"><u>test</u></li></ol> <p><u><span style="color:#00FF00">test</span></u></p><p><span style="color:#00FF00"><span style="font-size:36px">TESTETESTESTES</span></span></p></blockquote>';
+    const expected = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right"><u>test</u></li><li style="text-align: justify"><u>test</u></li></ol> <p><u><span style="color:#00FF00">test</span></u></p><p><span style="color:#00FF00"><span style="font-size:36px">TESTETESTESTES</span></span></p></blockquote>';
     assert.equal(
       sanitizeHtml(sanitizeString, {
         allowedTags: false,
@@ -1082,9 +1082,9 @@ describe('sanitizeHtml', function() {
     assert.equal(sanitizeHtml('<img src="<0&0;0.2&" />', {allowedTags: ['img']}), '<img src="&lt;0&amp;0;0.2&amp;" />');
   });
   it('Should not double encode ampersands on HTML entities if decodeEntities is false (TODO more tests, this is too loose to rely upon)', function() {
-    var textIn = 'This &amp; & that &reg; &#x0000A; &#10; &plusmn; OK?';
-    var expectedResult = 'This &amp; &amp; that &reg; &#x0000A; &#10; &plusmn; OK?';
-    var sanitizeHtmlOptions = {
+    const textIn = 'This &amp; & that &reg; &#x0000A; &#10; &plusmn; OK?';
+    const expectedResult = 'This &amp; &amp; that &reg; &#x0000A; &#10; &plusmn; OK?';
+    const sanitizeHtmlOptions = {
       parser: {
         decodeEntities: false
       }
