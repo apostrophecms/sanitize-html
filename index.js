@@ -164,7 +164,7 @@ function sanitizeHtml(html, options, _recursing) {
     var transFun;
     if (typeof transform === 'function') {
       transFun = transform;
-    } else if (typeof transform === "string") {
+    } else if (typeof transform === 'string') {
       transFun = sanitizeHtml.simpleTransform(transform);
     }
     if (tag === '*') {
@@ -306,7 +306,7 @@ function sanitizeHtml(html, options, _recursing) {
                 if (isRelativeUrl) {
                   // default value of allowIframeRelativeUrls is true
                   // unless allowedIframeHostnames or allowedIframeDomains specified
-                  allowed = has(options, "allowIframeRelativeUrls")
+                  allowed = has(options, 'allowIframeRelativeUrls')
                     ? options.allowIframeRelativeUrls
                     : (!options.allowedIframeHostnames && !options.allowedIframeDomains);
                 } else if (options.allowedIframeHostnames || options.allowedIframeDomains) {
@@ -362,7 +362,7 @@ function sanitizeHtml(html, options, _recursing) {
             }
             if (a === 'style') {
               try {
-                var abstractSyntaxTree = postcss.parse(name + " {" + value + "}");
+                var abstractSyntaxTree = postcss.parse(name + ' {' + value + '}');
                 var filteredAST = filterCss(abstractSyntaxTree, options.allowedStyles);
 
                 value = stringifyStyleAttributes(filteredAST);
@@ -386,9 +386,9 @@ function sanitizeHtml(html, options, _recursing) {
         });
       }
       if (options.selfClosing.indexOf(name) !== -1) {
-        result += " />";
+        result += ' />';
       } else {
-        result += ">";
+        result += '>';
         if (frame.innerText && !hasText && !options.textFilter) {
           result += frame.innerText;
         }
@@ -481,7 +481,7 @@ function sanitizeHtml(html, options, _recursing) {
         return;
       }
 
-      result += "</" + name + ">";
+      result += '</' + name + '>';
       if (skip) {
         result = tempResult + escapeHtml(result);
         tempResult = '';

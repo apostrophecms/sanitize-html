@@ -3,15 +3,12 @@
   "version": "1.27.1",
   "description": "Clean up user-submitted HTML, preserving whitelisted elements and whitelisted attributes on a per-element basis",
   "sideEffects": false,
-  "main": "dist/sanitize-html.js",
+  "main": "index.js",
   "files": [
     "dist/"
   ],
   "scripts": {
-    "build": "mkdir -p dist && browserify src/index.js > dist/sanitize-html-es2015.js --standalone 'sanitizeHtml' && babel dist/sanitize-html-es2015.js --out-file dist/sanitize-html.js --presets=@babel/preset-env",
-    "minify": "npm run build && uglifyjs dist/sanitize-html.js > dist/sanitize-html.min.js",
-    "prepublishOnly": "npm run minify",
-    "test": "npx eslint . && npm run prepublishOnly && mocha test/test.js"
+    "test": "npx eslint . && mocha test/test.js"
   },
   "repository": {
     "type": "git",
@@ -35,11 +32,6 @@
     "srcset": "^2.0.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.8.4",
-    "@babel/preset-env": "^7.8.4",
-    "babelify": "^10.0.0",
-    "browserify": "^16.2.3",
     "eslint": "^4.0.0",
     "eslint-config-apostrophe": "^3.1.0",
     "eslint-config-standard": "^11.0.0",
@@ -48,7 +40,6 @@
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-standard": "^3.1.0",
     "mocha": "^5.2.0",
-    "sinon": "^9.0.2",
-    "uglify-js": "^3.8.0"
+    "sinon": "^9.0.2"
   }
 }
