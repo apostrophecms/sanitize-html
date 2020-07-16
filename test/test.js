@@ -712,20 +712,20 @@ describe('sanitizeHtml', function() {
     // inline elements that look like the original but which do not
     // affect form submissions.
     var got = sanitizeHtml(
-        input,
-        {
-          allowedTags: [ 'u' ],
-          allowedAttributes: { '*': ['class'] },
-          transformTags: {
-            input: function (tagName, attribs) {
-              return {
-                tagName: 'u',
-                attribs: { class: 'inlined-input' },
-                text: attribs.value
-              };
-            }
+      input,
+      {
+        allowedTags: [ 'u' ],
+        allowedAttributes: { '*': ['class'] },
+        transformTags: {
+          input: function (tagName, attribs) {
+            return {
+              tagName: 'u',
+              attribs: { class: 'inlined-input' },
+              text: attribs.value
+            };
           }
-        });
+        }
+      });
     assert.equal(got, want);
   });
   it('drop attribute names with meta-characters', function() {
