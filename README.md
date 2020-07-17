@@ -48,7 +48,7 @@ Once built and linked in the browser with other project Javascript it can be use
 ```javascript
 import sanitizeHtml from 'sanitize-html';
 
-var html = "<strong>hello world</strong>";
+const html = "<strong>hello world</strong>";
 console.log(sanitizeHtml(html));
 console.log(sanitizeHtml("<img src=x onerror=alert('img') />"));
 console.log(sanitizeHtml("console.log('hello world')"));
@@ -66,10 +66,10 @@ npm install sanitize-html
 Use it in your node app:
 
 ```js
-var sanitizeHtml = require('sanitize-html');
+const sanitizeHtml = require('sanitize-html');
 
-var dirty = 'some really tacky HTML';
-var clean = sanitizeHtml(dirty);
+const dirty = 'some really tacky HTML';
+const clean = sanitizeHtml(dirty);
 ```
 
 That will allow our [default list of allowed tags and attributes](#default-options) through. It's a nice set, but probably not quite what you want. So:

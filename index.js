@@ -1,19 +1,18 @@
-/* eslint-disable no-useless-escape */
-var htmlparser = require('htmlparser2');
-var escapeStringRegexp = require('escape-string-regexp');
-var klona = require('klona');
-var deepmerge = require('deepmerge');
-var isPlainObject = require('is-plain-object');
-var srcset = require('srcset');
-var postcss = require('postcss');
-var url = require('url');
+const htmlparser = require('htmlparser2');
+const escapeStringRegexp = require('escape-string-regexp');
+const klona = require('klona');
+const deepmerge = require('deepmerge');
+const isPlainObject = require('is-plain-object');
+const srcset = require('srcset');
+const postcss = require('postcss');
+const url = require('url');
 // Tags that can conceivably represent stand-alone media.
-var mediaTags = [
+const mediaTags = [
   'img', 'audio', 'video', 'picture', 'svg',
   'object', 'map', 'iframe', 'embed'
 ];
 // Tags that are inherently vulnerable to being used in XSS attacks.
-var vulnerableTags = [ 'script', 'style' ];
+const vulnerableTags = ['script', 'style'];
 
 function each(obj, cb) {
   if (obj) {
@@ -30,7 +29,7 @@ function has(obj, key) {
 
 // Returns those elements of `a` for which `cb(a)` returns truthy
 function filter(a, cb) {
-  var n = [];
+  const n = [];
   each(a, function(v) {
     if (cb(v)) {
       n.push(v);
@@ -40,7 +39,7 @@ function filter(a, cb) {
 }
 
 function isEmptyObject(obj) {
-  for (var key in obj) {
+  for (const key in obj) {
     if (has(obj, key)) {
       return false;
     }
@@ -68,12 +67,12 @@ const VALID_HTML_ATTRIBUTE_NAME = /^[^\0\t\n\f\r /<=>]+$/;
 // https://github.com/fb55/htmlparser2/issues/105
 
 function sanitizeHtml(html, options, _recursing) {
-  var result = '';
+  let result = '';
   // Used for hot swapping the result variable with an empty string in order to "capture" the text written to it.
-  var tempResult = '';
+  let tempResult = '';
 
   function Frame(tag, attribs) {
-    var that = this;
+    const that = this;
     this.tag = tag;
     this.attribs = attribs || {};
     this.tagPosition = result.length;
@@ -82,14 +81,14 @@ function sanitizeHtml(html, options, _recursing) {
 
     this.updateParentNodeText = function() {
       if (stack.length) {
-        var parentFrame = stack[stack.length - 1];
+        const parentFrame = stack[stack.length - 1];
         parentFrame.text += that.text;
       }
     };
 
     this.updateParentNodeMediaChildren = function() {
       if (stack.length && mediaTags.includes(this.tag)) {
-        var parentFrame = stack[stack.length - 1];
+        const parentFrame = stack[stack.length - 1];
         parentFrame.mediaChildren.push(this.tag);
       }
     };
@@ -112,7 +111,6 @@ function sanitizeHtml(html, options, _recursing) {
       options.allowedTags && options.allowedTags.includes(tag) &&
       !options.allowVulnerableTags
     ) {
-      // eslint-disable-next-line no-console
       console.warn(`\n\n⚠️ Your \`allowedTags\` option includes, \`${tag}\`, which is inherently\nvulnerable to XSS attacks. Please remove it from \`allowedTags\`.\nOr, to disable this warning, add the \`allowVulnerableTags\` option\nand ensure you are accounting for this risk.\n\n`);
     }
   });
@@ -121,20 +119,20 @@ function sanitizeHtml(html, options, _recursing) {
   // the text when the tag is disallowed makes sense for other reasons.
   // If we are not allowing these tags, we should drop their content too.
   // For other tags you would drop the tag but keep its content.
-  var nonTextTagsArray = options.nonTextTags || [
+  const nonTextTagsArray = options.nonTextTags || [
     'script',
     'style',
     'textarea',
     'option'
   ];
-  var allowedAttributesMap;
-  var allowedAttributesGlobMap;
+  let allowedAttributesMap;
+  let allowedAttributesGlobMap;
   if (options.allowedAttributes) {
     allowedAttributesMap = {};
     allowedAttributesGlobMap = {};
     each(options.allowedAttributes, function(attributes, tag) {
       allowedAttributesMap[tag] = [];
-      var globRegex = [];
+      const globRegex = [];
       attributes.forEach(function(obj) {
         if (typeof obj === 'string' && obj.indexOf('*') >= 0) {
           globRegex.push(escapeStringRegexp(obj).replace(/\\\*/g, '.*'));
@@ -145,7 +143,7 @@ function sanitizeHtml(html, options, _recursing) {
       allowedAttributesGlobMap[tag] = new RegExp('^(' + globRegex.join('|') + ')$');
     });
   }
-  var allowedClassesMap = {};
+  const allowedClassesMap = {};
   each(options.allowedClasses, function(classes, tag) {
     // Implicitly allows the class attribute
     if (allowedAttributesMap) {
@@ -158,10 +156,10 @@ function sanitizeHtml(html, options, _recursing) {
     allowedClassesMap[tag] = classes;
   });
 
-  var transformTagsMap = {};
-  var transformTagsAll;
+  const transformTagsMap = {};
+  let transformTagsAll;
   each(options.transformTags, function(transform, tag) {
-    var transFun;
+    let transFun;
     if (typeof transform === 'function') {
       transFun = transform;
     } else if (typeof transform === 'string') {
@@ -174,16 +172,16 @@ function sanitizeHtml(html, options, _recursing) {
     }
   });
 
-  var depth;
-  var stack;
-  var skipMap;
-  var transformMap;
-  var skipText;
-  var skipTextDepth;
+  let depth;
+  let stack;
+  let skipMap;
+  let transformMap;
+  let skipText;
+  let skipTextDepth;
 
   initializeState();
 
-  var parser = new htmlparser.Parser({
+  const parser = new htmlparser.Parser({
     onopentag: function(name, attribs) {
       // If `enforceHtmlBoundary` is `true` and this has found the opening
       // `html` tag, reset the state.
@@ -195,12 +193,12 @@ function sanitizeHtml(html, options, _recursing) {
         skipTextDepth++;
         return;
       }
-      var frame = new Frame(name, attribs);
+      const frame = new Frame(name, attribs);
       stack.push(frame);
 
-      var skip = false;
-      var hasText = !!frame.text;
-      var transformedTag;
+      let skip = false;
+      const hasText = !!frame.text;
+      let transformedTag;
       if (has(transformTagsMap, name)) {
         transformedTag = transformTagsMap[name](name, attribs);
 
@@ -254,10 +252,10 @@ function sanitizeHtml(html, options, _recursing) {
             delete frame.attribs[a];
             return;
           }
-          var parsed;
+          let parsed;
           // check allowedAttributesMap for the element and attribute and modify the value
           // as necessary if there are specific values defined.
-          var passedAllowedAttributesMapCheck = false;
+          let passedAllowedAttributesMapCheck = false;
           if (!allowedAttributesMap ||
             (has(allowedAttributesMap, name) && allowedAttributesMap[name].indexOf(a) !== -1) ||
             (allowedAttributesMap['*'] && allowedAttributesMap['*'].indexOf(a) !== -1) ||
@@ -268,7 +266,7 @@ function sanitizeHtml(html, options, _recursing) {
             for (const o of allowedAttributesMap[name]) {
               if (isPlainObject(o) && o.name && (o.name === a)) {
                 passedAllowedAttributesMapCheck = true;
-                var newValue = '';
+                let newValue = '';
                 if (o.multiple === true) {
                   // verify the values that are allowed
                   const splitStrArray = value.split(' ');
@@ -297,12 +295,14 @@ function sanitizeHtml(html, options, _recursing) {
               }
             }
             if (name === 'iframe' && a === 'src') {
-              var allowed = true;
+              let allowed = true;
               try {
                 // naughtyHref is in charge of whether protocol relative URLs
                 // are cool. We should just accept them
+                // TODO: Replace deprecated `url.parse`
+                // eslint-disable-next-line node/no-deprecated-api
                 parsed = url.parse(value, false, true);
-                var isRelativeUrl = parsed && parsed.host === null && parsed.protocol === null;
+                const isRelativeUrl = parsed && parsed.host === null && parsed.protocol === null;
                 if (isRelativeUrl) {
                   // default value of allowIframeRelativeUrls is true
                   // unless allowedIframeHostnames or allowedIframeDomains specified
@@ -310,10 +310,10 @@ function sanitizeHtml(html, options, _recursing) {
                     ? options.allowIframeRelativeUrls
                     : (!options.allowedIframeHostnames && !options.allowedIframeDomains);
                 } else if (options.allowedIframeHostnames || options.allowedIframeDomains) {
-                  var allowedHostname = (options.allowedIframeHostnames || []).find(function (hostname) {
+                  const allowedHostname = (options.allowedIframeHostnames || []).find(function (hostname) {
                     return hostname === parsed.hostname;
                   });
-                  var allowedDomain = (options.allowedIframeDomains || []).find(function(domain) {
+                  const allowedDomain = (options.allowedIframeDomains || []).find(function(domain) {
                     return parsed.hostname === domain || parsed.hostname.endsWith(`.${domain}`);
                   });
                   allowed = allowedHostname || allowedDomain;
@@ -362,8 +362,8 @@ function sanitizeHtml(html, options, _recursing) {
             }
             if (a === 'style') {
               try {
-                var abstractSyntaxTree = postcss.parse(name + ' {' + value + '}');
-                var filteredAST = filterCss(abstractSyntaxTree, options.allowedStyles);
+                const abstractSyntaxTree = postcss.parse(name + ' {' + value + '}');
+                const filteredAST = filterCss(abstractSyntaxTree, options.allowedStyles);
 
                 value = stringifyStyleAttributes(filteredAST);
 
@@ -402,8 +402,8 @@ function sanitizeHtml(html, options, _recursing) {
       if (skipText) {
         return;
       }
-      var lastFrame = stack[stack.length - 1];
-      var tag;
+      const lastFrame = stack[stack.length - 1];
+      let tag;
 
       if (lastFrame) {
         tag = lastFrame.tag;
@@ -418,7 +418,7 @@ function sanitizeHtml(html, options, _recursing) {
         // which have their own collection of XSS vectors.
         result += text;
       } else {
-        var escaped = escapeHtml(text, false);
+        const escaped = escapeHtml(text, false);
         if (options.textFilter) {
           result += options.textFilter(escaped, tag);
         } else {
@@ -426,7 +426,7 @@ function sanitizeHtml(html, options, _recursing) {
         }
       }
       if (stack.length) {
-        var frame = stack[stack.length - 1];
+        const frame = stack[stack.length - 1];
         frame.text += text;
       }
     },
@@ -441,14 +441,14 @@ function sanitizeHtml(html, options, _recursing) {
         }
       }
 
-      var frame = stack.pop();
+      const frame = stack.pop();
       if (!frame) {
         // Do not crash on bad markup
         return;
       }
       skipText = options.enforceHtmlBoundary ? name === 'html' : false;
       depth--;
-      var skip = skipMap[depth];
+      const skip = skipMap[depth];
       if (skip) {
         delete skipMap[depth];
         if (options.disallowedTagsMode === 'discard') {
@@ -508,9 +508,9 @@ function sanitizeHtml(html, options, _recursing) {
       s = s + '';
     }
     if (options.parser.decodeEntities) {
-      s = s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\>/g, '&gt;');
+      s = s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       if (quote) {
-        s = s.replace(/\"/g, '&quot;');
+        s = s.replace(/"/g, '&quot;');
       }
     }
     // TODO: this is inadequate because it will pass `&0;`. This approach
@@ -520,9 +520,9 @@ function sanitizeHtml(html, options, _recursing) {
     // to false. (The default is true.)
     s = s.replace(/&(?![a-zA-Z0-9#]{1,20};)/g, '&amp;') // Match ampersands not part of existing HTML entity
       .replace(/</g, '&lt;')
-      .replace(/\>/g, '&gt;');
+      .replace(/>/g, '&gt;');
     if (quote) {
-      s = s.replace(/\"/g, '&quot;');
+      s = s.replace(/"/g, '&quot;');
     }
     return s;
   }
@@ -536,19 +536,19 @@ function sanitizeHtml(html, options, _recursing) {
     // Clobber any comments in URLs, which the browser might
     // interpret inside an XML data island, allowing
     // a javascript: URL to be snuck through
-    href = href.replace(/<\!\-\-.*?\-\-\>/g, '');
+    href = href.replace(/<!--.*?-->/g, '');
     // Case insensitive so we don't get faked out by JAVASCRIPT #1
-    var matches = href.match(/^([a-zA-Z]+)\:/);
+    const matches = href.match(/^([a-zA-Z]+):/);
     if (!matches) {
       // Protocol-relative URL starting with any combination of '/' and '\'
-      if (href.match(/^[\/\\]{2}/)) {
+      if (href.match(/^[/\\]{2}/)) {
         return !options.allowProtocolRelative;
       }
 
       // No scheme
       return false;
     }
-    var scheme = matches[1].toLowerCase();
+    const scheme = matches[1].toLowerCase();
 
     if (has(options.allowedSchemesByTag, name)) {
       return options.allowedSchemesByTag[name].indexOf(scheme) === -1;
@@ -570,9 +570,9 @@ function sanitizeHtml(html, options, _recursing) {
       return abstractSyntaxTree;
     }
 
-    var filteredAST = klona(abstractSyntaxTree);
-    var astRules = abstractSyntaxTree.nodes[0];
-    var selectedRule;
+    const filteredAST = klona(abstractSyntaxTree);
+    const astRules = abstractSyntaxTree.nodes[0];
+    let selectedRule;
 
     // Merge global and tag-specific styles into new AST.
     if (allowedStyles[astRules.selector] && allowedStyles['*']) {
@@ -624,8 +624,8 @@ function sanitizeHtml(html, options, _recursing) {
   function filterDeclarations(selectedRule) {
     return function (allowedDeclarationsList, attributeObject) {
       // If this property is whitelisted...
-      if (selectedRule.hasOwnProperty(attributeObject.prop)) {
-        var matchesRegex = selectedRule[attributeObject.prop].some(function(regularExpression) {
+      if (Object.prototype.hasOwnProperty.call(selectedRule, attributeObject.prop)) {
+        const matchesRegex = selectedRule[attributeObject.prop].some(function(regularExpression) {
           return regularExpression.test(attributeObject.value);
         });
 
@@ -652,27 +652,27 @@ function sanitizeHtml(html, options, _recursing) {
 // Defaults are accessible to you so that you can use them as a starting point
 // programmatically if you wish
 
-var htmlParserDefaults = {
+const htmlParserDefaults = {
   decodeEntities: true
 };
 sanitizeHtml.defaults = {
-  allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
+  allowedTags: ['h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
     'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'abbr', 'code', 'hr', 'br', 'div',
-    'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'iframe' ],
+    'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'iframe'],
   disallowedTagsMode: 'discard',
   allowedAttributes: {
-    a: [ 'href', 'name', 'target' ],
+    a: ['href', 'name', 'target'],
     // We don't currently allow img itself by default, but this
     // would make sense if we did. You could add srcset here,
     // and if you do the URL is checked for safety
-    img: [ 'src' ]
+    img: ['src']
   },
   // Lots of these won't come up by default because we don't allow them
-  selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
+  selfClosing: ['img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta'],
   // URL schemes we permit
-  allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
+  allowedSchemes: ['http', 'https', 'ftp', 'mailto'],
   allowedSchemesByTag: {},
-  allowedSchemesAppliedToAttributes: [ 'href', 'src', 'cite' ],
+  allowedSchemesAppliedToAttributes: ['href', 'src', 'cite'],
   allowProtocolRelative: true,
   enforceHtmlBoundary: false
 };
@@ -682,7 +682,7 @@ sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {
   newAttribs = newAttribs || {};
 
   return function(tagName, attribs) {
-    var attrib;
+    let attrib;
     if (merge) {
       for (attrib in newAttribs) {
         attribs[attrib] = newAttribs[attrib];
