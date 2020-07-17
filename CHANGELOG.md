@@ -6,6 +6,8 @@
 - Makes custom tag transformations less error-prone by escaping frame `innerText`. Thanks to [Mike Samuel](https://github.com/mikesamuel) for the contribution.
 Prior to this patch, tag transformations which turned an attribute
 value into a text node could be vulnerable to code execution.
+- Updates code to use modern features including `const`/`let` variable assignment.
+- ESLint clean up.
 
 1.27.1 (2020-07-15):
 - Removes the unused chalk dependency.

@@ -1,6 +1,13 @@
 {
   "extends": "apostrophe",
   "rules": {
-    "no-useless-escape": 1
+    "no-console": [
+      "error",
+      {
+        "allow": [
+          "warn"
+        ]
+      }
+    ]
   }
 }
