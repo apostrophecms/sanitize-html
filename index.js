@@ -330,7 +330,7 @@ function sanitizeHtml(html, options, _recursing) {
             if (a === 'srcset') {
               try {
                 parsed = srcset.parse(value);
-                each(parsed, function(value) {
+                parsed.forEach(function(value) {
                   if (naughtyHref('srcset', value.url)) {
                     value.evil = true;
                   }
