@@ -378,7 +378,7 @@ function sanitizeHtml(html, options, _recursing) {
               }
             }
             result += ' ' + a;
-            if (value && value.length) {
+            if (value != null && value != undefined) {
               result += '="' + escapeHtml(value, true) + '"';
             }
           } else {
