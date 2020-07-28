@@ -8,6 +8,9 @@ Prior to this patch, tag transformations which turned an attribute
 value into a text node could be vulnerable to code execution.
 - Updates code to use modern features including `const`/`let` variable assignment.
 - ESLint clean up.
+- Updates `is-plain-object` to the 4.x major version.
+
+Thanks to [Bogdan Chadkin](https://github.com/TrySound) for contributions to this major version update.
 
 1.27.1 (2020-07-15):
 - Removes the unused chalk dependency.
