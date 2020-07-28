@@ -5,7 +5,7 @@ var cloneDeep = require('lodash/cloneDeep');
 var mergeWith = require('lodash/mergeWith');
 var isString = require('lodash/isString');
 var isPlainObject = require('lodash/isPlainObject');
-var srcset = require('srcset');
+var parseSrcset = require('parse-srcset');
 var postcss = require('postcss');
 var url = require('url');
 // Tags that can conceivably represent stand-alone media.
@@ -47,6 +47,19 @@ function isEmptyObject(obj) {
     }
   }
   return true;
+}
+
+function stringifySrcset(parsedSrcset) {
+  return parsedSrcset.map(function(part) {
+    if (!part.url) {
+      throw new Error('URL missing');
+    }
+
+    return (part.url +
+             (part.w ? ` ${part.w}w` : '') +
+             (part.h ? ` ${part.h}h` : '') +
+             (part.d ? ` ${part.d}x` : ''));
+  }).join(', ');
 }
 
 module.exports = sanitizeHtml;
@@ -330,7 +343,7 @@ function sanitizeHtml(html, options, _recursing) {
             }
             if (a === 'srcset') {
               try {
-                parsed = srcset.parse(value);
+                parsed = parseSrcset(value);
                 each(parsed, function(value) {
                   if (naughtyHref('srcset', value.url)) {
                     value.evil = true;
@@ -343,7 +356,7 @@ function sanitizeHtml(html, options, _recursing) {
                   delete frame.attribs[a];
                   return;
                 } else {
-                  value = srcset.stringify(filter(parsed, function(v) {
+                  value = stringifySrcset(filter(parsed, function(v) {
                     return !v.evil;
                   }));
                   frame.attribs[a] = value;

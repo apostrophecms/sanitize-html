@@ -687,20 +687,29 @@ describe('sanitizeHtml', function() {
   });
   it('should accept srcset if allowed', function() {
     assert.equal(
-      sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />', {
+      sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w, bar.jpg 200w" />', {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
         allowedAttributes: { img: [ 'src', 'srcset' ] }
       }),
-      '<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />'
+      '<img src="fallback.jpg" srcset="foo.jpg 100w, bar.jpg 200w" />'
     );
   });
   it('should drop bogus srcset', function() {
     assert.equal(
-      sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x, javascript:alert(1) 100w 2x" />', {
+      sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w, bar.jpg 200w, javascript:alert(1) 100w" />', {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
         allowedAttributes: { img: [ 'src', 'srcset' ] }
       }),
-      '<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />'
+      '<img src="fallback.jpg" srcset="foo.jpg 100w, bar.jpg 200w" />'
+    );
+  });
+  it('should accept srcset with urls containing commas', function() {
+    assert.equal(
+      sanitizeHtml('<img src="fallback.jpg" srcset="/upload/f_auto,q_auto:eco,c_fit,w_1460,h_2191/abc.jpg 1460w, /upload/f_auto,q_auto:eco,c_fit,w_1360,h_2041/abc.jpg" />', {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
+        allowedAttributes: { img: [ 'src', 'srcset' ] }
+      }),
+      '<img src="fallback.jpg" srcset="/upload/f_auto,q_auto:eco,c_fit,w_1460,h_2191/abc.jpg 1460w, /upload/f_auto,q_auto:eco,c_fit,w_1360,h_2041/abc.jpg" />'
     );
   });
   it('drop attribute names with meta-characters', function() {
