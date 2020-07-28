@@ -14,8 +14,7 @@
   "keywords": [
     "html",
     "parser",
-    "sanitizer",
-    "apostrophecms"
+    "sanitizer"
   ],
   "author": "Apostrophe Technologies, Inc.",
   "license": "MIT",
