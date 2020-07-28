@@ -14,7 +14,7 @@ var mediaTags = [
   'object', 'map', 'iframe', 'embed'
 ];
 // Tags that are inherently vulnerable to being used in XSS attacks.
-var vulnerableTags = [ 'script', 'style' ];
+var vulnerableTags = ['script', 'style'];
 
 function each(obj, cb) {
   if (obj) {
@@ -178,7 +178,7 @@ function sanitizeHtml(html, options, _recursing) {
     var transFun;
     if (typeof transform === 'function') {
       transFun = transform;
-    } else if (typeof transform === "string") {
+    } else if (typeof transform === 'string') {
       transFun = sanitizeHtml.simpleTransform(transform);
     }
     if (tag === '*') {
@@ -320,7 +320,7 @@ function sanitizeHtml(html, options, _recursing) {
                 if (isRelativeUrl) {
                   // default value of allowIframeRelativeUrls is true
                   // unless allowedIframeHostnames or allowedIframeDomains specified
-                  allowed = has(options, "allowIframeRelativeUrls")
+                  allowed = has(options, 'allowIframeRelativeUrls')
                     ? options.allowIframeRelativeUrls
                     : (!options.allowedIframeHostnames && !options.allowedIframeDomains);
                 } else if (options.allowedIframeHostnames || options.allowedIframeDomains) {
@@ -376,7 +376,7 @@ function sanitizeHtml(html, options, _recursing) {
             }
             if (a === 'style') {
               try {
-                var abstractSyntaxTree = postcss.parse(name + " {" + value + "}");
+                var abstractSyntaxTree = postcss.parse(name + ' {' + value + '}');
                 var filteredAST = filterCss(abstractSyntaxTree, options.allowedStyles);
 
                 value = stringifyStyleAttributes(filteredAST);
@@ -400,9 +400,9 @@ function sanitizeHtml(html, options, _recursing) {
         });
       }
       if (options.selfClosing.indexOf(name) !== -1) {
-        result += " />";
+        result += ' />';
       } else {
-        result += ">";
+        result += '>';
         if (frame.innerText && !hasText && !options.textFilter) {
           result += frame.innerText;
         }
@@ -495,7 +495,7 @@ function sanitizeHtml(html, options, _recursing) {
         return;
       }
 
-      result += "</" + name + ">";
+      result += '</' + name + '>';
       if (skip) {
         result = tempResult + escapeHtml(result);
         tempResult = '';
@@ -675,23 +675,23 @@ var htmlParserDefaults = {
   decodeEntities: true
 };
 sanitizeHtml.defaults = {
-  allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
+  allowedTags: ['h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
     'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'abbr', 'code', 'hr', 'br', 'div',
-    'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'iframe' ],
+    'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'iframe'],
   disallowedTagsMode: 'discard',
   allowedAttributes: {
-    a: [ 'href', 'name', 'target' ],
+    a: ['href', 'name', 'target'],
     // We don't currently allow img itself by default, but this
     // would make sense if we did. You could add srcset here,
     // and if you do the URL is checked for safety
-    img: [ 'src' ]
+    img: ['src']
   },
   // Lots of these won't come up by default because we don't allow them
-  selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
+  selfClosing: ['img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta'],
   // URL schemes we permit
-  allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
+  allowedSchemes: ['http', 'https', 'ftp', 'mailto'],
   allowedSchemesByTag: {},
-  allowedSchemesAppliedToAttributes: [ 'href', 'src', 'cite' ],
+  allowedSchemesAppliedToAttributes: ['href', 'src', 'cite'],
   allowProtocolRelative: true,
   enforceHtmlBoundary: false
 };
