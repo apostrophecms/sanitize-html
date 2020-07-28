@@ -28,8 +28,8 @@
   "dependencies": {
     "htmlparser2": "^4.1.0",
     "lodash": "^4.17.15",
-    "postcss": "^7.0.27",
-    "srcset": "^2.0.1"
+    "parse-srcset": "^1.0.2",
+    "postcss": "^7.0.27"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

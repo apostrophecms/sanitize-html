@@ -2,6 +2,7 @@
 
 1.27.2 (2020-07-29):
 - Fixes CHANGELOG links. Thanks to [Alex Mayer](https://github.com/amayer5125) for the contribution.
+- Replaces `srcset` with `parse-srcset`. Thanks to [Massimiliano Mirra](https://github.com/bard) for the contribution.
 
 1.27.1 (2020-07-15):
 - Removes the unused chalk dependency.

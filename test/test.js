@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-escape */
-var assert = require("assert");
+var assert = require('assert');
 const sinon = require('sinon');
 
 describe('sanitizeHtml', function() {
@@ -51,17 +51,17 @@ describe('sanitizeHtml', function() {
     assert.equal(sanitizeHtml('<div><wiggly>Hello</wiggly></div>', { disallowedTagsMode: 'escape' }), '<div>&lt;wiggly&gt;Hello&lt;/wiggly&gt;</div>');
   });
   it('should accept a custom list of allowed tags', function() {
-    assert.equal(sanitizeHtml('<blue><red><green>Cheese</green></red></blue>', { allowedTags: [ 'blue', 'green' ] }), '<blue><green>Cheese</green></blue>');
+    assert.equal(sanitizeHtml('<blue><red><green>Cheese</green></red></blue>', { allowedTags: ['blue', 'green'] }), '<blue><green>Cheese</green></blue>');
   });
   it('should reject attributes not whitelisted', function() {
     assert.equal(sanitizeHtml('<a href="foo.html" whizbang="whangle">foo</a>'), '<a href="foo.html">foo</a>');
   });
   it('should accept a custom list of allowed attributes per element', function() {
-    assert.equal(sanitizeHtml('<a href="foo.html" whizbang="whangle">foo</a>', { allowedAttributes: { a: [ 'href', 'whizbang' ] } }), '<a href="foo.html" whizbang="whangle">foo</a>');
+    assert.equal(sanitizeHtml('<a href="foo.html" whizbang="whangle">foo</a>', { allowedAttributes: { a: ['href', 'whizbang'] } }), '<a href="foo.html" whizbang="whangle">foo</a>');
   });
   it('should clean up unclosed img tags and p tags', function() {
     assert.equal(sanitizeHtml('<img src="foo.jpg"><p>Whee<p>Again<p>Wow<b>cool</b>', {
-      allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ])
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img'])
     }), '<img src="foo.jpg" /><p>Whee</p><p>Again</p><p>Wow<b>cool</b></p>');
   });
   it('should reject hrefs that are not relative, ftp, http, https or mailto', function() {
@@ -89,17 +89,17 @@ describe('sanitizeHtml', function() {
     assert.equal(sanitizeHtml('<fibble>Nifty</fibble><p>Paragraph</p>'), 'Nifty<p>Paragraph</p>');
   });
   it('should discard the content of fibble elements if specified for nonTextTags', function() {
-    assert.equal(sanitizeHtml('<fibble>Nifty</fibble><p>Paragraph</p>', { nonTextTags: [ 'fibble' ] }), '<p>Paragraph</p>');
+    assert.equal(sanitizeHtml('<fibble>Nifty</fibble><p>Paragraph</p>', { nonTextTags: ['fibble'] }), '<p>Paragraph</p>');
   });
   it('should retain allowed tags within a fibble element if fibble is not specified for nonTextTags', function() {
     assert.equal(sanitizeHtml('<fibble>Ni<em>f</em>ty</fibble><p>Paragraph</p>', {}), 'Ni<em>f</em>ty<p>Paragraph</p>');
   });
   it('should discard allowed tags within a fibble element if fibble is specified for nonTextTags', function() {
-    assert.equal(sanitizeHtml('<fibble>Ni<em>f</em>ty</fibble><p>Paragraph</p>', { nonTextTags: [ 'fibble' ] }), '<p>Paragraph</p>');
+    assert.equal(sanitizeHtml('<fibble>Ni<em>f</em>ty</fibble><p>Paragraph</p>', { nonTextTags: ['fibble'] }), '<p>Paragraph</p>');
   });
   it('should preserve textarea content if textareas are allowed', function() {
     assert.equal(sanitizeHtml('<textarea>Nifty</textarea><p>Paragraph</p>', {
-      allowedTags: [ 'textarea', 'p' ]
+      allowedTags: ['textarea', 'p']
     }), '<textarea>Nifty</textarea><p>Paragraph</p>');
   });
   it('should preserve entities as such', function() {
@@ -137,23 +137,23 @@ describe('sanitizeHtml', function() {
     assert.equal(sanitizeHtml('<a href="hello.html">Hi</a>'), '<a href="hello.html">Hi</a>');
   });
   it('should replace ol to ul', function() {
-    assert.equal(sanitizeHtml('<ol><li>Hello world</li></ol>', { transformTags: {ol: 'ul'} }), '<ul><li>Hello world</li></ul>');
+    assert.equal(sanitizeHtml('<ol><li>Hello world</li></ol>', { transformTags: { ol: 'ul' } }), '<ul><li>Hello world</li></ul>');
   });
   it('should replace ol to ul and add class attribute with foo value', function() {
     assert.equal(sanitizeHtml('<ol><li>Hello world</li></ol>', {
-      transformTags: {ol: sanitizeHtml.simpleTransform('ul', {class: 'foo'})},
+      transformTags: { ol: sanitizeHtml.simpleTransform('ul', { class: 'foo' }) },
       allowedAttributes: { ul: ['class'] }
     }), '<ul class="foo"><li>Hello world</li></ul>');
   });
   it('should replace ol to ul, left attributes foo and bar untouched, remove baz attribute and add class attributte with foo value', function() {
     assert.equal(sanitizeHtml('<ol foo="foo" bar="bar" baz="baz"><li>Hello world</li></ol>', {
-      transformTags: {ol: sanitizeHtml.simpleTransform('ul', {class: 'foo'})},
+      transformTags: { ol: sanitizeHtml.simpleTransform('ul', { class: 'foo' }) },
       allowedAttributes: { ul: ['foo', 'bar', 'class'] }
     }), '<ul foo="foo" bar="bar" class="foo"><li>Hello world</li></ul>');
   });
   it('should replace ol to ul and replace all attributes to class attribute with foo value', function() {
     assert.equal(sanitizeHtml('<ol foo="foo" bar="bar" baz="baz"><li>Hello world</li></ol>', {
-      transformTags: {ol: sanitizeHtml.simpleTransform('ul', {class: 'foo'}, false)},
+      transformTags: { ol: sanitizeHtml.simpleTransform('ul', { class: 'foo' }, false) },
       allowedAttributes: { ul: ['foo', 'bar', 'class'] }
     }), '<ul class="foo"><li>Hello world</li></ul>');
   });
@@ -241,7 +241,7 @@ describe('sanitizeHtml', function() {
     );
   });
 
-  it("Should expose a node's inner text and inner HTML to the filter", function() {
+  it('Should expose a node\'s inner text and inner HTML to the filter', function() {
     assert.strictEqual(
       sanitizeHtml('<p>12<a href="http://www.linux.org"><br/>3<br></a><span>4</span></p>', {
         exclusiveFilter: function(frame) {
@@ -277,7 +277,7 @@ describe('sanitizeHtml', function() {
     var markup = '<a href="http://www.linux.org"><img /><video></video></a>';
     var sansVideo = '<a href="http://www.linux.org"><img /></a>';
     var sanitizedMarkup = sanitizeHtml(markup, {
-      allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
       exclusiveFilter: function(frame) {
         if (frame.tag === 'a') {
           console.log(frame);
@@ -308,7 +308,7 @@ describe('sanitizeHtml', function() {
         // teeny-tiny valid transparent GIF in a data URL
         '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />',
         {
-          allowedTags: [ 'img' ]
+          allowedTags: ['img']
         }
       ),
       '<img />'
@@ -320,8 +320,8 @@ describe('sanitizeHtml', function() {
         // teeny-tiny valid transparent GIF in a data URL
         '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />',
         {
-          allowedTags: [ 'img', 'p' ],
-          allowedSchemes: [ 'data', 'http' ]
+          allowedTags: ['img', 'p'],
+          allowedSchemes: ['data', 'http']
         }
       ),
       '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />'
@@ -332,9 +332,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml(
         '<p class="nifty simple dippy">whee</p>',
         {
-          allowedTags: [ 'p' ],
+          allowedTags: ['p'],
           allowedClasses: {
-            p: [ 'nifty' ]
+            p: ['nifty']
           }
         }
       ),
@@ -378,9 +378,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml(
         '<p class="">whee</p>',
         {
-          allowedTags: [ 'p' ],
+          allowedTags: ['p'],
           allowedClasses: {
-            p: [ 'nifty' ]
+            p: ['nifty']
           }
         }
       ),
@@ -390,7 +390,7 @@ describe('sanitizeHtml', function() {
   it('should not crash on bad markup', function() {
     assert.equal(
       sanitizeHtml(
-        "<p a"
+        '<p a'
       ),
       ''
     );
@@ -400,9 +400,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml(
         '<IMG SRC= onmouseover="alert(\'XSS\');">',
         {
-          allowedTags: [ 'img' ],
+          allowedTags: ['img'],
           allowedAttributes: {
-            img: [ 'src' ]
+            img: ['src']
           }
         }
       ),
@@ -415,12 +415,12 @@ describe('sanitizeHtml', function() {
 
   it('should deliver a warning if using vulnerable tags', function() {
     const spy = sinon.spy(console, 'warn');
-    const message = `\n\n⚠️ Your \`allowedTags\` option includes, \`style\`, which is inherently\nvulnerable to XSS attacks. Please remove it from \`allowedTags\`.\nOr, to disable this warning, add the \`allowVulnerableTags\` option\nand ensure you are accounting for this risk.\n\n`;
+    const message = '\n\n⚠️ Your `allowedTags` option includes, `style`, which is inherently\nvulnerable to XSS attacks. Please remove it from `allowedTags`.\nOr, to disable this warning, add the `allowVulnerableTags` option\nand ensure you are accounting for this risk.\n\n';
 
     sanitizeHtml(
       '<style></style>',
       {
-        allowedTags: [ 'style' ]
+        allowedTags: ['style']
       }
     );
 
@@ -436,7 +436,7 @@ describe('sanitizeHtml', function() {
       '<style></style>',
       {
         allowVulnerableTags: true,
-        allowedTags: [ 'style' ]
+        allowedTags: ['style']
       }
     );
 
@@ -450,9 +450,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml(
         '<table bgcolor="1" align="left" notlisted="0"><img src="1.gif" align="center" alt="not listed too"/></table>',
         {
-          allowedTags: [ 'table', 'img' ],
+          allowedTags: ['table', 'img'],
           allowedAttributes: {
-            '*': [ 'bgcolor', 'align', 'src' ]
+            '*': ['bgcolor', 'align', 'src']
           }
         }
       ),
@@ -464,10 +464,10 @@ describe('sanitizeHtml', function() {
       sanitizeHtml(
         '<a href="test.html">test</a>',
         {
-          allowedTags: [ 'a' ],
+          allowedTags: ['a'],
           allowedAttributes: { a: ['href', 'target'] },
           transformTags: {
-            'a': function (tagName, attribs) {
+            a: function (tagName, attribs) {
               if (!attribs.href) {
                 return false;
               }
@@ -493,10 +493,10 @@ describe('sanitizeHtml', function() {
       sanitizeHtml(
         '<a href="test.html">blah</a>',
         {
-          allowedTags: [ 'a' ],
-          allowedAttributes: {a: ['href', 'target']},
+          allowedTags: ['a'],
+          allowedAttributes: { a: ['href', 'target'] },
           transformTags: {
-            'a': function (tagName, attribs) {
+            a: function (tagName, attribs) {
               if (!attribs.href) {
                 return false;
               }
@@ -522,8 +522,8 @@ describe('sanitizeHtml', function() {
       sanitizeHtml(
         '<p>Text</p>',
         {
-          allowedTags: [ 'p' ],
-          allowedAttributes: {p: ['style']},
+          allowedTags: ['p'],
+          allowedAttributes: { p: ['style'] },
           transformTags: {
             '*': function (tagName, attribs) {
               return {
@@ -554,13 +554,13 @@ describe('sanitizeHtml', function() {
   it('should allow attributes to be specified as globs', function() {
     assert.equal(
       sanitizeHtml('<a data-target="#test" data-foo="hello">click me</a>', {
-        allowedTags: [ 'a' ],
+        allowedTags: ['a'],
         allowedAttributes: { a: ['data-*'] }
       }), '<a data-target="#test" data-foo="hello">click me</a>'
     );
     assert.equal(
       sanitizeHtml('<a data-target="#test" data-my-foo="hello">click me</a>', {
-        allowedTags: [ 'a' ],
+        allowedTags: ['a'],
         allowedAttributes: { a: ['data-*-foo'] }
       }), '<a data-my-foo="hello">click me</a>'
     );
@@ -568,7 +568,7 @@ describe('sanitizeHtml', function() {
   it('should quote regex chars in attributes specified as globs', function() {
     assert.equal(
       sanitizeHtml('<a data-b.c="#test" data-bcc="remove this">click me</a>', {
-        allowedTags: [ 'a' ],
+        allowedTags: ['a'],
         allowedAttributes: { a: ['data-b.*'] }
       }), '<a data-b.c="#test">click me</a>'
     );
@@ -576,12 +576,12 @@ describe('sanitizeHtml', function() {
   it('should not escape inner content of script and style tags (when allowed)', function() {
     assert.equal(
       sanitizeHtml('<div>"normal text"</div><script>"this is code"</script>', {
-        allowedTags: [ 'script' ]
+        allowedTags: ['script']
       }), '"normal text"<script>"this is code"</script>'
     );
     assert.equal(
       sanitizeHtml('<div>"normal text"</div><style>body { background-image: url("image.test"); }</style>', {
-        allowedTags: [ 'style' ]
+        allowedTags: ['style']
       }), '"normal text"<style>body { background-image: url("image.test"); }</style>'
     );
   });
@@ -589,7 +589,7 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<script>alert("&quot;This is cool but just ironically so I quoted it&quot;")</script>',
         {
-          allowedTags: [ 'script' ]
+          allowedTags: ['script']
         }
       ),
       '<script>alert("&quot;This is cool but just ironically so I quoted it&quot;")</script>'
@@ -618,32 +618,32 @@ describe('sanitizeHtml', function() {
   });
   it('should respect htmlparser2 options when passed in', function() {
     assert.equal(
-      sanitizeHtml("<Archer><Sterling>I am</Sterling></Archer>", {
+      sanitizeHtml('<Archer><Sterling>I am</Sterling></Archer>', {
         allowedTags: false,
         allowedAttributes: false
       }),
-      "<archer><sterling>I am</sterling></archer>"
+      '<archer><sterling>I am</sterling></archer>'
     );
     assert.equal(
-      sanitizeHtml("<Archer><Sterling>I am</Sterling></Archer>", {
+      sanitizeHtml('<Archer><Sterling>I am</Sterling></Archer>', {
         allowedTags: false,
         allowedAttributes: false,
         parser: {
           lowerCaseTags: false
         }
       }),
-      "<Archer><Sterling>I am</Sterling></Archer>"
+      '<Archer><Sterling>I am</Sterling></Archer>'
     );
   });
   it('should not crash due to tag names that are properties of the universal Object prototype', function() {
     assert.equal(
-      sanitizeHtml("!<__proto__>!"),
-      "!!");
+      sanitizeHtml('!<__proto__>!'),
+      '!!');
   });
   it('should correctly maintain escaping when allowing a nonTextTags tag other than script or style', function() {
     assert.equal(
       sanitizeHtml('!<textarea>&lt;/textarea&gt;&lt;svg/onload=prompt`xs`&gt;</textarea>!',
-        { allowedTags: [ 'textarea' ] }
+        { allowedTags: ['textarea'] }
       ), '!<textarea>&lt;/textarea&gt;&lt;svg/onload=prompt`xs`&gt;</textarea>!'
     );
   });
@@ -680,34 +680,43 @@ describe('sanitizeHtml', function() {
   it('should discard srcset by default', function() {
     assert.equal(
       sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />', {
-        allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ])
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img'])
       }),
       '<img src="fallback.jpg" />'
     );
   });
   it('should accept srcset if allowed', function() {
     assert.equal(
-      sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />', {
-        allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
-        allowedAttributes: { img: [ 'src', 'srcset' ] }
+      sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w, bar.jpg 200w" />', {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+        allowedAttributes: { img: ['src', 'srcset'] }
       }),
-      '<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />'
+      '<img src="fallback.jpg" srcset="foo.jpg 100w, bar.jpg 200w" />'
     );
   });
   it('should drop bogus srcset', function() {
     assert.equal(
-      sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x, javascript:alert(1) 100w 2x" />', {
-        allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
-        allowedAttributes: { img: [ 'src', 'srcset' ] }
+      sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w, bar.jpg 200w, javascript:alert(1) 100w" />', {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+        allowedAttributes: { img: ['src', 'srcset'] }
       }),
-      '<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />'
+      '<img src="fallback.jpg" srcset="foo.jpg 100w, bar.jpg 200w" />'
+    );
+  });
+  it('should accept srcset with urls containing commas', function() {
+    assert.equal(
+      sanitizeHtml('<img src="fallback.jpg" srcset="/upload/f_auto,q_auto:eco,c_fit,w_1460,h_2191/abc.jpg 1460w, /upload/f_auto,q_auto:eco,c_fit,w_1360,h_2041/abc.jpg" />', {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+        allowedAttributes: { img: ['src', 'srcset'] }
+      }),
+      '<img src="fallback.jpg" srcset="/upload/f_auto,q_auto:eco,c_fit,w_1460,h_2191/abc.jpg 1460w, /upload/f_auto,q_auto:eco,c_fit,w_1360,h_2041/abc.jpg" />'
     );
   });
   it('drop attribute names with meta-characters', function() {
     assert.equal(
       sanitizeHtml('<span data-<script>alert(1)//>', {
         allowedTags: ['span'],
-        allowedAttributes: { 'span': ['data-*'] }
+        allowedAttributes: { span: ['data-*'] }
       }),
       '<span>alert(1)//&gt;</span>'
     );
@@ -719,15 +728,15 @@ describe('sanitizeHtml', function() {
       sanitizeHtml(sanitizeString, {
         allowedTags: false,
         allowedAttributes: {
-          '*': ["dir"],
-          p: ["dir", "style"],
-          li: ["style"],
-          span: ["style"]
+          '*': ['dir'],
+          p: ['dir', 'style'],
+          li: ['style'],
+          span: ['style']
         },
         allowedStyles: {
           '*': {
             // Matches hex
-            'color': [/\#(0x)?[0-9a-f]+/i],
+            color: [/\#(0x)?[0-9a-f]+/i],
             'text-align': [/left/, /right/, /center/, /justify/, /initial/, /inherit/],
             'font-size': [/36px/]
           }
@@ -737,24 +746,24 @@ describe('sanitizeHtml', function() {
   });
   it('Should remove empty style tags', function() {
     assert.equal(
-      sanitizeHtml("<span style=''></span>", {
+      sanitizeHtml('<span style=\'\'></span>', {
         allowedTags: false,
         allowedAttributes: false
       }),
-      "<span></span>"
+      '<span></span>'
     );
   });
   it('Should remote invalid styles', function() {
     assert.equal(
-      sanitizeHtml("<span style='color: blue; text-align: justify'></span>", {
+      sanitizeHtml('<span style=\'color: blue; text-align: justify\'></span>', {
         allowedTags: false,
         allowedAttributes: {
-          "span": ["style"]
+          span: ['style']
         },
         allowedStyles: {
-          'span': {
-            "color": [/blue/],
-            "text-align": [/left/]
+          span: {
+            color: [/blue/],
+            'text-align': [/left/]
           }
         }
       }), '<span style="color:blue"></span>'
@@ -762,19 +771,19 @@ describe('sanitizeHtml', function() {
   });
   it('Should allow a specific style from global', function() {
     assert.equal(
-      sanitizeHtml("<span style='color: yellow; text-align: center; font-family: helvetica'></span>", {
+      sanitizeHtml('<span style=\'color: yellow; text-align: center; font-family: helvetica\'></span>', {
         allowedTags: false,
         allowedAttributes: {
-          "span": ["style"]
+          span: ['style']
         },
         allowedStyles: {
           '*': {
-            "color": [/yellow/],
-            "text-align": [/center/]
+            color: [/yellow/],
+            'text-align': [/center/]
           },
-          'span': {
-            "color": [/green/],
-            "font-family": [/helvetica/]
+          span: {
+            color: [/green/],
+            'font-family': [/helvetica/]
           }
         }
       }), '<span style="color:yellow;text-align:center;font-family:helvetica"></span>'
@@ -785,9 +794,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {
-          'iframe': ['src', 'href'],
-          'a': ['src', 'href'],
-          'img': ['src']
+          iframe: ['src', 'href'],
+          a: ['src', 'href'],
+          img: ['src']
         },
         allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
       }), '<iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>'
@@ -798,9 +807,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<iframe src="https://www.embed.vevo.com/USUV71704255"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {
-          'iframe': ['src', 'href'],
-          'a': ['src', 'href'],
-          'img': ['src']
+          iframe: ['src', 'href'],
+          a: ['src', 'href'],
+          img: ['src']
         },
         allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
       }), '<iframe></iframe>'
@@ -811,9 +820,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<iframe src="https://www.vimeo.com/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {
-          'iframe': ['src', 'href'],
-          'a': ['src', 'href'],
-          'img': ['src']
+          iframe: ['src', 'href'],
+          a: ['src', 'href'],
+          img: ['src']
         },
         allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
       }), '<iframe></iframe>'
@@ -824,9 +833,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<iframe src="https://www.vimeo.com/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {
-          'iframe': ['src', 'href'],
-          'a': ['src', 'href'],
-          'img': ['src']
+          iframe: ['src', 'href'],
+          a: ['src', 'href'],
+          img: ['src']
         }
       }), '<iframe src="https://www.vimeo.com/embed/c2IlcS7AHxM"></iframe>'
     );
@@ -836,9 +845,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<iframe src="https://www.foo.us02web.zoom.us/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {
-          'iframe': ['src', 'href'],
-          'a': ['src', 'href'],
-          'img': ['src']
+          iframe: ['src', 'href'],
+          a: ['src', 'href'],
+          img: ['src']
         },
         allowedIframeDomains: ['zoom.us']
       }), '<iframe src="https://www.foo.us02web.zoom.us/embed/c2IlcS7AHxM"></iframe>'
@@ -849,9 +858,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<iframe src="https://zoom.us/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {
-          'iframe': ['src', 'href'],
-          'a': ['src', 'href'],
-          'img': ['src']
+          iframe: ['src', 'href'],
+          a: ['src', 'href'],
+          img: ['src']
         },
         allowedIframeDomains: ['zoom.us']
       }), '<iframe src="https://zoom.us/embed/c2IlcS7AHxM"></iframe>'
@@ -862,9 +871,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<iframe src="https://www.prefix.us02web.zoom.us/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {
-          'iframe': ['src', 'href'],
-          'a': ['src', 'href'],
-          'img': ['src']
+          iframe: ['src', 'href'],
+          a: ['src', 'href'],
+          img: ['src']
         },
         allowedIframeDomains: ['vimeo.com']
       }), '<iframe></iframe>'
@@ -876,9 +885,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<iframe src="https://www.zoomzoom.us/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {
-          'iframe': ['src', 'href'],
-          'a': ['src', 'href'],
-          'img': ['src']
+          iframe: ['src', 'href'],
+          a: ['src', 'href'],
+          img: ['src']
         },
         allowedIframeDomains: ['zoom.us']
       }), '<iframe></iframe>'
@@ -890,9 +899,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {
-          'iframe': ['src', 'href'],
-          'a': ['src', 'href'],
-          'img': ['src']
+          iframe: ['src', 'href'],
+          a: ['src', 'href'],
+          img: ['src']
         },
         allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com'],
         allowedIframeDomains: ['zoom.us']
@@ -905,9 +914,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<iframe src="https://www.us02web.zoom.us/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {
-          'iframe': ['src', 'href'],
-          'a': ['src', 'href'],
-          'img': ['src']
+          iframe: ['src', 'href'],
+          a: ['src', 'href'],
+          img: ['src']
         },
         allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com'],
         allowedIframeDomains: ['zoom.us']
@@ -919,9 +928,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<iframe src="/foo"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {
-          'iframe': ['src', 'href'],
-          'a': ['src', 'href'],
-          'img': ['src']
+          iframe: ['src', 'href'],
+          a: ['src', 'href'],
+          img: ['src']
         }
       }), '<iframe src="/foo"></iframe>'
     );
@@ -931,9 +940,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<iframe src="/foo"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {
-          'iframe': ['src', 'href'],
-          'a': ['src', 'href'],
-          'img': ['src']
+          iframe: ['src', 'href'],
+          a: ['src', 'href'],
+          img: ['src']
         },
         allowIframeRelativeUrls: true
       }), '<iframe src="/foo"></iframe>'
@@ -944,9 +953,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<iframe src="/foo"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {
-          'iframe': ['src', 'href'],
-          'a': ['src', 'href'],
-          'img': ['src']
+          iframe: ['src', 'href'],
+          a: ['src', 'href'],
+          img: ['src']
         },
         allowIframeRelativeUrls: false
       }), '<iframe></iframe>'
@@ -957,9 +966,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<iframe src="/foo"></iframe><iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {
-          'iframe': ['src', 'href'],
-          'a': ['src', 'href'],
-          'img': ['src']
+          iframe: ['src', 'href'],
+          a: ['src', 'href'],
+          img: ['src']
         },
         allowedIframeHostnames: ['www.youtube.com']
       }), '<iframe></iframe><iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>'
@@ -970,9 +979,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<iframe src="/foo"></iframe><iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {
-          'iframe': ['src', 'href'],
-          'a': ['src', 'href'],
-          'img': ['src']
+          iframe: ['src', 'href'],
+          a: ['src', 'href'],
+          img: ['src']
         },
         allowIframeRelativeUrls: true,
         allowedIframeHostnames: ['www.youtube.com']
@@ -984,9 +993,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<iframe src="//www.youtube.com/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {
-          'iframe': ['src', 'href'],
-          'a': ['src', 'href'],
-          'img': ['src']
+          iframe: ['src', 'href'],
+          a: ['src', 'href'],
+          img: ['src']
         },
         allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
       }), '<iframe src="//www.youtube.com/embed/c2IlcS7AHxM"></iframe>'
@@ -997,9 +1006,9 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<iframe src="//www.vimeo.com/embed/c2IlcS7AHxM"></iframe>', {
         allowedTags: ['p', 'iframe', 'a', 'img', 'i'],
         allowedAttributes: {
-          'iframe': ['src', 'href'],
-          'a': ['src', 'href'],
-          'img': ['src']
+          iframe: ['src', 'href'],
+          a: ['src', 'href'],
+          img: ['src']
         },
         allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
       }), '<iframe></iframe>'
@@ -1041,20 +1050,20 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<q cite=\"http://www.google.com\">HTTP</q><q cite=\"https://www.google.com\">HTTPS</q><q cite=\"mailto://www.google.com\">MAILTO</q><q cite=\"tel://www.google.com\">TEL</q><q cite=\"ftp://www.google.com\">FTP</q><q cite=\"data://www.google.com\">DATA</q><q cite=\"ldap://www.google.com\">LDAP</q><q cite=\"acrobat://www.google.com\">ACROBAT</q><q cite=\"vbscript://www.google.com\">VBSCRIPT</q><q cite=\"file://www.google.com\">FILE</q><q cite=\"rlogin://www.google.com\">RLOGIN</q><q cite=\"webcal://www.google.com\">WEBCAL</q><q cite=\"javascript://www.google.com\">JAVASCRIPT</q><q cite=\"mms://www.google.com\">MMS</q>', {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat(['q']),
-        allowedAttributes: {q: [ 'cite' ]},
-        allowedSchemes: sanitizeHtml.defaults.allowedSchemes.concat([ 'tel' ])
+        allowedAttributes: { q: ['cite'] },
+        allowedSchemes: sanitizeHtml.defaults.allowedSchemes.concat(['tel'])
       }), '<q cite=\"http://www.google.com\">HTTP</q><q cite=\"https://www.google.com\">HTTPS</q><q cite=\"mailto://www.google.com\">MAILTO</q><q cite=\"tel://www.google.com\">TEL</q><q cite=\"ftp://www.google.com\">FTP</q><q>DATA</q><q>LDAP</q><q>ACROBAT</q><q>VBSCRIPT</q><q>FILE</q><q>RLOGIN</q><q>WEBCAL</q><q>JAVASCRIPT</q><q>MMS</q>');
   });
   it('Should encode &, <, > and where necessary, "', function() {
     assert.equal(sanitizeHtml('"< & >" <span class="&#34;test&#34;">cool</span>', {
-      allowedTags: [ 'span' ],
+      allowedTags: ['span'],
       allowedAttributes: {
-        span: [ 'class' ]
+        span: ['class']
       }
     }), '"&lt; &amp; &gt;" <span class="&quot;test&quot;">cool</span>');
   });
   it('Should not pass through &0; unescaped if decodeEntities is true (the default)', function() {
-    assert.equal(sanitizeHtml('<img src="<0&0;0.2&" />', {allowedTags: ['img']}), '<img src="&lt;0&amp;0;0.2&amp;" />');
+    assert.equal(sanitizeHtml('<img src="<0&0;0.2&" />', { allowedTags: ['img'] }), '<img src="&lt;0&amp;0;0.2&amp;" />');
   });
   it('Should not double encode ampersands on HTML entities if decodeEntities is false (TODO more tests, this is too loose to rely upon)', function() {
     var textIn = 'This &amp; & that &reg; &#x0000A; &#10; &plusmn; OK?';
