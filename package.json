@@ -26,7 +26,7 @@
     "is-plain-object": "^4.1.1",
     "klona": "^1.1.2",
     "postcss": "^7.0.27",
-    "srcset": "^2.0.1"
+    "srcset": "^3.0.0"
   },
   "devDependencies": {
     "eslint": "^7.3.1",

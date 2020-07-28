@@ -687,20 +687,27 @@ describe('sanitizeHtml', function() {
   });
   it('should accept srcset if allowed', function() {
     assert.equal(
-      sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />', {
+      sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w, bar.jpg 200w" />', {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
         allowedAttributes: { img: ['src', 'srcset'] }
       }),
-      '<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />'
+      '<img src="fallback.jpg" srcset="foo.jpg 100w, bar.jpg 200w" />'
+    );
+    assert.equal(
+      sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 2x, bar.jpg 1x" />', {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+        allowedAttributes: { img: ['src', 'srcset'] }
+      }),
+      '<img src="fallback.jpg" srcset="foo.jpg 2x, bar.jpg 1x" />'
     );
   });
   it('should drop bogus srcset', function() {
     assert.equal(
-      sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x, javascript:alert(1) 100w 2x" />', {
+      sanitizeHtml('<img src="fallback.jpg" srcset="foo.jpg 100w, bar.jpg 200w, javascript:alert(1) 100w" />', {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
         allowedAttributes: { img: ['src', 'srcset'] }
       }),
-      '<img src="fallback.jpg" srcset="foo.jpg 100w 2x, bar.jpg 200w 1x" />'
+      '<img src="fallback.jpg" srcset="foo.jpg 100w, bar.jpg 200w" />'
     );
   });
 
