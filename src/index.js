@@ -55,10 +55,12 @@ function stringifySrcset(parsedSrcset) {
       throw new Error('URL missing');
     }
 
-    return (part.url +
-             (part.w ? ` ${part.w}w` : '') +
-             (part.h ? ` ${part.h}h` : '') +
-             (part.d ? ` ${part.d}x` : ''));
+    return (
+      part.url +
+      (part.w ? ` ${part.w}w` : '') +
+      (part.h ? ` ${part.h}h` : '') +
+      (part.d ? ` ${part.d}x` : '')
+    );
   }).join(', ');
 }
 
