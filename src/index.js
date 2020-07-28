@@ -1,6 +1,5 @@
 /* eslint-disable no-useless-escape */
 var htmlparser = require('htmlparser2');
-var extend = require('xtend');
 var quoteRegexp = require('lodash/escapeRegExp');
 var cloneDeep = require('lodash/cloneDeep');
 var mergeWith = require('lodash/mergeWith');
@@ -114,9 +113,9 @@ function sanitizeHtml(html, options, _recursing) {
     options = sanitizeHtml.defaults;
     options.parser = htmlParserDefaults;
   } else {
-    options = extend(sanitizeHtml.defaults, options);
+    options = Object.assign({}, sanitizeHtml.defaults, options);
     if (options.parser) {
-      options.parser = extend(htmlParserDefaults, options.parser);
+      options.parser = Object.assign({}, htmlParserDefaults, options.parser);
     } else {
       options.parser = htmlParserDefaults;
     }
@@ -319,13 +318,19 @@ function sanitizeHtml(html, options, _recursing) {
                 parsed = url.parse(value, false, true);
                 var isRelativeUrl = parsed && parsed.host === null && parsed.protocol === null;
                 if (isRelativeUrl) {
-                  // default value of allowIframeRelativeUrls is true unless allowIframeHostnames specified
+                  // default value of allowIframeRelativeUrls is true
+                  // unless allowedIframeHostnames or allowedIframeDomains specified
                   allowed = has(options, "allowIframeRelativeUrls")
-                    ? options.allowIframeRelativeUrls : !options.allowedIframeHostnames;
-                } else if (options.allowedIframeHostnames) {
-                  allowed = options.allowedIframeHostnames.find(function (hostname) {
+                    ? options.allowIframeRelativeUrls
+                    : (!options.allowedIframeHostnames && !options.allowedIframeDomains);
+                } else if (options.allowedIframeHostnames || options.allowedIframeDomains) {
+                  var allowedHostname = (options.allowedIframeHostnames || []).find(function (hostname) {
                     return hostname === parsed.hostname;
                   });
+                  var allowedDomain = (options.allowedIframeDomains || []).find(function(domain) {
+                    return parsed.hostname === domain || parsed.hostname.endsWith(`.${domain}`);
+                  });
+                  allowed = allowedHostname || allowedDomain;
                 }
               } catch (e) {
                 // Unparseable iframe src

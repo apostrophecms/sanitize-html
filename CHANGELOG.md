@@ -1,5 +1,16 @@
 ## Changelog
 
+1.27.2 (2020-07-29):
+- Fixes CHANGELOG links. Thanks to [Alex Mayer](https://github.com/amayer5125) for the contribution.
+
+1.27.1 (2020-07-15):
+- Removes the unused chalk dependency.
+- Adds configuration for a Github stale bot.
+- Replace `xtend` package with native `Object.assign`.
+
+1.27.0:
+- Adds the `allowedIframeDomains` option. This works similar to `allowedIframeHostnames`, where you would set it to an array of web domains. It would then permit any hostname on those domains to be used in iframe `src` attributes. Thanks to [Stanislav Kravchenko](https://github.com/StanisLove) for the contribution.
+
 1.26.0:
 - Adds the `option` element to the default `nonTextTagsArray` of tags with contents that aren't meant to be displayed visually as text. This can be overridden with the `nonTextTags` option.
 

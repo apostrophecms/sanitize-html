@@ -1,8 +1,8 @@
 # sanitize-html
 
-[![CircleCI](https://circleci.com/gh/apostrophecms/sanitize-html/tree/master.svg?style=svg)](https://circleci.com/gh/apostrophecms/sanitize-html/tree/master)
+[![CircleCI](https://circleci.com/gh/apostrophecms/sanitize-html/tree/main.svg?style=svg)](https://circleci.com/gh/apostrophecms/sanitize-html/tree/main)
 
-<a href="https://apostrophecms.com/"><img src="https://raw.github.com/apostrophecms/sanitize-html/master/logos/logo-box-madefor.png" align="right" /></a>
+<a href="https://apostrophecms.com/"><img src="https://raw.githubusercontent.com/apostrophecms/sanitize-html/main/logos/logo-box-madefor.png" align="right" /></a>
 
 `sanitize-html` provides a simple HTML sanitizer with a clear API.
 
@@ -161,14 +161,15 @@ If you set `disallowedTagsMode` to `recursiveEscape`, the disallowed tags are es
 When configuring the attribute in `allowedAttributes` simply use an object with attribute `name` and an allowed `values` array. In the following example `sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-scripts"` would become `sandbox="allow-popups allow-scripts"`:
 
 ```js
-        allowedAttributes: {
-          iframe: [
-            {
-              name: 'sandbox',
-              multiple: true,
-              values: ['allow-popups', 'allow-same-origin', 'allow-scripts']
-            }
-          ]
+allowedAttributes: {
+  iframe: [
+    {
+      name: 'sandbox',
+      multiple: true,
+      values: ['allow-popups', 'allow-same-origin', 'allow-scripts']
+    }
+  ]
+}
 ```
 
 With `multiple: true`, several allowed values may appear in the same attribute, separated by spaces. Otherwise the attribute must exactly match one and only one of the allowed values.
@@ -177,7 +178,7 @@ With `multiple: true`, several allowed values may appear in the same attribute, 
 
 You can use the `*` wildcard to allow all attributes with a certain prefix:
 
-```javascript
+```js
 allowedAttributes: {
   a: [ 'href', 'data-*' ]
 }
@@ -185,7 +186,7 @@ allowedAttributes: {
 
 Also you can use the `*` as name for a tag, to allow listed attributes to be valid for any tag:
 
-```javascript
+```js
 allowedAttributes: {
   '*': [ 'href', 'align', 'alt', 'center', 'bgcolor' ]
 }
@@ -196,7 +197,7 @@ Some text editing applications generate HTML to allow copying over to a web appl
 
 Setting this option to true will instruct sanitize-html to discard all characters outside of `html` tag boundaries -- before `<html>` and after `</html>` tags.
 
-```javascript
+```js
 enforceHtmlBoundary: true
 ```
 
@@ -204,7 +205,7 @@ enforceHtmlBoundary: true
 
 `santizeHtml` is built on `htmlparser2`. By default the only option passed down is `decodeEntities: true` You can set the options to pass by using the parser option.
 
-```javascript
+```js
 clean = sanitizeHtml(dirty, {
   allowedTags: ['a'],
   parser: {
@@ -234,14 +235,14 @@ The most advanced usage:
 clean = sanitizeHtml(dirty, {
   transformTags: {
     'ol': function(tagName, attribs) {
-        // My own custom magic goes here
+      // My own custom magic goes here
 
-        return {
-            tagName: 'ul',
-            attribs: {
-                class: 'foo'
-            }
-        };
+      return {
+        tagName: 'ul',
+        attribs: {
+          class: 'foo'
+        }
+      };
     }
   }
 });
@@ -273,10 +274,10 @@ You can also add or modify the text contents of a tag:
 clean = sanitizeHtml(dirty, {
   transformTags: {
     'a': function(tagName, attribs) {
-        return {
-            tagName: 'a',
-            text: 'Some text'
-        };
+      return {
+        tagName: 'a',
+        text: 'Some text'
+      };
     }
   }
 });
@@ -300,12 +301,12 @@ You can provide a filter function to remove unwanted tags. Let's suppose we need
 
 We can do that with the following filter:
 
-```javascript
+```js
 sanitizeHtml(
   '<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>',
   {
     exclusiveFilter: function(frame) {
-        return frame.tag === 'a' && !frame.text.trim();
+      return frame.tag === 'a' && !frame.text.trim();
     }
   }
 );
@@ -327,7 +328,7 @@ You can also process all text content with a provided filter function. Let's say
 
 We can do that with the following filter:
 
-```javascript
+```js
 sanitizeHtml(
   '<p>some text...</p>',
   {
@@ -344,29 +345,30 @@ Note that the text passed to the `textFilter` method is already escaped for safe
 
 ### Iframe Filters
 
-If you would like to allow iframe tags but want to control the domains that are allowed through you can provide an array of hostnames that you would like to allow as iframe sources. This hostname is a property in the options object passed as an argument to the `sanitize-html` function.
+If you would like to allow iframe tags but want to control the domains that are allowed through you can provide an array of hostnames and(or) array of domains that you would like to allow as iframe sources. This hostname is a property in the options object passed as an argument to the `sanitize-html` function.
 
-This array will be checked against the html that is passed to the function and return only `src` urls that include the allowed hostnames in the object. The url in the html that is passed must be formatted correctly (valid hostname) as an embedded iframe otherwise the module will strip out the src from the iframe.
+These arrays will be checked against the html that is passed to the function and return only `src` urls that include the allowed hostnames or domains in the object. The url in the html that is passed must be formatted correctly (valid hostname) as an embedded iframe otherwise the module will strip out the src from the iframe.
 
 Make sure to pass a valid hostname along with the domain you wish to allow, i.e.:
 
-```javascript
-  allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com']
+```js
+allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com'],
+allowedIframeDomains: ['zoom.us']
 ```
 
 You may also specify whether or not to allow relative URLs as iframe sources.
 
-```javascript
-  allowIframeRelativeUrls: true
+```js
+allowIframeRelativeUrls: true
 ```
 
-Note that if unspecified, relative URLs will be allowed by default if no hostname filter is provided but removed by default if a hostname filter is provided.
+Note that if unspecified, relative URLs will be allowed by default if no hostname or domain filter is provided but removed by default if a hostname or domain filter is provided.
 
 **Remember that the `iframe` tag must be allowed as well as the `src` attribute.**
 
 For example:
 
-```javascript
+```js
 clean = sanitizeHtml('<p><iframe src="https://www.youtube.com/embed/nykIhs12345"></iframe><p>', {
   allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
   allowedClasses: {
@@ -381,7 +383,7 @@ clean = sanitizeHtml('<p><iframe src="https://www.youtube.com/embed/nykIhs12345"
 
 will pass through as safe whereas:
 
-```javascript
+```js
 clean = sanitizeHtml('<p><iframe src="https://www.youtube.net/embed/nykIhs12345"></iframe><p>', {
   allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
   allowedClasses: {
@@ -396,7 +398,7 @@ clean = sanitizeHtml('<p><iframe src="https://www.youtube.net/embed/nykIhs12345"
 
 or
 
-```javascript
+```js
 clean = sanitizeHtml('<p><iframe src="https://www.vimeo/video/12345"></iframe><p>', {
   allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
   allowedClasses: {
@@ -411,13 +413,31 @@ clean = sanitizeHtml('<p><iframe src="https://www.vimeo/video/12345"></iframe><p
 
 will return an empty iframe tag.
 
+If you want to allow any subdomain of any level you can provide the domain in `allowedIframeDomains`
+
+```js
+clean = sanitizeHtml('<p><iframe src="https://us02web.zoom.us/embed/12345"></iframe><p>', {
+  allowedTags: [ 'p', 'em', 'strong', 'iframe' ],
+  allowedClasses: {
+    'p': [ 'fancy', 'simple' ],
+  },
+  allowedAttributes: {
+    'iframe': ['src']
+  },
+  allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com'],
+  allowedIframeDomains: ['zoom.us']
+});
+```
+
+will pass through as safe.
+
 ### Allowed CSS Classes
 
 If you wish to allow specific CSS classes on a particular element, you can do so with the `allowedClasses` option. Any other CSS classes are discarded.
 
 This implies that the `class` attribute is allowed on that element.
 
-```javascript
+```js
 // Allow only a restricted set of CSS classes and only on the p tag
 clean = sanitizeHtml(dirty, {
   allowedTags: [ 'p', 'em', 'strong' ],
@@ -437,25 +457,25 @@ If you wish to allow specific CSS _styles_ on a particular element, you can do t
 
 **URLs in inline styles are NOT filtered by any mechanism other than your regular expression.**
 
-```javascript
+```js
 clean = sanitizeHtml(dirty, {
-        allowedTags: ['p'],
-        allowedAttributes: {
-          'p': ["style"],
-        },
-        allowedStyles: {
-          '*': {
-            // Match HEX and RGB
-            'color': [/^#(0x)?[0-9a-f]+$/i, /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/],
-            'text-align': [/^left$/, /^right$/, /^center$/],
-            // Match any number with px, em, or %
-            'font-size': [/^\d+(?:px|em|%)$/]
-          },
-          'p': {
-            'font-size': [/^\d+rem$/]
-          }
-        }
-      });
+  allowedTags: ['p'],
+  allowedAttributes: {
+    'p': ["style"],
+  },
+  allowedStyles: {
+    '*': {
+      // Match HEX and RGB
+      'color': [/^#(0x)?[0-9a-f]+$/i, /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/],
+      'text-align': [/^left$/, /^right$/, /^center$/],
+      // Match any number with px, em, or %
+      'font-size': [/^\d+(?:px|em|%)$/]
+    },
+    'p': {
+      'font-size': [/^\d+rem$/]
+    }
+  }
+});
 ```
 
 ### Allowed URL schemes
@@ -468,7 +488,7 @@ By default we allow the following URL schemes in cases where `href`, `src`, etc.
 
 You can override this if you want to:
 
-```javascript
+```js
 sanitizeHtml(
   // teeny-tiny valid transparent GIF in a data URL
   '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />',
@@ -481,7 +501,7 @@ sanitizeHtml(
 
 You can also allow a scheme for a particular tag only:
 
-```javascript
+```js
 allowedSchemes: [ 'http', 'https' ],
 allowedSchemesByTag: {
   img: [ 'data' ]
@@ -490,7 +510,7 @@ allowedSchemesByTag: {
 
 And you can forbid the use of protocol-relative URLs (starting with `//`) to access another site using the current protocol, which is allowed by default:
 
-```javascript
+```js
 allowProtocolRelative: false
 ```
 
@@ -505,7 +525,7 @@ The exceptions are:
 If you wish to replace this list, for instance to discard whatever is found
 inside a `noscript` tag, use the `nonTextTags` option:
 
-```javascript
+```js
 nonTextTags: [ 'style', 'script', 'textarea', 'option', 'noscript' ]
 ```
 
@@ -521,7 +541,7 @@ disabled with the `allowVulnerableTags: true` option.
 
 Instead of discarding, or keeping text only, you may enable escaping of the entire content:
 
-```javascript
+```js
 disallowedTagsMode: 'escape'
 ```
 
@@ -535,10 +555,10 @@ Valid values are: `'discard'` (default), `'escape'` (escape the tag) and `'recur
 
 ## Changelog
 
-[The changelog is now in a separate file for readability.](https://github.com/apostrophecms/sanitize-html/blob/master/CHANGELOG.md)
+[The changelog is now in a separate file for readability.](https://github.com/apostrophecms/sanitize-html/blob/main/CHANGELOG.md)
 
 ## Support
 
 Feel free to open issues on [github](http://github.com/apostrophecms/sanitize-html).
 
-<a href="http://apostrophecms.com/"><img src="https://raw.github.com/apostrophecms/sanitize-html/master/logos/logo-box-builtby.png" /></a>
+<a href="http://apostrophecms.com/"><img src="https://raw.githubusercontent.com/apostrophecms/sanitize-html/main/logos/logo-box-builtby.png" /></a>
