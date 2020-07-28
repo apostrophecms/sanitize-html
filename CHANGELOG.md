@@ -9,6 +9,7 @@ value into a text node could be vulnerable to code execution.
 - Updates code to use modern features including `const`/`let` variable assignment.
 - ESLint clean up.
 - Updates `is-plain-object` to the 4.x major version.
+- Updates `srcset` to tge 3.x major version.
 
 Thanks to [Bogdan Chadkin](https://github.com/TrySound) for contributions to this major version update.
 
