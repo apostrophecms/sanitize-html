@@ -1,5 +1,10 @@
 ## Changelog
 
+2.0.0-beta.2:
+- Add `files` to `package.json` to prevent publishing unnecessary files to npm #392
+
+Thanks to [styfle](https://github.com/styfle) for contributions to this patch version update.
+
 2.0.0-beta:
 - Moves the `index.js` file to the project root and removes all build steps within the package. Going forward, it is up to the developer to include sanitize-html in their project builds as-needed. This removes major points of conflict with project code and frees this module to not worry about myriad build-related questions.
 - Replaces lodash with utility packages: klona, is-plain-object, deepmerge, escape-string-regexp.
