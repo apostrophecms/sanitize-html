@@ -657,8 +657,9 @@ const htmlParserDefaults = {
 };
 sanitizeHtml.defaults = {
   allowedTags: [
-    'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol', 'li',
-    'b', 'i', 'strong', 'em', 'strike', 'abbr', 'code', 'hr', 'br', 'div',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'div', 'blockquote', 'p', 'ul', 'ol', 'li', 'a',
+    'b', 'i', 'strong', 'em', 'strike', 'abbr', 'code', 'hr', 'br',
     'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre'
   ],
   disallowedTagsMode: 'discard',
