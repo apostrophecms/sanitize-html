@@ -2,6 +2,7 @@
 
 2.0.0-beta.2:
 - Add `files` to `package.json` to prevent publishing unnecessary files to npm #392
+- Removes `'iframe'` from default allowed tags.
 
 Thanks to [styfle](https://github.com/styfle) for contributions to this patch version update.
 
