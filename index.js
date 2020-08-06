@@ -178,6 +178,7 @@ function sanitizeHtml(html, options, _recursing) {
   let transformMap;
   let skipText;
   let skipTextDepth;
+  let addedText = false;
 
   initializeState();
 
@@ -391,6 +392,7 @@ function sanitizeHtml(html, options, _recursing) {
         result += '>';
         if (frame.innerText && !hasText && !options.textFilter) {
           result += escapeHtml(frame.innerText);
+          addedText = true;
         }
       }
       if (skip) {
@@ -419,9 +421,9 @@ function sanitizeHtml(html, options, _recursing) {
         result += text;
       } else {
         const escaped = escapeHtml(text, false);
-        if (options.textFilter) {
+        if (options.textFilter && !addedText) {
           result += options.textFilter(escaped, tag);
-        } else {
+        } else if (!addedText) {
           result += escaped;
         }
       }
