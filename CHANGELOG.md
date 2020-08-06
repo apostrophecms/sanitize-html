@@ -1,5 +1,8 @@
 ## Changelog
 
+1.27.3 (2020-08-12):
+- Fixes a bug when using `transformTags` with out `textFilter`. Thanks to [Andrzej Porebski](https://github.com/andpor) for the help with a failing test.
+
 1.27.2 (2020-07-29):
 - Fixes CHANGELOG links. Thanks to [Alex Mayer](https://github.com/amayer5125) for the contribution.
 - Replaces `srcset` with `parse-srcset`. Thanks to [Massimiliano Mirra](https://github.com/bard) for the contribution.
