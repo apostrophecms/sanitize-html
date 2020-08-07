@@ -657,7 +657,7 @@ const htmlParserDefaults = {
 };
 sanitizeHtml.defaults = {
   allowedTags: [
-    // Sections derrived from MDN element categories and limited to the more
+    // Sections derived from MDN element categories and limited to the more
     // benign categories.
     // https://developer.mozilla.org/en-US/docs/Web/HTML/Element
     // Content sectioning
