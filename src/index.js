@@ -196,6 +196,7 @@ function sanitizeHtml(html, options, _recursing) {
   var transformMap;
   var skipText;
   var skipTextDepth;
+  var addedText = false;
 
   initializeState();
 
@@ -407,6 +408,7 @@ function sanitizeHtml(html, options, _recursing) {
         result += '>';
         if (frame.innerText && !hasText && !options.textFilter) {
           result += frame.innerText;
+          addedText = true;
         }
       }
       if (skip) {
@@ -435,9 +437,9 @@ function sanitizeHtml(html, options, _recursing) {
         result += text;
       } else {
         var escaped = escapeHtml(text, false);
-        if (options.textFilter) {
+        if (options.textFilter && !addedText) {
           result += options.textFilter(escaped, tag);
-        } else {
+        } else if (!addedText) {
           result += escaped;
         }
       }

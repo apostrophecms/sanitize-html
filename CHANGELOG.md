@@ -1,5 +1,8 @@
 ## Changelog
 
+1.27.3 (2020-08-12):
+- Fixes a bug when using `transformTags` with out `textFilter`. Thanks to [Andrzej Porebski](https://github.com/andpor) for the help with a failing test.
+
 1.27.2 (2020-07-29):
 - Fixes CHANGELOG links. Thanks to [Alex Mayer](https://github.com/amayer5125) for the contribution.
 - Replaces `srcset` with `parse-srcset`. Thanks to [Massimiliano Mirra](https://github.com/bard) for the contribution.
@@ -92,9 +95,7 @@ There is currently a commented-out test which verifies one example of the proble
 1.18.0:
 
 * The new `allowedSchemesAppliedToAttributes` option. This determines which attributes are validated as URLs, replacing the old hardcoded list of `src` and `href` only. The default list now includes `cite`. Thanks to ml-dublin for this contribution.
-
 * It is now easy to configure a specific list of allowed values for an attribute. When configuring `allowedAttributes`, rather than listing an attribute name, simply list an object with an attribute `name` property and an allowed `values` array property. You can also add `multiple: true` to allow multiple space-separated allowed values in the attribute, otherwise the attribute must match one and only one of the allowed values. Thanks again to ml-dublin for this contribution.
-
 * Fixed a bug in the npm test procedure.
 
 1.17.0: the new `allowedIframeHostnames` option. If present, this must be an array, and only iframe `src` URLs hostnames (complete hostnames; domain name matches are not enough) that appear on this list are allowed. You must also configure `hostname` as an allowed attribute for `iframe`. Thanks to Ryan Verys for this contribution.
