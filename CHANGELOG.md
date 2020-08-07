@@ -2,6 +2,7 @@
 
 2.0.0-beta.2:
 - Add `files` to `package.json` to prevent publishing unnecessary files to npm #392. Thanks to [styfle](https://github.com/styfle) for the contribution.
+- Removes `iframe` and `nl` from default allowed tags. Adds most innocuous tags to the default `allowedTags` array.
 - Fixes a bug when using `transformTags` with out `textFilter`. Thanks to [Andrzej Porebski](https://github.com/andpor) for the help with a failing test.
 
 2.0.0-beta:
