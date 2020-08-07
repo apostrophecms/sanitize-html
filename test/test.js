@@ -202,6 +202,20 @@ describe('sanitizeHtml', function() {
     }), '<a href="http://somelink">some_text_need"to&lt;be&gt;filtered</a>');
   });
 
+  it('should replace text and attributes when they are changed by transforming function and textFilter is set', function () {
+    assert.equal(sanitizeHtml('<a href="http://somelink">some text</a>', {
+      transformTags: {
+        a: function (tagName, attribs) {
+          return {
+            tagName: tagName,
+            attribs: attribs,
+            text: 'some good text'
+          };
+        }
+      }
+    }), '<a href="http://somelink">some good text</a>');
+  });
+
   it('should add new text when not initially set and replace attributes when they are changed by transforming function', function () {
     assert.equal(sanitizeHtml('<a href="http://somelink"></a>', {
       transformTags: {
@@ -745,8 +759,8 @@ describe('sanitizeHtml', function() {
     );
   });
   it('should sanitize styles correctly', function() {
-    const sanitizeString = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right"><u>test</u></li><li style="text-align: justify"><u>test</u></li></ol> <p><u><span style="color:#00FF00">test</span></u></p><p><span style="color:#00FF00"><span style="font-size:36px">TESTETESTESTES</span></span></p></blockquote>';
-    const expected = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>​test</u></li><li><u>test</u></li><li style="text-align: right"><u>test</u></li><li style="text-align: justify"><u>test</u></li></ol> <p><u><span style="color:#00FF00">test</span></u></p><p><span style="color:#00FF00"><span style="font-size:36px">TESTETESTESTES</span></span></p></blockquote>';
+    const sanitizeString = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>test</u></li><li><u>test</u></li><li style="text-align: right"><u>test</u></li><li style="text-align: justify"><u>test</u></li></ol> <p><u><span style="color:#00FF00">test</span></u></p><p><span style="color:#00FF00"><span style="font-size:36px">TESTETESTESTES</span></span></p></blockquote>';
+    const expected = '<p dir="ltr"><strong>beste</strong><em>testestes</em><s>testestset</s><u>testestest</u></p><ul dir="ltr"> <li><u>test</u></li></ul><blockquote dir="ltr"> <ol> <li><u>test</u></li><li><u>test</u></li><li style="text-align: right"><u>test</u></li><li style="text-align: justify"><u>test</u></li></ol> <p><u><span style="color:#00FF00">test</span></u></p><p><span style="color:#00FF00"><span style="font-size:36px">TESTETESTESTES</span></span></p></blockquote>';
     assert.equal(
       sanitizeHtml(sanitizeString, {
         allowedTags: false,
