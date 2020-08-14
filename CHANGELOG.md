@@ -1,6 +1,6 @@
 ## Changelog
 
-1.27.4 (2020-08-12):
+1.27.4 (2020-08-26):
 - Fixes an IE11 regression from using `Array.prototype.includes`, replacing it with `Array.prototype.indexOf`.
 
 1.27.3 (2020-08-12):
