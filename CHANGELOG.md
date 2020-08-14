@@ -1,5 +1,8 @@
 ## Changelog
 
+1.27.4 (2020-08-12):
+- Fixes an IE11 regression from using `Array.prototype.includes`, replacing it with the lodash `indexOf` method.
+
 1.27.3 (2020-08-12):
 - Fixes a bug when using `transformTags` with out `textFilter`. Thanks to [Andrzej Porebski](https://github.com/andpor) for the help with a failing test.
 

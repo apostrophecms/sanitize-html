@@ -4,6 +4,7 @@ var quoteRegexp = require('lodash/escapeRegExp');
 var cloneDeep = require('lodash/cloneDeep');
 var mergeWith = require('lodash/mergeWith');
 var isString = require('lodash/isString');
+var _indexOf = require('lodash/indexOf');
 var isPlainObject = require('lodash/isPlainObject');
 var parseSrcset = require('parse-srcset');
 var postcss = require('postcss');
@@ -104,7 +105,7 @@ function sanitizeHtml(html, options, _recursing) {
     };
 
     this.updateParentNodeMediaChildren = function() {
-      if (stack.length && mediaTags.includes(this.tag)) {
+      if (stack.length && _indexOf(mediaTags, this.tag) > -1) {
         var parentFrame = stack[stack.length - 1];
         parentFrame.mediaChildren.push(this.tag);
       }
