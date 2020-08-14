@@ -104,7 +104,7 @@ function sanitizeHtml(html, options, _recursing) {
     };
 
     this.updateParentNodeMediaChildren = function() {
-      if (stack.length && mediaTags.includes(this.tag)) {
+      if (stack.length && mediaTags.indexOf(this.tag) > -1) {
         var parentFrame = stack[stack.length - 1];
         parentFrame.mediaChildren.push(this.tag);
       }
