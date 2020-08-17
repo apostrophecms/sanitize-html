@@ -125,7 +125,7 @@ function sanitizeHtml(html, options, _recursing) {
   // vulnerableTags
   vulnerableTags.forEach(function (tag) {
     if (
-      options.allowedTags && options.allowedTags.includes(tag) &&
+      options.allowedTags && options.allowedTags.indexOf(tag) > -1 &&
       !options.allowVulnerableTags
     ) {
       // eslint-disable-next-line no-console
