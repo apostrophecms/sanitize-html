@@ -1,6 +1,6 @@
 ## Changelog
 
-2.0.0-beta.3 (2020-08-26):
+2.0.0-rc.1 (2020-08-26):
 - Upgrade `klona` package. Thanks to [Bogdan Chadkin](https://github.com/TrySound) for the contribution.
 
 2.0.0-beta.2:
