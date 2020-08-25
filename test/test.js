@@ -790,7 +790,7 @@ describe('sanitizeHtml', function() {
       '<span></span>'
     );
   });
-  it('Should remote invalid styles', function() {
+  it('Should remove invalid styles', function() {
     assert.equal(
       sanitizeHtml('<span style=\'color: blue; text-align: justify\'></span>', {
         allowedTags: false,
