@@ -1,6 +1,7 @@
 ## Changelog
 
-- Upgrade `klona` package.
+2.0.0-beta.3 (2020-08-26):
+- Upgrade `klona` package. Thanks to [Bogdan Chadkin](https://github.com/TrySound) for the contribution.
 
 2.0.0-beta.2:
 - Add `files` to `package.json` to prevent publishing unnecessary files to npm #392. Thanks to [styfle](https://github.com/styfle) for the contribution.
