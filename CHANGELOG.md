@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.0-rc.2 (2020-09-09):
+- Always use existing `has` function rather than duplicating it.
+
 ## 2.0.0-rc.1 (2020-08-26):
 - Upgrade `klona` package. Thanks to [Bogdan Chadkin](https://github.com/TrySound) for the contribution.
 
