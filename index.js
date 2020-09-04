@@ -626,7 +626,7 @@ function sanitizeHtml(html, options, _recursing) {
   function filterDeclarations(selectedRule) {
     return function (allowedDeclarationsList, attributeObject) {
       // If this property is whitelisted...
-      if (Object.prototype.hasOwnProperty.call(selectedRule, attributeObject.prop)) {
+      if (has(selectedRule, attributeObject.prop)) {
         const matchesRegex = selectedRule[attributeObject.prop].some(function(regularExpression) {
           return regularExpression.test(attributeObject.value);
         });
