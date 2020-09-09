@@ -1,8 +1,8 @@
 const htmlparser = require('htmlparser2');
 const escapeStringRegexp = require('escape-string-regexp');
 const { klona } = require('klona');
+const { isPlainObject } = require('is-plain-object');
 const deepmerge = require('deepmerge');
-const isPlainObject = require('is-plain-object');
 const srcset = require('srcset');
 const postcss = require('postcss');
 const url = require('url');
