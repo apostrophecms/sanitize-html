@@ -71,13 +71,21 @@ Install module from console:
 npm install sanitize-html
 ```
 
-Use it in your node app:
+Import the module:
+
+```bash
+// In ESM
+import sanitizeHtml from 'sanitize-html';
+
+// Or in CJS
+const sanitizeHtml = require('sanitize-html');
+```
+
+Use it in your JavaScript app:
 
 ```js
-var sanitizeHtml = require('sanitize-html');
-
-var dirty = 'some really tacky HTML';
-var clean = sanitizeHtml(dirty);
+const dirty = 'some really tacky HTML';
+const clean = sanitizeHtml(dirty);
 ```
 
 That will allow our default list of allowed tags and attributes through. It's a nice set, but probably not quite what you want. So:
