@@ -4,7 +4,7 @@ const { klona } = require('klona');
 const { isPlainObject } = require('is-plain-object');
 const deepmerge = require('deepmerge');
 const srcset = require('srcset');
-const postcss = require('postcss');
+const { parse: postcssParse } = require('postcss');
 const url = require('url');
 // Tags that can conceivably represent stand-alone media.
 const mediaTags = [
@@ -363,7 +363,7 @@ function sanitizeHtml(html, options, _recursing) {
             }
             if (a === 'style') {
               try {
-                const abstractSyntaxTree = postcss.parse(name + ' {' + value + '}');
+                const abstractSyntaxTree = postcssParse(name + ' {' + value + '}');
                 const filteredAST = filterCss(abstractSyntaxTree, options.allowedStyles);
 
                 value = stringifyStyleAttributes(filteredAST);

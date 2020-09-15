@@ -2,6 +2,7 @@
 
 ## 2.0.0-rc.3 (2020-09-09):
 - Upgrade `is-plain-object` package with named export. Thanks to [Bogdan Chadkin](https://github.com/TrySound) for the contribution.
+- Upgrade `postcss` package and drop node 11 and node 13 support (enforced by postcss).
 
 ## 2.0.0-rc.2 (2020-09-09):
 - Always use existing `has` function rather than duplicating it.
