@@ -551,7 +551,7 @@ You can limit the depth of HTML tags in the document with the `nestingLimit` opt
 nestingLimit: 6
 ```
 
-This will prevent the user from nesting tags more than 6 levels deep. Note that the rules for preserving text inside the nested tags are the same in this situation as they would be if the tags were not on the `allowedTags` list.
+This will prevent the user from nesting tags more than 6 levels deep. Tags deeper than that are stripped out exactly as if they were disallowed. Note that this means text is preserved in the usual ways where appropriate.
 
 ## About ApostropheCMS
 
