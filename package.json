@@ -27,7 +27,7 @@
     "htmlparser2": "^4.1.0",
     "is-plain-object": "^5.0.0",
     "klona": "^2.0.3",
-    "postcss": "^7.0.27",
+    "postcss": "^8.0.2",
     "srcset": "^3.0.0"
   },
   "devDependencies": {
