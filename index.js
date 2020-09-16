@@ -224,7 +224,7 @@ function sanitizeHtml(html, options, _recursing) {
         }
       }
 
-      if ((options.allowedTags && options.allowedTags.indexOf(name) === -1) || (options.disallowedTagsMode === 'recursiveEscape' && !isEmptyObject(skipMap))) {
+      if ((options.allowedTags && options.allowedTags.indexOf(name) === -1) || (options.disallowedTagsMode === 'recursiveEscape' && !isEmptyObject(skipMap)) || (options.nestingLimit != null && depth >= options.nestingLimit)) {
         skip = true;
         skipMap[depth] = true;
         if (options.disallowedTagsMode === 'discard') {

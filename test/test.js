@@ -294,7 +294,6 @@ describe('sanitizeHtml', function() {
       exclusiveFilter: function(frame) {
         if (frame.tag === 'a') {
           // eslint-disable-next-line no-console
-          console.log(frame);
           assert(frame.mediaChildren.length === 1);
         }
 
@@ -1156,6 +1155,20 @@ describe('sanitizeHtml', function() {
     assert.equal(
       sanitizeHtml('<div><wiggly>Hello<p>World</p><tiggly>JS</tiggly></wiggly></div>', { disallowedTagsMode: 'escape' }),
       '<div>&lt;wiggly&gt;Hello<p>World</p>&lt;tiggly&gt;JS&lt;/tiggly&gt;&lt;/wiggly&gt;</div>'
+    );
+  });
+  it('allows markup of depth 6 with a nestingLimit of depth 6', function() {
+    assert.equal(
+      sanitizeHtml('<div><div><div><div><div><div></div></div></div></div></div></div>', { nestingLimit: 6 }),
+      '<div><div><div><div><div><div></div></div></div></div></div></div>'
+    );
+  });
+  it('disallows markup of depth 7 with a nestingLimit of depth 6', function() {
+    assert.equal(
+      // 7 divs here
+      sanitizeHtml('<div><div><div><div><div><div><div>nested text</div></div></div></div></div></div></div>', { nestingLimit: 6 }),
+      // only 6 kept
+      '<div><div><div><div><div><div>nested text</div></div></div></div></div></div>'
     );
   });
 });

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.0-rc.4 (2020-09-23):
+- `nestingLimit` option added.
+
 ## 2.0.0-rc.3 (2020-09-09):
 - Upgrade `is-plain-object` package with named export. Thanks to [Bogdan Chadkin](https://github.com/TrySound) for the contribution.
 
