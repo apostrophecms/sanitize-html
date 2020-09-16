@@ -543,6 +543,16 @@ This will transform `<disallowed>content</disallowed>` to `&lt;disallowed&gt;con
 
 Valid values are: `'discard'` (default), `'escape'` (escape the tag) and `'recursiveEscape'` (to escape the tag and all its content).
 
+### Restricting deep nesting
+
+You can limit the depth of HTML tags in the document with the `nestingLimit` option:
+
+```javascript
+nestingLimit: 6
+```
+
+This will prevent the user from nesting tags more than 6 levels deep. Note that the rules for preserving text inside the nested tags are the same in this situation as they would be if the tags were not on the `allowedTags` list.
+
 ## About ApostropheCMS
 
 `sanitize-html` was created at [P'unk Avenue](https://punkave.com) for use in [ApostropheCMS](https://apostrophecms.com), an open-source content management system built on Node.js. If you like `sanitize-html` you should definitely check out ApostropheCMS.
