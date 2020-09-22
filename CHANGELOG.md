@@ -1,5 +1,8 @@
 ## Changelog
 
+1.27.5 (2020-09-23):
+- Updates README to include ES modules syntax.
+
 1.27.4 (2020-08-26):
 - Fixes an IE11 regression from using `Array.prototype.includes`, replacing it with `Array.prototype.indexOf`.
 
