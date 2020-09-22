@@ -1,21 +1,21 @@
 # Changelog
 
-## 2.0.0-rc.3 (2020-09-23):
+## 2.0.0 (2020-09-23):
 - `nestingLimit` option added.
 - Updates ESLint config package and fixes warnings.
 - Upgrade `is-plain-object` package with named export. Thanks to [Bogdan Chadkin](https://github.com/TrySound) for the contribution.
 - Upgrade `postcss` package and drop Node 11 and Node 13 support (enforced by postcss).
+
+### Backwards compatibility breaks:
+- There is no build. You should no longer directly link to a sanitize-html file directly in the browser as it is using modern Javascript that is not fully supported by all major browsers (depending on your definition). You should now include sanitize-html in your project build for this purpose if you have one.
+- On the server side, Node.js 10 or higher is required.
+- The default `allowedTags` array was updated significantly. This mostly added HTML tags to be more comprehensive by default. You should review your projects and consider the `allowedTags` defaults if you are not already overriding them.
 
 ## 2.0.0-rc.2 (2020-09-09):
 - Always use existing `has` function rather than duplicating it.
 
 ## 2.0.0-rc.1 (2020-08-26):
 - Upgrade `klona` package. Thanks to [Bogdan Chadkin](https://github.com/TrySound) for the contribution.
-
-### Backwards compatibility breaks:
-- There is no build. You should no longer directly link to a sanitize-html file directly in the browser as it is using modern Javascript that is not fully supported by all major browsers (depending on your definition). You should now include sanitize-html in your project build for this purpose if you have one.
-- On the server side, Node.js 10 or higher is required.
-- The default `allowedTags` array was updated significantly. This mostly added HTML tags to be more comprehensive by default. You should review your projects and consider the `allowedTags` defaults if you are not already overriding them.
 
 ## 2.0.0-beta.2:
 - Add `files` to `package.json` to prevent publishing unnecessary files to npm #392. Thanks to [styfle](https://github.com/styfle) for the contribution.
@@ -33,6 +33,19 @@ value into a text node could be vulnerable to code execution.
 - Updates `srcset` to the 3.x major version.
 
 Thanks to [Bogdan Chadkin](https://github.com/TrySound) for contributions to this major version update.
+
+## 1.27.5 (2020-09-23):
+- Updates README to include ES modules syntax.
+
+## 1.27.4 (2020-08-26):
+- Fixes an IE11 regression from using `Array.prototype.includes`, replacing it with `Array.prototype.indexOf`.
+
+## 1.27.3 (2020-08-12):
+- Fixes a bug when using `transformTags` with out `textFilter`. Thanks to [Andrzej Porebski](https://github.com/andpor) for the help with a failing test.
+
+## 1.27.2 (2020-07-29):
+- Fixes CHANGELOG links. Thanks to [Alex Mayer](https://github.com/amayer5125) for the contribution.
+- Replaces `srcset` with `parse-srcset`. Thanks to [Massimiliano Mirra](https://github.com/bard) for the contribution.
 
 ## 1.27.1 (2020-07-15):
 - Removes the unused chalk dependency.
