@@ -14,7 +14,7 @@ var mediaTags = [
   'object', 'map', 'iframe', 'embed'
 ];
 // Tags that are inherently vulnerable to being used in XSS attacks.
-var vulnerableTags = ['script', 'style'];
+var vulnerableTags = [ 'script', 'style' ];
 
 function each(obj, cb) {
   if (obj) {
@@ -317,7 +317,8 @@ function sanitizeHtml(html, options, _recursing) {
               var allowed = true;
               try {
                 // naughtyHref is in charge of whether protocol relative URLs
-                // are cool. We should just accept them
+                // are cool. We should just accept them.
+                // eslint-disable-next-line node/no-deprecated-api
                 parsed = url.parse(value, false, true);
                 var isRelativeUrl = parsed && parsed.host === null && parsed.protocol === null;
                 if (isRelativeUrl) {
@@ -647,7 +648,7 @@ function sanitizeHtml(html, options, _recursing) {
   function filterDeclarations(selectedRule) {
     return function (allowedDeclarationsList, attributeObject) {
       // If this property is whitelisted...
-      if (selectedRule.hasOwnProperty(attributeObject.prop)) {
+      if (has(selectedRule, attributeObject.prop)) {
         var matchesRegex = selectedRule[attributeObject.prop].some(function(regularExpression) {
           return regularExpression.test(attributeObject.value);
         });
@@ -679,23 +680,23 @@ var htmlParserDefaults = {
   decodeEntities: true
 };
 sanitizeHtml.defaults = {
-  allowedTags: ['h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
+  allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
     'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'abbr', 'code', 'hr', 'br', 'div',
-    'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'iframe'],
+    'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'iframe' ],
   disallowedTagsMode: 'discard',
   allowedAttributes: {
-    a: ['href', 'name', 'target'],
+    a: [ 'href', 'name', 'target' ],
     // We don't currently allow img itself by default, but this
     // would make sense if we did. You could add srcset here,
     // and if you do the URL is checked for safety
-    img: ['src']
+    img: [ 'src' ]
   },
   // Lots of these won't come up by default because we don't allow them
-  selfClosing: ['img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta'],
+  selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
   // URL schemes we permit
-  allowedSchemes: ['http', 'https', 'ftp', 'mailto'],
+  allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
   allowedSchemesByTag: {},
-  allowedSchemesAppliedToAttributes: ['href', 'src', 'cite'],
+  allowedSchemesAppliedToAttributes: [ 'href', 'src', 'cite' ],
   allowProtocolRelative: true,
   enforceHtmlBoundary: false
 };
