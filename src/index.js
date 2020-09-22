@@ -317,7 +317,8 @@ function sanitizeHtml(html, options, _recursing) {
               var allowed = true;
               try {
                 // naughtyHref is in charge of whether protocol relative URLs
-                // are cool. We should just accept them
+                // are cool. We should just accept them.
+                // eslint-disable-next-line node/no-deprecated-api
                 parsed = url.parse(value, false, true);
                 var isRelativeUrl = parsed && parsed.host === null && parsed.protocol === null;
                 if (isRelativeUrl) {
@@ -647,7 +648,7 @@ function sanitizeHtml(html, options, _recursing) {
   function filterDeclarations(selectedRule) {
     return function (allowedDeclarationsList, attributeObject) {
       // If this property is whitelisted...
-      if (selectedRule.hasOwnProperty(attributeObject.prop)) {
+      if (has(selectedRule, attributeObject.prop)) {
         var matchesRegex = selectedRule[attributeObject.prop].some(function(regularExpression) {
           return regularExpression.test(attributeObject.value);
         });
