@@ -3,7 +3,7 @@ const escapeStringRegexp = require('escape-string-regexp');
 const { klona } = require('klona');
 const { isPlainObject } = require('is-plain-object');
 const deepmerge = require('deepmerge');
-const srcset = require('srcset');
+const parseSrcset = require('parse-srcset');
 const { parse: postcssParse } = require('postcss');
 const url = require('url');
 // Tags that can conceivably represent stand-alone media.
@@ -345,7 +345,7 @@ function sanitizeHtml(html, options, _recursing) {
             }
             if (a === 'srcset') {
               try {
-                parsed = srcset.parse(value);
+                parsed = parseSrcset(value);
                 parsed.forEach(function(value) {
                   if (naughtyHref('srcset', value.url)) {
                     value.evil = true;
