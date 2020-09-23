@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/apostrophecms/sanitize-html/tree/main.svg?style=svg)](https://circleci.com/gh/apostrophecms/sanitize-html/tree/main)
 
-<a href="https://apostrophecms.com/"><img src="https://raw.github.com/apostrophecms/sanitize-html/master/logos/logo-box-madefor.png" align="right" /></a>
+<a href="https://apostrophecms.com/"><img src="https://raw.githubusercontent.com/apostrophecms/sanitize-html/main/logos/logo-box-madefor.png" align="right" /></a>
 
 `sanitize-html` provides a simple HTML sanitizer with a clear API.
 
@@ -171,6 +171,7 @@ allowedAttributes: {
       values: ['allow-popups', 'allow-same-origin', 'allow-scripts']
     }
   ]
+}
 ```
 
 With `multiple: true`, several allowed values may appear in the same attribute, separated by spaces. Otherwise the attribute must exactly match one and only one of the allowed values.
@@ -179,7 +180,7 @@ With `multiple: true`, several allowed values may appear in the same attribute, 
 
 You can use the `*` wildcard to allow all attributes with a certain prefix:
 
-```javascript
+```js
 allowedAttributes: {
   a: [ 'href', 'data-*' ]
 }
@@ -187,7 +188,7 @@ allowedAttributes: {
 
 Also you can use the `*` as name for a tag, to allow listed attributes to be valid for any tag:
 
-```javascript
+```js
 allowedAttributes: {
   '*': [ 'href', 'align', 'alt', 'center', 'bgcolor' ]
 }
@@ -248,7 +249,7 @@ Some text editing applications generate HTML to allow copying over to a web appl
 
 Setting this option to true will instruct sanitize-html to discard all characters outside of `html` tag boundaries -- before `<html>` and after `</html>` tags.
 
-```javascript
+```js
 enforceHtmlBoundary: true
 ```
 
@@ -286,13 +287,13 @@ The most advanced usage:
 const clean = sanitizeHtml(dirty, {
   transformTags: {
     'ol': function(tagName, attribs) {
-        // My own custom magic goes here
-        return {
-            tagName: 'ul',
-            attribs: {
-                class: 'foo'
-            }
-        };
+      // My own custom magic goes here
+      return {
+        tagName: 'ul',
+        attribs: {
+          class: 'foo'
+        }
+      };
     }
   }
 });
@@ -324,10 +325,10 @@ You can also add or modify the text contents of a tag:
 const clean = sanitizeHtml(dirty, {
   transformTags: {
     'a': function(tagName, attribs) {
-        return {
-            tagName: 'a',
-            text: 'Some text'
-        };
+      return {
+        tagName: 'a',
+        text: 'Some text'
+      };
     }
   }
 });
@@ -351,12 +352,12 @@ You can provide a filter function to remove unwanted tags. Let's suppose we need
 
 We can do that with the following filter:
 
-```javascript
+```js
 sanitizeHtml(
   '<p>This is <a href="http://www.linux.org"></a><br/>Linux</p>',
   {
     exclusiveFilter: function(frame) {
-        return frame.tag === 'a' && !frame.text.trim();
+      return frame.tag === 'a' && !frame.text.trim();
     }
   }
 );
@@ -378,7 +379,7 @@ You can also process all text content with a provided filter function. Let's say
 
 We can do that with the following filter:
 
-```javascript
+```js
 sanitizeHtml(
   '<p>some text...</p>',
   {
@@ -401,15 +402,15 @@ These arrays will be checked against the html that is passed to the function and
 
 Make sure to pass a valid hostname along with the domain you wish to allow, i.e.:
 
-```javascript
-  allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com'],
-  allowedIframeDomains: ['zoom.us']
+```js
+allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com'],
+allowedIframeDomains: ['zoom.us']
 ```
 
 You may also specify whether or not to allow relative URLs as iframe sources.
 
-```javascript
-  allowIframeRelativeUrls: true
+```js
+allowIframeRelativeUrls: true
 ```
 
 Note that if unspecified, relative URLs will be allowed by default if no hostname or domain filter is provided but removed by default if a hostname or domain filter is provided.
@@ -490,7 +491,7 @@ By default we allow the following URL schemes in cases where `href`, `src`, etc.
 
 You can override this if you want to:
 
-```javascript
+```js
 sanitizeHtml(
   // teeny-tiny valid transparent GIF in a data URL
   '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />',
@@ -503,7 +504,7 @@ sanitizeHtml(
 
 You can also allow a scheme for a particular tag only:
 
-```javascript
+```js
 allowedSchemes: [ 'http', 'https' ],
 allowedSchemesByTag: {
   img: [ 'data' ]
@@ -512,7 +513,7 @@ allowedSchemesByTag: {
 
 And you can forbid the use of protocol-relative URLs (starting with `//`) to access another site using the current protocol, which is allowed by default:
 
-```javascript
+```js
 allowProtocolRelative: false
 ```
 
@@ -527,7 +528,7 @@ The exceptions are:
 If you wish to replace this list, for instance to discard whatever is found
 inside a `noscript` tag, use the `nonTextTags` option:
 
-```javascript
+```js
 nonTextTags: [ 'style', 'script', 'textarea', 'option', 'noscript' ]
 ```
 
@@ -543,7 +544,7 @@ disabled with the `allowVulnerableTags: true` option.
 
 Instead of discarding, or keeping text only, you may enable escaping of the entire content:
 
-```javascript
+```js
 disallowedTagsMode: 'escape'
 ```
 

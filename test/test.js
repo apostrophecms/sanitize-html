@@ -202,7 +202,7 @@ describe('sanitizeHtml', function() {
     }), '<a href="http://somelink">some_text_need"to&lt;be&gt;filtered</a>');
   });
 
-  it('should replace text and attributes when they are changed by transforming function and textFilter is set', function () {
+  it('should replace text and attributes when they are changed by transforming function and textFilter is not set', function () {
     assert.equal(sanitizeHtml('<a href="http://somelink">some text</a>', {
       transformTags: {
         a: function (tagName, attribs) {
@@ -721,6 +721,15 @@ describe('sanitizeHtml', function() {
         allowedAttributes: { img: [ 'src', 'srcset' ] }
       }),
       '<img src="fallback.jpg" srcset="foo.jpg 100w, bar.jpg 200w" />'
+    );
+  });
+  it('should accept srcset with urls containing commas', function() {
+    assert.equal(
+      sanitizeHtml('<img src="fallback.jpg" srcset="/upload/f_auto,q_auto:eco,c_fit,w_1460,h_2191/abc.jpg 1460w, /upload/f_auto,q_auto:eco,c_fit,w_1360,h_2041/abc.jpg" />', {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
+        allowedAttributes: { img: [ 'src', 'srcset' ] }
+      }),
+      '<img src="fallback.jpg" srcset="/upload/f_auto,q_auto:eco,c_fit,w_1460,h_2191/abc.jpg 1460w, /upload/f_auto,q_auto:eco,c_fit,w_1360,h_2041/abc.jpg" />'
     );
   });
 

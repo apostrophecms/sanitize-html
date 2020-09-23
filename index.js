@@ -47,6 +47,21 @@ function isEmptyObject(obj) {
   return true;
 }
 
+function stringifySrcset(parsedSrcset) {
+  return parsedSrcset.map(function(part) {
+    if (!part.url) {
+      throw new Error('URL missing');
+    }
+
+    return (
+      part.url +
+      (part.w ? ` ${part.w}w` : '') +
+      (part.h ? ` ${part.h}h` : '') +
+      (part.d ? ` ${part.d}x` : '')
+    );
+  }).join(', ');
+}
+
 module.exports = sanitizeHtml;
 
 // A valid attribute name.
@@ -108,7 +123,7 @@ function sanitizeHtml(html, options, _recursing) {
   // vulnerableTags
   vulnerableTags.forEach(function (tag) {
     if (
-      options.allowedTags && options.allowedTags.includes(tag) &&
+      options.allowedTags && options.allowedTags.indexOf(tag) > -1 &&
       !options.allowVulnerableTags
     ) {
       console.warn(`\n\n⚠️ Your \`allowedTags\` option includes, \`${tag}\`, which is inherently\nvulnerable to XSS attacks. Please remove it from \`allowedTags\`.\nOr, to disable this warning, add the \`allowVulnerableTags\` option\nand ensure you are accounting for this risk.\n\n`);
@@ -343,7 +358,7 @@ function sanitizeHtml(html, options, _recursing) {
                   delete frame.attribs[a];
                   return;
                 } else {
-                  value = srcset.stringify(filter(parsed, function(v) {
+                  value = stringifySrcset(filter(parsed, function(v) {
                     return !v.evil;
                   }));
                   frame.attribs[a] = value;
