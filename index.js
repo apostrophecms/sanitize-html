@@ -688,7 +688,7 @@ sanitizeHtml.defaults = {
     'a', 'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'dfn',
     'em', 'i', 'kbd', 'mark', 'q',
     'rb', 'rp', 'rt', 'rtc', 'ruby',
-    's', 'samp', 'small', 'span', 'strong', 'sub', 'time', 'u', 'var', 'wbr',
+    's', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'time', 'u', 'var', 'wbr',
     // Table content
     'caption', 'col', 'colgroup', 'table', 'tbody', 'td', 'tfoot', 'th',
     'thead', 'tr'
