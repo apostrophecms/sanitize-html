@@ -104,8 +104,8 @@ allowedTags: [
   "dl", "dt", "figcaption", "figure", "hr", "li", "main", "ol", "p", "pre",
   "ul", "a", "abbr", "b", "bdi", "bdo", "br", "cite", "code", "data", "dfn",
   "em", "i", "kbd", "mark", "q", "rb", "rp", "rt", "rtc", "ruby", "s", "samp",
-  "small", "span", "strong", "sub", "time", "u", "var", "wbr", "caption", "col",
-  "colgroup", "table", "tbody", "td", "tfoot", "th", "thead", "tr"
+  "small", "span", "strong", "sub", "sup", "time", "u", "var", "wbr", "caption",
+  "col", "colgroup", "table", "tbody", "td", "tfoot", "th", "thead", "tr"
 ],
 disallowedTagsMode: 'discard',
 allowedAttributes: {

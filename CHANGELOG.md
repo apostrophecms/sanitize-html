@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.0 (2020-09-30):
+- `sup` added to the default allowed tags list. Thanks to [Julian Lam](https://github.com/julianlam) for the contribution.
+
 ## 2.0.0 (2020-09-23):
 - `nestingLimit` option added.
 - Updates ESLint config package and fixes warnings.
