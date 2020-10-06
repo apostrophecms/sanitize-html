@@ -2,6 +2,7 @@
 
 ## 2.1.0 (2020-09-30):
 - `sup` added to the default allowed tags list. Thanks to [Julian Lam](https://github.com/julianlam) for the contribution.
+- Updates default `allowedTags` README documentation. Thanks to [Marco Arduini](https://github.com/nerfologist) for the contribution.
 
 ## 2.0.0 (2020-09-23):
 - `nestingLimit` option added.
