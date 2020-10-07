@@ -101,7 +101,8 @@ function sanitizeHtml(html, options, _recursing) {
       }
     };
 
-    this.updateParentNodeMediaChildren = function() {
+    this.updateParentNodeMediaChildren = function() 
+    {
       if (stack.length && mediaTags.includes(this.tag)) {
         const parentFrame = stack[stack.length - 1];
         parentFrame.mediaChildren.push(this.tag);
@@ -126,7 +127,7 @@ function sanitizeHtml(html, options, _recursing) {
       options.allowedTags && options.allowedTags.indexOf(tag) > -1 &&
       !options.allowVulnerableTags
     ) {
-      console.warn(`\n\n⚠️ Your \`allowedTags\` option includes, \`${tag}\`, which is inherently\nvulnerable to XSS attacks. Please remove it from \`allowedTags\`.\nOr, to disable this warning, add the \`allowVulnerableTags\` option\nand ensure you are accounting for this risk.\n\n`);
+      console.warn(`\n\n Your \`allowedTags\` option includes, \`${tag}\`, which is inherently\nvulnerable to XSS attacks. Please remove it from \`allowedTags\`.\nOr, to disable this warning, add the \`allowVulnerableTags\` option\nand ensure you are accounting for this risk.\n\n`);
     }
   });
 
@@ -158,7 +159,7 @@ function sanitizeHtml(html, options, _recursing) {
       allowedAttributesGlobMap[tag] = new RegExp('^(' + globRegex.join('|') + ')$');
     });
   }
-  const allowedClassesMap = {};
+  const allowedClassesMap = {classes};
   each(options.allowedClasses, function(classes, tag) {
     // Implicitly allows the class attribute
     if (allowedAttributesMap) {
