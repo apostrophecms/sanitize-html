@@ -109,17 +109,9 @@ function sanitizeHtml(html, options, _recursing) {
     };
   }
 
-  if (!options) {
-    options = sanitizeHtml.defaults;
-    options.parser = htmlParserDefaults;
-  } else {
-    options = Object.assign({}, sanitizeHtml.defaults, options);
-    if (options.parser) {
-      options.parser = Object.assign({}, htmlParserDefaults, options.parser);
-    } else {
-      options.parser = htmlParserDefaults;
-    }
-  }
+  options = Object.assign({}, sanitizeHtml.defaults, options);
+  options.parser = Object.assign({}, htmlParserDefaults, options.parser);
+
   // vulnerableTags
   vulnerableTags.forEach(function (tag) {
     if (
