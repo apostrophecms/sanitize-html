@@ -218,6 +218,13 @@ const clean = sanitizeHtml(dirty, {
 });
 ```
 
+Similar to `allowedAttributes`, you can use `*` as a tag name, to allow listed classes to be valid for any tag:
+```js
+allowedClasses: {
+  '*': [ 'fancy', 'simple' ]
+}
+```
+
 ### Allowed CSS Styles
 
 If you wish to allow specific CSS _styles_ on a particular element, you can do that with the `allowedStyles` option. Simply declare your desired attributes as regular expression options within an array for the given attribute. Specific elements will inherit whitelisted attributes from the global (\*) attribute. Any other CSS classes are discarded.

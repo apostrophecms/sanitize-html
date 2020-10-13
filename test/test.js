@@ -340,7 +340,7 @@ describe('sanitizeHtml', function() {
       '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />'
     );
   });
-  it('should allow specific classes when whitelisted with allowedClasses', function() {
+  it('should allow specific classes when whitelisted with allowedClasses for a single tag', function() {
     assert.equal(
       sanitizeHtml(
         '<p class="nifty simple dippy">whee</p>',
@@ -352,6 +352,36 @@ describe('sanitizeHtml', function() {
         }
       ),
       '<p class="nifty">whee</p>'
+    );
+  });
+  it('should allow specific classes when whitelisted with allowedClasses for all tags', function() {
+    assert.equal(
+      sanitizeHtml(
+        '<p class="nifty simple dippy">whee</p><div class="dippy nifty simple"></div>',
+        {
+          allowedTags: [ 'p', 'div' ],
+          allowedClasses: {
+            '*': [ 'nifty' ]
+          }
+        }
+      ),
+      '<p class="nifty">whee</p><div class="nifty"></div>'
+    );
+  });
+  it('should allow all classes that are whitelisted for a single tag or all tags', function() {
+    assert.equal(
+      sanitizeHtml(
+        '<p class="nifty simple dippy">whee</p><div class="simple dippy nifty"></div>',
+        {
+          allowedTags: [ 'p', 'div' ],
+          allowedClasses: {
+            '*': [ 'simple' ],
+            p: [ 'nifty' ],
+            div: [ 'dippy' ]
+          }
+        }
+      ),
+      '<p class="nifty simple">whee</p><div class="simple dippy"></div>'
     );
   });
   it('should allow defining schemes on a per-tag basis', function() {

@@ -370,7 +370,13 @@ function sanitizeHtml(html, options, _recursing) {
               }
             }
             if (a === 'class') {
-              value = filterClasses(value, allowedClassesMap[name]);
+              const allowedSpecificClasses = allowedClassesMap[name];
+              const allowedWildcardClasses = allowedClassesMap['*'];
+              if (allowedSpecificClasses && allowedWildcardClasses) {
+                value = filterClasses(value, deepmerge(allowedSpecificClasses, allowedWildcardClasses));
+              } else {
+                value = filterClasses(value, allowedSpecificClasses || allowedWildcardClasses);
+              }
               if (!value.length) {
                 delete frame.attribs[a];
                 return;
