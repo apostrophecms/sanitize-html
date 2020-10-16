@@ -239,6 +239,15 @@ function sanitizeHtml(html, options, _recursing) {
         }
       }
 
+      if (options.disallowedAttributes) {
+        each(attribs, function(value, a) {
+          if (options.disallowedAttributes[name] && options.disallowedAttributes[name].includes(a)) {
+            delete frame.attribs[a];
+            return;
+          }
+        })
+      }
+
       if ((options.allowedTags && options.allowedTags.indexOf(name) === -1) || (options.disallowedTagsMode === 'recursiveEscape' && !isEmptyObject(skipMap)) || (options.nestingLimit != null && depth >= options.nestingLimit)) {
         skip = true;
         skipMap[depth] = true;
