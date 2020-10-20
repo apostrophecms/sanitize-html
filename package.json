@@ -1,6 +1,6 @@
 {
   "name": "sanitize-html",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Clean up user-submitted HTML, preserving whitelisted elements and whitelisted attributes on a per-element basis",
   "sideEffects": false,
   "main": "index.js",
@@ -38,7 +38,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "mocha": "^5.2.0",
+    "mocha": "^7.0.0",
     "sinon": "^9.0.2"
   }
 }
