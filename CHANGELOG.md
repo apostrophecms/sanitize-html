@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.1 (2020-10-21):
+- Fixes a bug when using `allowedClasses` with an `'*'` wildcard selector. Thanks to [Clemens Damke](https://github.com/Cortys) for this contribution.
+
 ## 2.1.0 (2020-10-07):
 - `sup` added to the default allowed tags list. Thanks to [Julian Lam](https://github.com/julianlam) for the contribution.
 - Updates default `allowedTags` README documentation. Thanks to [Marco Arduini](https://github.com/nerfologist) for the contribution.
