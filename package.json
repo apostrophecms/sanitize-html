@@ -18,6 +18,7 @@
     "html",
     "parser",
     "sanitizer"
+    "sanitize"
   ],
   "author": "Apostrophe Technologies, Inc.",
   "license": "MIT",
