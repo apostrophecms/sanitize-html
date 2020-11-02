@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.2 (2020-11-04):
+- Fixes typos and inconsistencies in the README. Thanks to [Eric Lefevre-Ardant](https://github.com/elefevre) for this contribution.
+
 ## 2.1.1 (2020-10-21):
 - Fixes a bug when using `allowedClasses` with an `'*'` wildcard selector. Thanks to [Clemens Damke](https://github.com/Cortys) for this contribution.
 - Updates mocha to 7.x to resolve security warnings.
