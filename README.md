@@ -4,11 +4,11 @@
 
 <a href="https://apostrophecms.com/"><img src="https://raw.githubusercontent.com/apostrophecms/sanitize-html/main/logos/logo-box-madefor.png" align="right" /></a>
 
-`sanitize-html` provides a simple HTML sanitizer with a clear API.
+sanitize-html provides a simple HTML sanitizer with a clear API.
 
-`sanitize-html` is tolerant. It is well suited for cleaning up HTML fragments such as those created by ckeditor and other rich text editors. It is especially handy for removing unwanted CSS when copying and pasting from Word.
+sanitize-html is tolerant. It is well suited for cleaning up HTML fragments such as those created by CKEditor and other rich text editors. It is especially handy for removing unwanted CSS when copying and pasting from Word.
 
-`sanitize-html` allows you to specify the tags you want to permit, and the permitted attributes for each of those tags.
+sanitize-html allows you to specify the tags you want to permit, and the permitted attributes for each of those tags.
 
 If a tag is not permitted, the contents of the tag are not discarded. There are
 some exceptions to this, discussed below in the "Discarding the entire contents
@@ -24,7 +24,7 @@ HTML comments are not preserved.
 
 ## Requirements
 
-`sanitize-html` is intended for use with Node. That's pretty much it. All of its npm dependencies are pure JavaScript. `sanitize-html` is built on the excellent `htmlparser2` module.
+sanitize-html is intended for use with Node. That's pretty much it. All of its npm dependencies are pure JavaScript. sanitize-html is built on the excellent `htmlparser2` module.
 
 ## How to use
 
@@ -35,7 +35,7 @@ HTML comments are not preserved.
 But, perhaps you'd like to display sanitized HTML immediately in the browser for preview. Or ask the browser to do the sanitization work on every page load. You can if you want to!
 
 * Clone repository and install via npm
-* Run npm install and :
+* Run npm install and:
 
 ```bash
 npm install sanitize-html # yarn install sanitize-html
@@ -43,7 +43,7 @@ npm install sanitize-html # yarn install sanitize-html
 
 The primary change in the 2.x version of sanitize-html is that it no longer includes a build that is ready for browser use. Developers are expected to include sanitize-html in their project builds (e.g., webpack) as they would any other dependency. So while sanitize-html is no longer ready to link to directly in HTML, developers can now more easily process it according to their needs.
 
-Once built and linked in the browser with other project Javascript it can be used to sanitize HTML strings in front end code:
+Once built and linked in the browser with other project Javascript, it can be used to sanitize HTML strings in front end code:
 
 ```javascript
 import sanitizeHtml from 'sanitize-html';
@@ -127,7 +127,9 @@ enforceHtmlBoundary: false
 
 ### Common use cases
 
-#### "I like your set but I want to add one more tag. Is there a convenient way?" Sure:
+#### "I like your set but I want to add one more tag. Is there a convenient way?"
+
+Sure:
 
 ```js
 const clean = sanitizeHtml(dirty, {
@@ -135,11 +137,11 @@ const clean = sanitizeHtml(dirty, {
 });
 ```
 
-If you do not specify `allowedTags` or `allowedAttributes` our default list is applied. So if you really want an empty list, specify one.
+If you do not specify `allowedTags` or `allowedAttributes`, our default list is applied. So if you really want an empty list, specify one.
 
 #### "What if I want to allow all tags or all attributes?"
 
-Simple! instead of leaving `allowedTags` or `allowedAttributes` out of the options, set either
+Simple! Instead of leaving `allowedTags` or `allowedAttributes` out of the options, set either
 one or both to `false`:
 
 ```js
@@ -227,7 +229,7 @@ allowedClasses: {
 
 ### Allowed CSS Styles
 
-If you wish to allow specific CSS _styles_ on a particular element, you can do that with the `allowedStyles` option. Simply declare your desired attributes as regular expression options within an array for the given attribute. Specific elements will inherit whitelisted attributes from the global (\*) attribute. Any other CSS classes are discarded.
+If you wish to allow specific CSS _styles_ on a particular element, you can do that with the `allowedStyles` option. Simply declare your desired attributes as regular expression options within an array for the given attribute. Specific elements will inherit whitelisted attributes from the global (`*`) attribute. Any other CSS classes are discarded.
 
 **You must also use `allowedAttributes`** to activate the `style` attribute for the relevant elements. Otherwise this feature will never come into play.
 
@@ -268,7 +270,7 @@ enforceHtmlBoundary: true
 
 ### htmlparser2 Options
 
-`santizeHtml` is built on `htmlparser2`. By default the only option passed down is `decodeEntities: true` You can set the options to pass by using the parser option.
+sanitize-html is built on `htmlparser2`. By default the only option passed down is `decodeEntities: true` You can set the options to pass by using the parser option.
 
 ```javascript
 const clean = sanitizeHtml(dirty, {
@@ -278,7 +280,7 @@ const clean = sanitizeHtml(dirty, {
   }
 });
 ```
-See the [htmlparser2 wiki] (https://github.com/fb55/htmlparser2/wiki/Parser-options) for the full list of possible options.
+See the [htmlparser2 wiki](https://github.com/fb55/htmlparser2/wiki/Parser-options) for the full list of possible options.
 
 ### Transformations
 
@@ -409,7 +411,7 @@ Note that the text passed to the `textFilter` method is already escaped for safe
 
 ### Iframe Filters
 
-If you would like to allow iframe tags but want to control the domains that are allowed through you can provide an array of hostnames and(or) array of domains that you would like to allow as iframe sources. This hostname is a property in the options object passed as an argument to the `sanitize-html` function.
+If you would like to allow iframe tags but want to control the domains that are allowed through, you can provide an array of hostnames and/or array of domains that you would like to allow as iframe sources. This hostname is a property in the options object passed as an argument to the sanitize-html function.
 
 These arrays will be checked against the html that is passed to the function and return only `src` urls that include the allowed hostnames or domains in the object. The url in the html that is passed must be formatted correctly (valid hostname) as an embedded iframe otherwise the module will strip out the src from the iframe.
 
@@ -496,7 +498,7 @@ const clean = sanitizeHtml('<p><iframe src="https://us02web.zoom.us/embed/12345"
 
 ### Allowed URL schemes
 
-By default we allow the following URL schemes in cases where `href`, `src`, etc. are allowed:
+By default, we allow the following URL schemes in cases where `href`, `src`, etc. are allowed:
 
 ```js
 [ 'http', 'https', 'ftp', 'mailto' ]
@@ -577,7 +579,7 @@ This will prevent the user from nesting tags more than 6 levels deep. Tags deepe
 
 ## About ApostropheCMS
 
-`sanitize-html` was created at [P'unk Avenue](https://punkave.com) for use in [ApostropheCMS](https://apostrophecms.com), an open-source content management system built on Node.js. If you like `sanitize-html` you should definitely check out ApostropheCMS.
+sanitize-html was created at [P'unk Avenue](https://punkave.com) for use in [ApostropheCMS](https://apostrophecms.com), an open-source content management system built on Node.js. If you like sanitize-html you should definitely check out ApostropheCMS.
 
 ## Support
 
