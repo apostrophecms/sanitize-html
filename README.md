@@ -4,11 +4,11 @@
 
 <a href="https://apostrophecms.com/"><img src="https://raw.githubusercontent.com/apostrophecms/sanitize-html/main/logos/logo-box-madefor.png" align="right" /></a>
 
-`sanitize-html` provides a simple HTML sanitizer with a clear API.
+sanitize-html provides a simple HTML sanitizer with a clear API.
 
-`sanitize-html` is tolerant. It is well suited for cleaning up HTML fragments such as those created by CKEditor and other rich text editors. It is especially handy for removing unwanted CSS when copying and pasting from Word.
+sanitize-html is tolerant. It is well suited for cleaning up HTML fragments such as those created by CKEditor and other rich text editors. It is especially handy for removing unwanted CSS when copying and pasting from Word.
 
-`sanitize-html` allows you to specify the tags you want to permit, and the permitted attributes for each of those tags.
+sanitize-html allows you to specify the tags you want to permit, and the permitted attributes for each of those tags.
 
 If a tag is not permitted, the contents of the tag are not discarded. There are
 some exceptions to this, discussed below in the "Discarding the entire contents
@@ -24,7 +24,7 @@ HTML comments are not preserved.
 
 ## Requirements
 
-`sanitize-html` is intended for use with Node. That's pretty much it. All of its npm dependencies are pure JavaScript. `sanitize-html` is built on the excellent `htmlparser2` module.
+sanitize-html is intended for use with Node. That's pretty much it. All of its npm dependencies are pure JavaScript. sanitize-html is built on the excellent `htmlparser2` module.
 
 ## How to use
 
@@ -41,7 +41,7 @@ But, perhaps you'd like to display sanitized HTML immediately in the browser for
 npm install sanitize-html # yarn install sanitize-html
 ```
 
-The primary change in the 2.x version of `sanitize-html` is that it no longer includes a build that is ready for browser use. Developers are expected to include `sanitize-html` in their project builds (e.g., webpack) as they would any other dependency. So while `sanitize-html` is no longer ready to link to directly in HTML, developers can now more easily process it according to their needs.
+The primary change in the 2.x version of sanitize-html is that it no longer includes a build that is ready for browser use. Developers are expected to include sanitize-html in their project builds (e.g., webpack) as they would any other dependency. So while sanitize-html is no longer ready to link to directly in HTML, developers can now more easily process it according to their needs.
 
 Once built and linked in the browser with other project Javascript, it can be used to sanitize HTML strings in front end code:
 
@@ -260,9 +260,9 @@ const clean = sanitizeHtml(dirty, {
 
 ### Discarding text outside of ```<html></html>``` tags
 
-Some text editing applications generate HTML to allow copying over to a web application. These can sometimes include undesireable control characters after terminating `html` tag. By default `sanitize-html` will not discard these characters, instead returning them in sanitized string. This behaviour can be modified using `enforceHtmlBoundary` option.
+Some text editing applications generate HTML to allow copying over to a web application. These can sometimes include undesireable control characters after terminating `html` tag. By default sanitize-html will not discard these characters, instead returning them in sanitized string. This behaviour can be modified using `enforceHtmlBoundary` option.
 
-Setting this option to true will instruct `sanitize-html` to discard all characters outside of `html` tag boundaries -- before `<html>` and after `</html>` tags.
+Setting this option to true will instruct sanitize-html to discard all characters outside of `html` tag boundaries -- before `<html>` and after `</html>` tags.
 
 ```js
 enforceHtmlBoundary: true
@@ -270,7 +270,7 @@ enforceHtmlBoundary: true
 
 ### htmlparser2 Options
 
-`sanitize-html` is built on `htmlparser2`. By default the only option passed down is `decodeEntities: true` You can set the options to pass by using the parser option.
+sanitize-html is built on `htmlparser2`. By default the only option passed down is `decodeEntities: true` You can set the options to pass by using the parser option.
 
 ```javascript
 const clean = sanitizeHtml(dirty, {
@@ -411,7 +411,7 @@ Note that the text passed to the `textFilter` method is already escaped for safe
 
 ### Iframe Filters
 
-If you would like to allow iframe tags but want to control the domains that are allowed through, you can provide an array of hostnames and/or array of domains that you would like to allow as iframe sources. This hostname is a property in the options object passed as an argument to the `sanitize-html` function.
+If you would like to allow iframe tags but want to control the domains that are allowed through, you can provide an array of hostnames and/or array of domains that you would like to allow as iframe sources. This hostname is a property in the options object passed as an argument to the sanitize-html function.
 
 These arrays will be checked against the html that is passed to the function and return only `src` urls that include the allowed hostnames or domains in the object. The url in the html that is passed must be formatted correctly (valid hostname) as an embedded iframe otherwise the module will strip out the src from the iframe.
 
@@ -552,7 +552,7 @@ Note that if you use this option you are responsible for stating the entire list
 The content still gets escaped properly, with the exception of the `script` and
 `style` tags. *Allowing either `script` or `style` leaves you open to XSS
 attacks. Don't do that* unless you have good reason to trust their origin.
-`sanitize-html` will log a warning if these tags are allowed, which can be
+sanitize-html will log a warning if these tags are allowed, which can be
 disabled with the `allowVulnerableTags: true` option.
 
 ### Choose what to do with disallowed tags
@@ -579,7 +579,7 @@ This will prevent the user from nesting tags more than 6 levels deep. Tags deepe
 
 ## About ApostropheCMS
 
-`sanitize-html` was created at [P'unk Avenue](https://punkave.com) for use in [ApostropheCMS](https://apostrophecms.com), an open-source content management system built on Node.js. If you like `sanitize-html` you should definitely check out ApostropheCMS.
+sanitize-html was created at [P'unk Avenue](https://punkave.com) for use in [ApostropheCMS](https://apostrophecms.com), an open-source content management system built on Node.js. If you like sanitize-html you should definitely check out ApostropheCMS.
 
 ## Support
 
