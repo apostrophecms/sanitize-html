@@ -26,6 +26,10 @@ HTML comments are not preserved.
 
 sanitize-html is intended for use with Node. That's pretty much it. All of its npm dependencies are pure JavaScript. sanitize-html is built on the excellent `htmlparser2` module.
 
+### Regarding Typescript
+
+sanitize-html is not written in Typescript and there is no plan to directly support it. There is a community supported implementation, [`@types/sanitize-html`](https://www.npmjs.com/package/@types/sanitize-html), however. Any questions or problems while using that implementation should be directed to its maintainers as directed by that project's contribution guidelines.
+
 ## How to use
 
 ### Browser
