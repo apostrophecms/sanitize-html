@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.3 (2020-12-02):
+- Adds a note to the README about Typescript support (or the lack-thereof).
+
 ## 2.1.2 (2020-11-04):
 - Fixes typos and inconsistencies in the README. Thanks to [Eric Lefevre-Ardant](https://github.com/elefevre) for this contribution.
 
