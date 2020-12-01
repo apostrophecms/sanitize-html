@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.1.3 (2020-12-02):
+## 2.2.0 (2020-12-02):
 - Adds a note to the README about Typescript support (or the lack-thereof).
 - Adds `tel` to the default `allowedSchemes`. Thanks to [Arne Herbots](https://github.com/aHerbots) for this contribution.
 
