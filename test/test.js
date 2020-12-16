@@ -681,7 +681,7 @@ describe('sanitizeHtml', function() {
   it('should not crash due to tag names that are properties of the universal Object prototype', function() {
     assert.equal(
       sanitizeHtml('!<__proto__>!'),
-      '!!');
+      '!&lt;__proto__&gt;!');
   });
   it('should correctly maintain escaping when allowing a nonTextTags tag other than script or style', function() {
     assert.equal(
