@@ -1,7 +1,7 @@
 # Changelog
 
 ## 2.3.0 (2020-12-16):
-- Upgrade `htmlparser2`. Thanks to [Bogdan Chadkin](https://github.com/TrySound) for the contribution.
+- Upgrades `htmlparser2` to new major version `^6.0.0`. Thanks to [Bogdan Chadkin](https://github.com/TrySound) for the contribution.
 
 ## 2.2.0 (2020-12-02):
 - Adds a note to the README about Typescript support (or the lack-thereof).
