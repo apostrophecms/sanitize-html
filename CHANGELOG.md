@@ -4,7 +4,7 @@
 - Upgrade `htmlparser2`. Thanks to [Bogdan Chadkin](https://github.com/TrySound) for the contribution.
 
 ## 2.2.0 (2020-12-02):
- Adds a note to the README about Typescript support (or the lack-thereof).
+- Adds a note to the README about Typescript support (or the lack-thereof).
 - Adds `tel` to the default `allowedSchemes`. Thanks to [Arne Herbots](https://github.com/aHerbots) for this contribution.
 
 ## 2.1.2 (2020-11-04):
