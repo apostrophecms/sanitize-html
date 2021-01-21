@@ -261,6 +261,20 @@ const clean = sanitizeHtml(dirty, {
         }
       });
 ```
+**Callback functions** can also be used to check allowed styles.
+```javascript
+const clean = sanitizeHtml(dirty, {
+        allowedTags: ['p'],
+        allowedAttributes: {
+          'p': ["style"],
+        },
+        allowedStyles: {
+          '*': ({prop, value}) => prop.trim().indexOf('background') !== 0 
+            || [value.match(/url\(\W*.{4}/i)].map(match => !match || match[0].substr(-4).toLowerCase() == 'data')[0]
+        }
+      });
+```
+
 
 ### Discarding text outside of ```<html></html>``` tags
 

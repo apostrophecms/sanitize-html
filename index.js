@@ -628,7 +628,7 @@ function sanitizeHtml(html, options, _recursing) {
     * Filters the existing attributes for the given property. Discards any attributes
     * which don't match the whitelist.
     *
-    * @param  {object} selectedRule             - Example: { color: red, font-family: helvetica }
+    * @param  {object} selectedRule             - Example: either ({ color: red, font-family: helvetica }) or callback function ({prop:string,value:string}):boolean
     * @param  {array} allowedDeclarationsList   - List of declarations which pass whitelisting.
     * @param  {object} attributeObject          - Object representing the current css property.
     * @property {string} attributeObject.type   - Typically 'declaration'.
@@ -636,16 +636,22 @@ function sanitizeHtml(html, options, _recursing) {
     * @property {string} attributeObject.value  - The corresponding value to the css property, i.e 'red'.
     * @return {function}                        - When used in Array.reduce, will return an array of Declaration objects
     */
-  function filterDeclarations(selectedRule) {
+   function filterDeclarations(selectedRule) {
     return function (allowedDeclarationsList, attributeObject) {
-      // If this property is whitelisted...
-      if (has(selectedRule, attributeObject.prop)) {
-        const matchesRegex = selectedRule[attributeObject.prop].some(function(regularExpression) {
-          return regularExpression.test(attributeObject.value);
-        });
+      if (typeof selectedRule === 'function') {
+        if (selectedRule({ prop: attributeObject.prop, value: attributeObject.value })) {
+            allowedDeclarationsList.push(attributeObject);
+        }
+      } else {
+        // If this property is whitelisted...
+        if (has(selectedRule, attributeObject.prop)) {
+            const matchesRegex = selectedRule[attributeObject.prop].some(function(regularExpression) {
+                return regularExpression.test(attributeObject.value);
+            });
 
-        if (matchesRegex) {
-          allowedDeclarationsList.push(attributeObject);
+            if (matchesRegex) {
+                allowedDeclarationsList.push(attributeObject);
+            }
         }
       }
       return allowedDeclarationsList;
