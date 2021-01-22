@@ -1210,4 +1210,63 @@ describe('sanitizeHtml', function() {
       '<div><div><div><div><div><div>nested text</div></div></div></div></div></div>'
     );
   });
+  it('should not allow simple append attacks on iframe hostname validation', function() {
+    assert.equal(
+      sanitizeHtml('<iframe src=//www.youtube.comissocool>', {
+        allowedTags: [ 'iframe' ],
+        allowedAttributes: {
+          iframe: [ 'src' ]
+        },
+        allowedIframeHostnames: [ 'www.youtube.com' ]
+      }),
+      '<iframe></iframe>'
+    );
+  });
+  it('should not allow IDNA (Internationalized Domain Name) iframe validation bypass attacks', function() {
+    assert.equal(
+      sanitizeHtml('<iframe src=//www.youtube.com%C3%9E.93.184.216.34.nip.io>', {
+        allowedTags: [ 'iframe' ],
+        allowedAttributes: {
+          iframe: [ 'src' ]
+        },
+        allowedIframeHostnames: [ 'www.youtube.com' ]
+      }),
+      '<iframe></iframe>'
+    );
+  });
+  it('should parse path-rooted relative URLs sensibly', function() {
+    assert.equal(
+      sanitizeHtml('<a href="/foo"></a>'),
+      '<a href="/foo"></a>'
+    );
+  });
+  it('should parse bare relative URLs sensibly', function() {
+    assert.equal(
+      sanitizeHtml('<a href="foo"></a>'),
+      '<a href="foo"></a>'
+    );
+  });
+  it('should parse ../ relative URLs sensibly', function() {
+    assert.equal(
+      sanitizeHtml('<a href="../../foo"></a>'),
+      '<a href="../../foo"></a>'
+    );
+  });
+  it('should parse protocol relative URLs sensibly', function() {
+    assert.equal(
+      sanitizeHtml('<a href="//foo.com/foo"></a>'),
+      '<a href="//foo.com/foo"></a>'
+    );
+  });
+  it('should reject attempts to hack our use of a relative: protocol in our test base URL', function() {
+    assert.equal(
+      sanitizeHtml('<iframe src="relative://relative-test/aha">', {
+        allowedTags: [ 'iframe' ],
+        allowedAttributes: {
+          iframe: [ 'src' ]
+        }
+      }),
+      '<iframe></iframe>'
+    );
+  });
 });
