@@ -5,7 +5,6 @@ const { isPlainObject } = require('is-plain-object');
 const deepmerge = require('deepmerge');
 const parseSrcset = require('parse-srcset');
 const { parse: postcssParse } = require('postcss');
-const url = require('url');
 // Tags that can conceivably represent stand-alone media.
 const mediaTags = [
   'img', 'audio', 'video', 'picture', 'svg',
@@ -305,12 +304,24 @@ function sanitizeHtml(html, options, _recursing) {
             if (name === 'iframe' && a === 'src') {
               let allowed = true;
               try {
+                if (value.startsWith('relative:')) {
+                  // An attempt to exploit our workaround for base URLs being
+                  // mandatory for relative URL validation in the WHATWG
+                  // URL parser, reject it
+                  throw new Error('relative: exploit attempt');
+                }
                 // naughtyHref is in charge of whether protocol relative URLs
-                // are cool. We should just accept them
-                // TODO: Replace deprecated `url.parse`
-                // eslint-disable-next-line node/no-deprecated-api
-                parsed = url.parse(value, false, true);
-                const isRelativeUrl = parsed && parsed.host === null && parsed.protocol === null;
+                // are cool. Here we are concerned just with allowed hostnames and
+                // whether to allow relative URLs.
+                //
+                // Build a placeholder "base URL" against which any reasonable
+                // relative URL may be parsed successfully
+                let base = 'relative://relative-site';
+                for (let i = 0; (i < 100); i++) {
+                  base += `/${i}`;
+                }
+                const parsed = new URL(value, base);
+                const isRelativeUrl = parsed && parsed.hostname === 'relative-site' && parsed.protocol === 'relative:';
                 if (isRelativeUrl) {
                   // default value of allowIframeRelativeUrls is true
                   // unless allowedIframeHostnames or allowedIframeDomains specified
