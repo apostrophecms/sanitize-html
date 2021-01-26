@@ -304,6 +304,10 @@ function sanitizeHtml(html, options, _recursing) {
             if (name === 'iframe' && a === 'src') {
               let allowed = true;
               try {
+                // Chrome accepts \ as a substitute for / in the // at the
+                // start of a URL, so rewrite accordingly to prevent exploit.
+                // Also drop any whitespace at that point in the URL
+                value = value.replace(/^(\w+:)?\s*[\\/]\s*[\\/]/, '$1//');
                 if (value.startsWith('relative:')) {
                   // An attempt to exploit our workaround for base URLs being
                   // mandatory for relative URL validation in the WHATWG
