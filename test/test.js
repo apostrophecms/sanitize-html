@@ -1272,54 +1272,54 @@ describe('sanitizeHtml', function() {
   it('Should prevent hostname bypass using protocol-relative src', function () {
     assert.strictEqual(
       sanitizeHtml('<iframe src="/\\example.com"></iframe>', {
-        allowedTags: ['iframe'],
+        allowedTags: [ 'iframe' ],
         allowedAttributes: {
-          iframe: ['src']
+          iframe: [ 'src' ]
         },
-        allowedIframeHostnames: ["www.youtube.com"],
+        allowedIframeHostnames: [ 'www.youtube.com' ],
         allowIframeRelativeUrls: true
       }), '<iframe></iframe>'
     );
     assert.strictEqual(
       sanitizeHtml('<iframe src="\\/example.com"></iframe>', {
-        allowedTags: ['iframe'],
+        allowedTags: [ 'iframe' ],
         allowedAttributes: {
-          iframe: ['src']
+          iframe: [ 'src' ]
         },
-        allowedIframeHostnames: ["www.youtube.com"],
+        allowedIframeHostnames: [ 'www.youtube.com' ],
         allowIframeRelativeUrls: true
       }), '<iframe></iframe>'
     );
-    const linefeed = decodeURIComponent("%0A");
+    const linefeed = decodeURIComponent('%0A');
     assert.strictEqual(
-      sanitizeHtml('<iframe src="/'+linefeed+'\\example.com"></iframe>', {
-        allowedTags: ['iframe'],
+      sanitizeHtml('<iframe src="/' + linefeed + '\\example.com"></iframe>', {
+        allowedTags: [ 'iframe' ],
         allowedAttributes: {
-          iframe: ['src']
+          iframe: [ 'src' ]
         },
-        allowedIframeHostnames: ["www.youtube.com"],
+        allowedIframeHostnames: [ 'www.youtube.com' ],
         allowIframeRelativeUrls: true
       }), '<iframe></iframe>'
     );
-    const creturn = decodeURIComponent("%0D");
+    const creturn = decodeURIComponent('%0D');
     assert.strictEqual(
-      sanitizeHtml('<iframe src="/'+creturn+'\\example.com"></iframe>', {
-        allowedTags: ['iframe'],
+      sanitizeHtml('<iframe src="/' + creturn + '\\example.com"></iframe>', {
+        allowedTags: [ 'iframe' ],
         allowedAttributes: {
-          iframe: ['src']
+          iframe: [ 'src' ]
         },
-        allowedIframeHostnames: ["www.youtube.com"],
+        allowedIframeHostnames: [ 'www.youtube.com' ],
         allowIframeRelativeUrls: true
       }), '<iframe></iframe>'
     );
-    const tab = decodeURIComponent("%09");
+    const tab = decodeURIComponent('%09');
     assert.strictEqual(
-      sanitizeHtml('<iframe src="/'+tab+'\\example.com"></iframe>', {
-        allowedTags: ['iframe'],
+      sanitizeHtml('<iframe src="/' + tab + '\\example.com"></iframe>', {
+        allowedTags: [ 'iframe' ],
         allowedAttributes: {
-          iframe: ['src']
+          iframe: [ 'src' ]
         },
-        allowedIframeHostnames: ["www.youtube.com"],
+        allowedIframeHostnames: [ 'www.youtube.com' ],
         allowIframeRelativeUrls: true
       }), '<iframe></iframe>'
     );
