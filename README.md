@@ -42,7 +42,7 @@ But, perhaps you'd like to display sanitized HTML immediately in the browser for
 * Run npm install and:
 
 ```bash
-npm install sanitize-html # yarn install sanitize-html
+npm install sanitize-html # yarn add sanitize-html
 ```
 
 The primary change in the 2.x version of sanitize-html is that it no longer includes a build that is ready for browser use. Developers are expected to include sanitize-html in their project builds (e.g., webpack) as they would any other dependency. So while sanitize-html is no longer ready to link to directly in HTML, developers can now more easily process it according to their needs.
