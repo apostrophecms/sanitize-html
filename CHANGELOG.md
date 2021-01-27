@@ -1,8 +1,9 @@
 # Changelog
 
 ## 2.3.2 (2021-01-26):
+
 - Additional fixes for iframe validation exploits. Prevent exploits based on browsers' tolerance of the use of "\" rather than "/" and the presence of whitespace at this point in the URL. Thanks to Ron Masas of [Checkmarx](https://www.checkmarx.com/) for pointing out the issue and writing unit tests.
-- Documentation correction for `yarn` users. Thanks to Tagir Khadzhiev.
+- Updates README `yarn add` syntax. Thanks to [Tagir Khadshiev](https://github.com/Aspedm) for the contribution.
 
 ## 2.3.1 (2021-01-22):
 - Uses the standard WHATWG URL parser to stop IDNA (Internationalized Domain Name) attacks on the iframe hostname validator. Thanks to Ron Masas of [Checkmarx](https://www.checkmarx.com/) for pointing out the issue and suggesting the use of the WHATWG parser.
