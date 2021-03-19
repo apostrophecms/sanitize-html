@@ -274,7 +274,9 @@ enforceHtmlBoundary: true
 
 ### htmlparser2 Options
 
-sanitize-html is built on `htmlparser2`. By default the only option passed down is `decodeEntities: true` You can set the options to pass by using the parser option.
+sanitize-html is built on `htmlparser2`. By default the only option passed down is `decodeEntities: true`. You can set the options to pass by using the parser option.
+
+**Security note: changing the `parser` settings can be risky.** In particular, `decodeEntities: false` has known security concerns and a complete test suite does not exist for every possible combination of settings when used with `sanitize-html`. If security is your goal we recommend you use the defaults rather than changing `parser`, except for the `lowerCaseTags` option.
 
 ```javascript
 const clean = sanitizeHtml(dirty, {

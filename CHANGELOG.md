@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.3.3 (2021-03-19):
+- Security fix: `allowedSchemes` and related options did not properly block schemes containing a hyphen, plus sign, period or digit, such as `ms-calculator:`. Thanks to Lukas Euler for pointing out the issue.
+- Added a security note about the known risks associated with using the `parser` option, especially `decodeEntities: false`. See the documentation.
+
 ## 2.3.2 (2021-01-26):
 
 - Additional fixes for iframe validation exploits. Prevent exploits based on browsers' tolerance of the use of "\" rather than "/" and the presence of whitespace at this point in the URL. Thanks to Ron Masas of [Checkmarx](https://www.checkmarx.com/) for pointing out the issue and writing unit tests.

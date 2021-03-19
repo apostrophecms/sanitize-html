@@ -568,7 +568,9 @@ function sanitizeHtml(html, options, _recursing) {
     // a javascript: URL to be snuck through
     href = href.replace(/<!--.*?-->/g, '');
     // Case insensitive so we don't get faked out by JAVASCRIPT #1
-    const matches = href.match(/^([a-zA-Z]+):/);
+    // Allow more characters after the first so we don't get faked
+    // out by certain schemes browsers accept
+    const matches = href.match(/^([a-zA-Z][a-zA-Z0-9.\-+]*):/);
     if (!matches) {
       // Protocol-relative URL starting with any combination of '/' and '\'
       if (href.match(/^[/\\]{2}/)) {
