@@ -69,7 +69,7 @@ npm install sanitize-html
 
 Import the module:
 
-```bash
+```js
 // In ES modules
 import sanitizeHtml from 'sanitize-html';
 
