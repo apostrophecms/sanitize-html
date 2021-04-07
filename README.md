@@ -126,7 +126,8 @@ allowedSchemes: [ 'http', 'https', 'ftp', 'mailto', 'tel' ],
 allowedSchemesByTag: {},
 allowedSchemesAppliedToAttributes: [ 'href', 'src', 'cite' ],
 allowProtocolRelative: true,
-enforceHtmlBoundary: false
+enforceHtmlBoundary: false,
+useAutoClosingTag: true
 ```
 
 ### Common use cases

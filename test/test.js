@@ -1324,5 +1324,30 @@ describe('sanitizeHtml', function() {
       }), '<iframe></iframe>'
     );
   });
-
+  it('should not automatically attach close tag when useAutoClosingTag option is false', function() {
+    assert.equal(sanitizeHtml('<test>Hello', {
+      disallowedTagsMode: 'discard',
+      useAutoClosingTag: true
+    }), 'Hello');
+    assert.equal(sanitizeHtml('<test>Hello', {
+      disallowedTagsMode: 'discard',
+      useAutoClosingTag: false
+    }), 'Hello');
+    assert.equal(sanitizeHtml('<test>Hello', {
+      disallowedTagsMode: 'escape',
+      useAutoClosingTag: true
+    }), '&lt;test&gt;Hello&lt;/test&gt;');
+    assert.equal(sanitizeHtml('<test>Hello', {
+      disallowedTagsMode: 'escape',
+      useAutoClosingTag: false
+    }), '&lt;test&gt;Hello');
+    assert.equal(sanitizeHtml('<test>Hello', {
+      disallowedTagsMode: 'recursiveEscape',
+      useAutoClosingTag: true
+    }), '&lt;test&gt;Hello&lt;/test&gt;');
+    assert.equal(sanitizeHtml('<test>Hello', {
+      disallowedTagsMode: 'recursiveEscape',
+      useAutoClosingTag: false
+    }), '&lt;test&gt;Hello');
+  });
 });
