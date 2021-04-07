@@ -1345,9 +1345,9 @@ describe('sanitizeHtml', function() {
       disallowedTagsMode: 'recursiveEscape',
       useAutoClosingTag: true
     }), '&lt;test&gt;Hello&lt;/test&gt;');
-    assert.equal(sanitizeHtml('<test>Hello', {
+    assert.equal(sanitizeHtml('<test><test><test><test><test>Hello', {
       disallowedTagsMode: 'recursiveEscape',
       useAutoClosingTag: false
-    }), '&lt;test&gt;Hello');
+    }), '&lt;test&gt;&lt;test&gt;&lt;test&gt;&lt;test&gt;&lt;test&gt;Hello');
   });
 });
