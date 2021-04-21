@@ -101,6 +101,8 @@ const clean = sanitizeHtml(dirty, {
 
 Boom!
 
+[Demo.](https://runkit.com/george-hill/60804840902a6c001a5c0f20)
+
 ### Default options
 
 ```js
