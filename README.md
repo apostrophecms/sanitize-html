@@ -174,6 +174,8 @@ If you set `disallowedTagsMode` to `discard` (the default), disallowed tags are 
 
 If you set `disallowedTagsMode` to `escape`, the disallowed tags are escaped rather than discarded. Any text or subtags is handled normally.
 
+[Demo.](https://runkit.com/george-hill/60804dabb71f9b001a450566)
+
 If you set `disallowedTagsMode` to `recursiveEscape`, the disallowed tags are escaped rather than discarded, and the same treatment is applied to all subtags, whether otherwise allowed or not.
 
 #### "What if I want to allow only specific values on some attributes?"
