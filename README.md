@@ -166,6 +166,8 @@ allowedTags: [],
 allowedAttributes: {}
 ```
 
+[Demo.](https://runkit.com/george-hill/60804b5828234e001afb4372)
+
 #### "What if I want disallowed tags to be escaped rather than discarded?"
 
 If you set `disallowedTagsMode` to `discard` (the default), disallowed tags are discarded. Any text content or subtags is still included, depending on whether the individual subtags are allowed.
