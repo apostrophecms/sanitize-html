@@ -34,7 +34,7 @@ sanitize-html is not written in Typescript and there is no plan to directly supp
 
 ### Browser
 
-*Think first: why do you want to use it in the browser?* Remember, *servers must never trust browsers.* You can't sanitize HTML for saving on the server anywhere else but on the server.
+*Think first: why do you want to use it in the browser?* Remember, *servers must never trust browsers*. You can't sanitize HTML for saving on the server anywhere else but on the server.
 
 But, perhaps you'd like to display sanitized HTML immediately in the browser for preview. Or ask the browser to do the sanitization work on every page load. You can if you want to!
 
@@ -83,6 +83,8 @@ Use it in your JavaScript app:
 const dirty = 'some really tacky HTML';
 const clean = sanitizeHtml(dirty);
 ```
+
+Here's a [demo](https://runkit.com/george-hill/607727a862a0150013483c2e).
 
 That will allow our [default list of allowed tags and attributes](#default-options) through. It's a nice set, but probably not quite what you want. So:
 
