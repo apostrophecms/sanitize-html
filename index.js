@@ -146,7 +146,9 @@ function sanitizeHtml(html, options, _recursing) {
           allowedAttributesMap[tag].push(obj);
         }
       });
-      allowedAttributesGlobMap[tag] = new RegExp('^(' + globRegex.join('|') + ')$');
+      if (globRegex.length) {
+        allowedAttributesGlobMap[tag] = new RegExp('^(' + globRegex.join('|') + ')$');
+      }
     });
   }
   const allowedClassesMap = {};
