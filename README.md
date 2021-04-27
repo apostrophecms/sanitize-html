@@ -224,9 +224,10 @@ const clean = sanitizeHtml(dirty, {
 });
 ```
 
-Similar to `allowedAttributes`, you can use `*` as a tag name, to allow listed classes to be valid for any tag:
+Similar to `allowedAttributes`, you can use `*` to allow classes with a certain prefix, or use `*` as a tag name to allow listed classes to be valid for any tag:
 ```js
 allowedClasses: {
+  'code': [ 'language-*', 'lang-*' ],
   '*': [ 'fancy', 'simple' ]
 }
 ```
