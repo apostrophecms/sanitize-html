@@ -346,6 +346,8 @@ const clean = sanitizeHtml(dirty, {
 });
 ```
 
+[Demo.](https://runkit.com/george-hill/608d48848ee2b1001aeaf005)
+
 The `simpleTransform` helper method has 3 parameters:
 
 ```js
