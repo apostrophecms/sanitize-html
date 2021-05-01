@@ -431,6 +431,8 @@ sanitizeHtml(
 );
 ```
 
+[Demo.](https://runkit.com/george-hill/608d568fed59f2001bd4bdb4)
+
 Note that the text passed to the `textFilter` method is already escaped for safe display as HTML. You may add markup and use entity escape sequences in your `textFilter`.
 
 ### Iframe Filters
