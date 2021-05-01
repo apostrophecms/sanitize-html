@@ -379,6 +379,8 @@ To a link with anchor text:
 <a href="http://somelink.com">Some text</a>
 ```
 
+[Demo.](https://runkit.com/george-hill/608d49f2185fcc001aebb5a7)
+
 ### Filters
 
 You can provide a filter function to remove unwanted tags. Let's suppose we need to remove empty `a` tags like:
