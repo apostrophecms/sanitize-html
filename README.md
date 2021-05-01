@@ -274,6 +274,8 @@ const clean = sanitizeHtml(dirty, {
       });
 ```
 
+[Demo.](https://runkit.com/george-hill/608d4456185fcc001aebb26e)
+
 ### Discarding text outside of ```<html></html>``` tags
 
 Some text editing applications generate HTML to allow copying over to a web application. These can sometimes include undesirable control characters after terminating `html` tag. By default sanitize-html will not discard these characters, instead returning them in sanitized string. This behaviour can be modified using `enforceHtmlBoundary` option.
