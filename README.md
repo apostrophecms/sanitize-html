@@ -234,6 +234,8 @@ const clean = sanitizeHtml(dirty, {
 });
 ```
 
+[Demo.](https://runkit.com/george-hill/608d422bc22c86001a5cf9c8)
+
 Similar to `allowedAttributes`, you can use `*` as a tag name, to allow listed classes to be valid for any tag:
 ```js
 allowedClasses: {
