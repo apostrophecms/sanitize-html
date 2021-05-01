@@ -178,6 +178,8 @@ If you set `disallowedTagsMode` to `escape`, the disallowed tags are escaped rat
 
 If you set `disallowedTagsMode` to `recursiveEscape`, the disallowed tags are escaped rather than discarded, and the same treatment is applied to all subtags, whether otherwise allowed or not.
 
+[Demo.](https://runkit.com/george-hill/608d3e8bed59f2001bd4b115)
+
 #### "What if I want to allow only specific values on some attributes?"
 
 When configuring the attribute in `allowedAttributes` simply use an object with attribute `name` and an allowed `values` array. In the following example `sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-scripts"` would become `sandbox="allow-popups allow-scripts"`:
