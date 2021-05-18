@@ -864,6 +864,47 @@ describe('sanitizeHtml', function() {
       }), '<span style="color:yellow;text-align:center;font-family:helvetica"></span>'
     );
   });
+  it('should delete the script tag', function() {
+    assert.equal(sanitizeHtml('<script src="https://www.unauthorized.com/lib.js"></script>', {
+      allowedTags: [ 'script' ],
+      allowVulnerableTags: true,
+      allowedAttributes: {
+        script: [ 'src' ]
+      },
+      allowedScriptHostnames: [ 'www.authorized.com' ]
+    }), '<script></script>');
+  });
+  it('Should allow domains in a script that are whitelisted', function() {
+    assert.equal(
+      sanitizeHtml('<script src="https://www.safe.authorized.com/lib.js"></script>', {
+        allowedTags: [ 'script' ],
+        allowedAttributes: {
+          script: [ 'src' ]
+        },
+        allowedScriptDomains: [ 'authorized.com' ]
+      }), '<script src="https://www.safe.authorized.com/lib.js"></script>'
+    );
+  });
+  it('should delete the script tag content', function() {
+    assert.equal(sanitizeHtml('<script src="https://www.authorized.com/lib.js"> alert("evil") </script>', {
+      allowedTags: [ 'script' ],
+      allowVulnerableTags: true,
+      allowedAttributes: {
+        script: [ 'src' ]
+      },
+      allowedScriptHostnames: [ 'www.authorized.com' ]
+    }), '<script src="https://www.authorized.com/lib.js"></script>');
+  });
+  it('should leave the content of script elements', function() {
+    assert.equal(sanitizeHtml('<script src="https://www.authorized.com/lib.js"></script>', {
+      allowedTags: [ 'script' ],
+      allowVulnerableTags: true,
+      allowedAttributes: {
+        script: [ 'src' ]
+      },
+      allowedScriptHostnames: [ 'www.authorized.com' ]
+    }), '<script src="https://www.authorized.com/lib.js"></script>');
+  });
   it('Should allow hostnames in an iframe that are whitelisted', function() {
     assert.equal(
       sanitizeHtml('<iframe src="https://www.youtube.com/embed/c2IlcS7AHxM"></iframe>', {
