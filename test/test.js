@@ -384,6 +384,35 @@ describe('sanitizeHtml', function() {
       '<p class="nifty simple">whee</p><div class="simple dippy"></div>'
     );
   });
+  it('should allow classes that match wildcards for a single tag or all tags', function() {
+    assert.equal(
+      sanitizeHtml(
+        '<p class="nifty- nifty-a simple dippy dippy-a-simple">whee</p>',
+        {
+          allowedTags: [ 'p' ],
+          allowedClasses: {
+            '*': [ 'dippy-*-simple' ],
+            p: [ 'nifty-*' ]
+          }
+        }
+      ),
+      '<p class="nifty- nifty-a dippy-a-simple">whee</p>'
+    );
+  });
+  it('should allow all classes if whitelist contains a sigle `*`', function() {
+    assert.equal(
+      sanitizeHtml(
+        '<p class="nifty simple dippy">whee</p>',
+        {
+          allowedTags: [ 'p' ],
+          allowedClasses: {
+            '*': [ '*' ]
+          }
+        }
+      ),
+      '<p class="nifty simple dippy">whee</p>'
+    );
+  });
   it('should allow defining schemes on a per-tag basis', function() {
     assert.equal(
       sanitizeHtml(

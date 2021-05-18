@@ -146,10 +146,13 @@ function sanitizeHtml(html, options, _recursing) {
           allowedAttributesMap[tag].push(obj);
         }
       });
-      allowedAttributesGlobMap[tag] = new RegExp('^(' + globRegex.join('|') + ')$');
+      if (globRegex.length) {
+        allowedAttributesGlobMap[tag] = new RegExp('^(' + globRegex.join('|') + ')$');
+      }
     });
   }
   const allowedClassesMap = {};
+  const allowedClassesGlobMap = {};
   each(options.allowedClasses, function(classes, tag) {
     // Implicitly allows the class attribute
     if (allowedAttributesMap) {
@@ -159,7 +162,18 @@ function sanitizeHtml(html, options, _recursing) {
       allowedAttributesMap[tag].push('class');
     }
 
-    allowedClassesMap[tag] = classes;
+    allowedClassesMap[tag] = [];
+    const globRegex = [];
+    classes.forEach(function(obj) {
+      if (typeof obj === 'string' && obj.indexOf('*') >= 0) {
+        globRegex.push(escapeStringRegexp(obj).replace(/\\\*/g, '.*'));
+      } else {
+        allowedClassesMap[tag].push(obj);
+      }
+    });
+    if (globRegex.length) {
+      allowedClassesGlobMap[tag] = new RegExp('^(' + globRegex.join('|') + ')$');
+    }
   });
 
   const transformTagsMap = {};
@@ -379,10 +393,17 @@ function sanitizeHtml(html, options, _recursing) {
             if (a === 'class') {
               const allowedSpecificClasses = allowedClassesMap[name];
               const allowedWildcardClasses = allowedClassesMap['*'];
+              const allowedSpecificClassesGlob = allowedClassesGlobMap[name];
+              const allowedWildcardClassesGlob = allowedClassesGlobMap['*'];
+              const allowedClassesGlobs = [ allowedSpecificClassesGlob, allowedWildcardClassesGlob ].filter(
+                function(t) {
+                  return t;
+                }
+              );
               if (allowedSpecificClasses && allowedWildcardClasses) {
-                value = filterClasses(value, deepmerge(allowedSpecificClasses, allowedWildcardClasses));
+                value = filterClasses(value, deepmerge(allowedSpecificClasses, allowedWildcardClasses), allowedClassesGlobs);
               } else {
-                value = filterClasses(value, allowedSpecificClasses || allowedWildcardClasses);
+                value = filterClasses(value, allowedSpecificClasses || allowedWildcardClasses, allowedClassesGlobs);
               }
               if (!value.length) {
                 delete frame.attribs[a];
@@ -669,14 +690,16 @@ function sanitizeHtml(html, options, _recursing) {
     };
   }
 
-  function filterClasses(classes, allowed) {
+  function filterClasses(classes, allowed, allowedGlobs) {
     if (!allowed) {
       // The class attribute is allowed without filtering on this tag
       return classes;
     }
     classes = classes.split(/\s+/);
     return classes.filter(function(clss) {
-      return allowed.indexOf(clss) !== -1;
+      return allowed.indexOf(clss) !== -1 || allowedGlobs.some(function(glob) {
+        return glob.test(clss);
+      });
     }).join(' ');
   }
 }
