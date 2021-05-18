@@ -1,7 +1,7 @@
 # Changelog
 
-## 2.4.0 (2021-05-05):
-- Added support for class names with wildcards in `allowedClasses`.
+## 2.4.0 (2021-05-19):
+- Added support for class names with wildcards in `allowedClasses`. Thanks to [zhangbenber](https://github.com/zhangbenber) for the contribution.
 
 ## 2.3.3 (2021-03-19):
 - Security fix: `allowedSchemes` and related options did not properly block schemes containing a hyphen, plus sign, period or digit, such as `ms-calculator:`. Thanks to Lukas Euler for pointing out the issue.
