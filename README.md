@@ -26,9 +26,19 @@ HTML comments are not preserved.
 
 sanitize-html is intended for use with Node.js and supports Node 10+. All of its npm dependencies are pure JavaScript. sanitize-html is built on the excellent `htmlparser2` module.
 
-### Regarding Typescript
+### Regarding TypeScript
 
-sanitize-html is not written in Typescript and there is no plan to directly support it. There is a community supported implementation, [`@types/sanitize-html`](https://www.npmjs.com/package/@types/sanitize-html), however. Any questions or problems while using that implementation should be directed to its maintainers as directed by that project's contribution guidelines.
+sanitize-html is not written in TypeScript and there is no plan to directly support it. There is a community supported typing definition, [`@types/sanitize-html`](https://www.npmjs.com/package/@types/sanitize-html), however.
+```bash 
+npm install -D @types/sanitize-html
+```
+If `esModuleInterop=true` is not set in your `tsconfig.json` file, you have to import it with:
+
+```javascript
+import * as sanitizeHtml from 'sanitize-html';
+```
+
+Any questions or problems while using `@types/sanitize-html` should be directed to its maintainers as directed by that project's contribution guidelines.
 
 ## How to use
 
@@ -38,11 +48,14 @@ sanitize-html is not written in Typescript and there is no plan to directly supp
 
 But, perhaps you'd like to display sanitized HTML immediately in the browser for preview. Or ask the browser to do the sanitization work on every page load. You can if you want to!
 
-* Clone repository and install via npm
-* Run npm install and:
+* Install the package:
 
 ```bash
-npm install sanitize-html # yarn add sanitize-html
+npm install sanitize-html 
+```
+or
+```
+yarn add sanitize-html
 ```
 
 The primary change in the 2.x version of sanitize-html is that it no longer includes a build that is ready for browser use. Developers are expected to include sanitize-html in their project builds (e.g., webpack) as they would any other dependency. So while sanitize-html is no longer ready to link to directly in HTML, developers can now more easily process it according to their needs.
@@ -224,9 +237,10 @@ const clean = sanitizeHtml(dirty, {
 });
 ```
 
-Similar to `allowedAttributes`, you can use `*` as a tag name, to allow listed classes to be valid for any tag:
+Similar to `allowedAttributes`, you can use `*` to allow classes with a certain prefix, or use `*` as a tag name to allow listed classes to be valid for any tag:
 ```js
 allowedClasses: {
+  'code': [ 'language-*', 'lang-*' ],
   '*': [ 'fancy', 'simple' ]
 }
 ```
