@@ -320,17 +320,22 @@ function sanitizeHtml(html, options, _recursing) {
 
               frame.innerText = '';
 
-              const parsed = new URL(value);
+              try {
+                const parsed = new URL(value);
 
-              if (options.allowedScriptHostnames || options.allowedScriptDomains) {
-                const allowedHostname = (options.allowedScriptHostnames || []).find(function (hostname) {
-                  return hostname === parsed.hostname;
-                });
-                const allowedDomain = (options.allowedScriptDomains || []).find(function(domain) {
-                  return parsed.hostname === domain || parsed.hostname.endsWith(`.${domain}`);
-                });
-                allowed = allowedHostname || allowedDomain;
+                if (options.allowedScriptHostnames || options.allowedScriptDomains) {
+                  const allowedHostname = (options.allowedScriptHostnames || []).find(function (hostname) {
+                    return hostname === parsed.hostname;
+                  });
+                  const allowedDomain = (options.allowedScriptDomains || []).find(function(domain) {
+                    return parsed.hostname === domain || parsed.hostname.endsWith(`.${domain}`);
+                  });
+                  allowed = allowedHostname || allowedDomain;
+                }
+              } catch (e) {
+                allowed = false;
               }
+
               if (!allowed) {
                 delete frame.attribs[a];
                 return;

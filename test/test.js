@@ -903,6 +903,16 @@ describe('sanitizeHtml', function() {
       allowedScriptHostnames: [ 'www.authorized.com' ]
     }), '<script></script>');
   });
+  it('should delete the script tag since src is not a valid URL', function() {
+    assert.equal(sanitizeHtml('<script src="not-a-valid-url"></script>', {
+      allowedTags: [ 'script' ],
+      allowVulnerableTags: true,
+      allowedAttributes: {
+        script: [ 'src' ]
+      },
+      allowedScriptHostnames: [ 'www.unauthorized.com' ]
+    }), '<script></script>');
+  });
   it('Should allow domains in a script that are whitelisted', function() {
     assert.equal(
       sanitizeHtml('<script src="https://www.safe.authorized.com/lib.js"></script>', {
