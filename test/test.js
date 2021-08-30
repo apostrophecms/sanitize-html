@@ -934,7 +934,7 @@ describe('sanitizeHtml', function() {
       allowedScriptHostnames: [ 'www.authorized.com' ]
     }), '<script src="https://www.authorized.com/lib.js"></script>');
   });
-  it('should leave the content of script elements', function() {
+  it('Should allow hostnames in a script that are whitelisted', function() {
     assert.equal(sanitizeHtml('<script src="https://www.authorized.com/lib.js"></script>', {
       allowedTags: [ 'script' ],
       allowVulnerableTags: true,
