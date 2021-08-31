@@ -315,6 +315,33 @@ function sanitizeHtml(html, options, _recursing) {
                 return;
               }
             }
+            if (name === 'script' && a === 'src') {
+              let allowed = true;
+
+              frame.innerText = '';
+
+              try {
+                const parsed = new URL(value);
+
+                if (options.allowedScriptHostnames || options.allowedScriptDomains) {
+                  const allowedHostname = (options.allowedScriptHostnames || []).find(function (hostname) {
+                    return hostname === parsed.hostname;
+                  });
+                  const allowedDomain = (options.allowedScriptDomains || []).find(function(domain) {
+                    return parsed.hostname === domain || parsed.hostname.endsWith(`.${domain}`);
+                  });
+                  allowed = allowedHostname || allowedDomain;
+                }
+              } catch (e) {
+                allowed = false;
+              }
+
+              if (!allowed) {
+                delete frame.attribs[a];
+                return;
+              }
+            }
+
             if (name === 'iframe' && a === 'src') {
               let allowed = true;
               try {

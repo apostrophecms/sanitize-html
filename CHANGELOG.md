@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased:
+
+- New `allowedScriptHostnames` option, it enables you to specify which hostnames are allowed in a script tag.
+- New `allowedScriptDomains` option, it enables you to specify which domains are allowed in a script tag. Thank you to [Yorick Girard](https://github.com/yorickgirard) for this and the `allowedScriptHostnames` contribution.
+
 ## 2.4.0 (2021-05-19):
 - Added support for class names with wildcards in `allowedClasses`. Thanks to [zhangbenber](https://github.com/zhangbenber) for the contribution.
 

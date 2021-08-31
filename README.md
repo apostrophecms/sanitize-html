@@ -516,6 +516,32 @@ const clean = sanitizeHtml('<p><iframe src="https://us02web.zoom.us/embed/12345"
 });
 ```
 
+### Script Filters
+
+Similarly to iframes you can allow a script tag on a list of whitelisted domains
+
+```js
+const clean = sanitizeHtml('<script src="https://www.safe.authorized.com/lib.js"></script>', {
+    allowedTags: ['script'],
+    allowedAttributes: {
+        script: ['src']
+    },
+    allowedScriptDomains: ['authorized.com'],
+})
+```
+
+You can allow a script tag on a list of whitelisted hostnames too
+
+```js
+const clean = sanitizeHtml('<script src="https://www.authorized.com/lib.js"></script>', {
+    allowedTags: ['script'],
+    allowedAttributes: {
+        script: ['src']
+    },
+    allowedScriptHostnames: [ 'www.authorized.com' ],
+})
+```
+
 ### Allowed URL schemes
 
 By default, we allow the following URL schemes in cases where `href`, `src`, etc. are allowed:
