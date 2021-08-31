@@ -29,7 +29,7 @@ sanitize-html is intended for use with Node.js and supports Node 10+. All of its
 ### Regarding TypeScript
 
 sanitize-html is not written in TypeScript and there is no plan to directly support it. There is a community supported typing definition, [`@types/sanitize-html`](https://www.npmjs.com/package/@types/sanitize-html), however.
-```bash 
+```bash
 npm install -D @types/sanitize-html
 ```
 If `esModuleInterop=true` is not set in your `tsconfig.json` file, you have to import it with:
@@ -51,7 +51,7 @@ But, perhaps you'd like to display sanitized HTML immediately in the browser for
 * Install the package:
 
 ```bash
-npm install sanitize-html 
+npm install sanitize-html
 ```
 or
 ```
@@ -247,7 +247,7 @@ allowedClasses: {
 
 ### Allowed CSS Styles
 
-If you wish to allow specific CSS _styles_ on a particular element, you can do that with the `allowedStyles` option. Simply declare your desired attributes as regular expression options within an array for the given attribute. Specific elements will inherit whitelisted attributes from the global (`*`) attribute. Any other CSS classes are discarded.
+If you wish to allow specific CSS _styles_ on a particular element, you can do that with the `allowedStyles` option. Simply declare your desired attributes as regular expression options within an array for the given attribute. Specific elements will inherit allowlisted attributes from the global (`*`) attribute. Any other CSS classes are discarded.
 
 **You must also use `allowedAttributes`** to activate the `style` attribute for the relevant elements. Otherwise this feature will never come into play.
 
@@ -518,7 +518,7 @@ const clean = sanitizeHtml('<p><iframe src="https://us02web.zoom.us/embed/12345"
 
 ### Script Filters
 
-Similarly to iframes you can allow a script tag on a list of whitelisted domains
+Similarly to iframes you can allow a script tag on a list of allowlisted domains
 
 ```js
 const clean = sanitizeHtml('<script src="https://www.safe.authorized.com/lib.js"></script>', {
@@ -530,7 +530,7 @@ const clean = sanitizeHtml('<script src="https://www.safe.authorized.com/lib.js"
 })
 ```
 
-You can allow a script tag on a list of whitelisted hostnames too
+You can allow a script tag on a list of allowlisted hostnames too
 
 ```js
 const clean = sanitizeHtml('<script src="https://www.authorized.com/lib.js"></script>', {

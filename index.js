@@ -638,7 +638,7 @@ function sanitizeHtml(html, options, _recursing) {
   }
 
   /**
-   * Filters user input css properties by whitelisted regex attributes.
+   * Filters user input css properties by allowlisted regex attributes.
    *
    * @param {object} abstractSyntaxTree  - Object representation of CSS attributes.
    * @property {array[Declaration]} abstractSyntaxTree.nodes[0] - Each object cointains prop and value key, i.e { prop: 'color', value: 'red' }.
@@ -691,10 +691,10 @@ function sanitizeHtml(html, options, _recursing) {
 
   /**
     * Filters the existing attributes for the given property. Discards any attributes
-    * which don't match the whitelist.
+    * which don't match the allowlist.
     *
     * @param  {object} selectedRule             - Example: { color: red, font-family: helvetica }
-    * @param  {array} allowedDeclarationsList   - List of declarations which pass whitelisting.
+    * @param  {array} allowedDeclarationsList   - List of declarations which pass the allowlist.
     * @param  {object} attributeObject          - Object representing the current css property.
     * @property {string} attributeObject.type   - Typically 'declaration'.
     * @property {string} attributeObject.prop   - The CSS property, i.e 'color'.
@@ -703,7 +703,7 @@ function sanitizeHtml(html, options, _recursing) {
     */
   function filterDeclarations(selectedRule) {
     return function (allowedDeclarationsList, attributeObject) {
-      // If this property is whitelisted...
+      // If this property is allowlisted...
       if (has(selectedRule, attributeObject.prop)) {
         const matchesRegex = selectedRule[attributeObject.prop].some(function(regularExpression) {
           return regularExpression.test(attributeObject.value);
