@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased:
+## 2.5.0 (2021-09-08):
 
 - New `allowedScriptHostnames` option, it enables you to specify which hostnames are allowed in a script tag.
 - New `allowedScriptDomains` option, it enables you to specify which domains are allowed in a script tag. Thank you to [Yorick Girard](https://github.com/yorickgirard) for this and the `allowedScriptHostnames` contribution.
