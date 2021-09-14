@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.5.1 (2021-09-14):
+- The `allowedScriptHostnames` and `allowedScriptDomains` options now implicitly purge the inline content of all script tags, not just those with `src` attributes. This behavior was already strongly implied by the fact that they purged it in the case where a `src` attribute was actually present, and is necessary for the feature to provide any real security. Thanks to Grigorii Duca for pointing out the issue.
+
 ## 2.5.0 (2021-09-08):
 
 - New `allowedScriptHostnames` option, it enables you to specify which hostnames are allowed in a script tag.
