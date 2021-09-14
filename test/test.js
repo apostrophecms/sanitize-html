@@ -934,6 +934,26 @@ describe('sanitizeHtml', function() {
       allowedScriptHostnames: [ 'www.authorized.com' ]
     }), '<script src="https://www.authorized.com/lib.js"></script>');
   });
+  it('should delete the script tag content from script tags with no src when allowedScriptHostnames is present', function() {
+    assert.equal(sanitizeHtml('<script>alert("evil")</script>', {
+      allowedTags: [ 'script' ],
+      allowVulnerableTags: true,
+      allowedAttributes: {
+        script: [ 'src' ]
+      },
+      allowedScriptHostnames: [ 'www.authorized.com' ]
+    }), '<script></script>');
+  });
+  it('should delete the script tag content from script tags with no src when allowedScriptDomains is present', function() {
+    assert.equal(sanitizeHtml('<script>alert("evil")</script>', {
+      allowedTags: [ 'script' ],
+      allowVulnerableTags: true,
+      allowedAttributes: {
+        script: [ 'src' ]
+      },
+      allowedScriptDomains: [ 'www.authorized.com' ]
+    }), '<script></script>');
+  });
   it('Should allow hostnames in a script that are in allowedScriptHostnames', function() {
     assert.equal(sanitizeHtml('<script src="https://www.authorized.com/lib.js"></script>', {
       allowedTags: [ 'script' ],

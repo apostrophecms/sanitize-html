@@ -265,6 +265,13 @@ function sanitizeHtml(html, options, _recursing) {
         result = '';
       }
       result += '<' + name;
+
+      if (name === 'script') {
+        if (options.allowedScriptHostnames || options.allowedScriptDomains) {
+          frame.innerText = '';
+        }
+      }
+
       if (!allowedAttributesMap || has(allowedAttributesMap, name) || allowedAttributesMap['*']) {
         each(attribs, function(value, a) {
           if (!VALID_HTML_ATTRIBUTE_NAME.test(a)) {
@@ -315,10 +322,10 @@ function sanitizeHtml(html, options, _recursing) {
                 return;
               }
             }
-            if (name === 'script' && a === 'src') {
-              let allowed = true;
 
-              frame.innerText = '';
+            if (name === 'script' && a === 'src') {
+
+              let allowed = true;
 
               try {
                 const parsed = new URL(value);
