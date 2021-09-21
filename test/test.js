@@ -43,6 +43,18 @@ describe('sanitizeHtml', function() {
   it('should respect text nodes at top level', function() {
     assert.equal(sanitizeHtml('Blah blah blah<p>Whee!</p>'), 'Blah blah blah<p>Whee!</p>');
   });
+  it('should return an empty string when input is explicit "undefined"', function() {
+    assert.equal(sanitizeHtml(undefined), '');
+  });
+  it('should return an empty string when input is explicit "null"', function() {
+    assert.equal(sanitizeHtml(null), '');
+  });
+  it('should return an empty string when input is not provided', function() {
+    assert.equal(sanitizeHtml(), '');
+  });
+  it('should return an empty string when input is an empty string', function() {
+    assert.equal(sanitizeHtml(''), '');
+  });
   it('should reject markup not allowlisted without destroying its text', function() {
     assert.equal(sanitizeHtml('<div><wiggly>Hello</wiggly></div>'), '<div>Hello</div>');
   });
