@@ -81,7 +81,7 @@ const VALID_HTML_ATTRIBUTE_NAME = /^[^\0\t\n\f\r /<=>]+$/;
 // https://github.com/fb55/htmlparser2/issues/105
 
 function sanitizeHtml(html, options, _recursing) {
-  if (!html) {
+  if (html == null) {
     return '';
   }
 
