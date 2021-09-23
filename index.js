@@ -81,6 +81,10 @@ const VALID_HTML_ATTRIBUTE_NAME = /^[^\0\t\n\f\r /<=>]+$/;
 // https://github.com/fb55/htmlparser2/issues/105
 
 function sanitizeHtml(html, options, _recursing) {
+  if (html == null) {
+    return '';
+  }
+
   let result = '';
   // Used for hot swapping the result variable with an empty string in order to "capture" the text written to it.
   let tempResult = '';
