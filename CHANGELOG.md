@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.5.2:
+## UNRELEASED
 - Nullish HTML input now returns an empty string. Nullish value may be explicit `null`, `undefined` or implicit `undefined` when value is not provided. Thanks to Artem Kostiuk for the contribution.
 
 ## 2.5.1 (2021-09-14):
