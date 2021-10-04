@@ -21,6 +21,7 @@ The syntax of poorly closed `p` and `img` elements is cleaned up.
 Allowing particular urls as a `src` to an iframe tag by filtering hostnames is also supported.
 
 HTML comments are not preserved.
+Additionally, sanitize-html escapes _ALL_ text content - this means that ampersands, quotes, etc are converted to their equivalent HTML character references (`&` --> `&amp;`).
 
 ## Requirements
 
