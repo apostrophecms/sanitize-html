@@ -2,6 +2,7 @@
 
 ## UNRELEASED
 - Nullish HTML input now returns an empty string. Nullish value may be explicit `null`, `undefined` or implicit `undefined` when value is not provided. Thanks to Artem Kostiuk for the contribution.
+- Documented that all text content is escaped. Thanks to Siddharth Singh.
 
 ## 2.5.1 (2021-09-14):
 - The `allowedScriptHostnames` and `allowedScriptDomains` options now implicitly purge the inline content of all script tags, not just those with `src` attributes. This behavior was already strongly implied by the fact that they purged it in the case where a `src` attribute was actually present, and is necessary for the feature to provide any real security. Thanks to Grigorii Duca for pointing out the issue.
