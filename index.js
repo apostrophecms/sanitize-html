@@ -375,12 +375,12 @@ function sanitizeHtml(html, options, _recursing) {
                 //
                 // Build a placeholder "base URL" against which any reasonable
                 // relative URL may be parsed successfully
-                let base = 'relative://relative-site';
+                let base = 'https://relative-site';
                 for (let i = 0; (i < 100); i++) {
                   base += `/${i}`;
                 }
                 const parsed = new URL(value, base);
-                const isRelativeUrl = parsed && parsed.hostname === 'relative-site' && parsed.protocol === 'relative:';
+                const isRelativeUrl = parsed && parsed.hostname === 'relative-site';
                 if (isRelativeUrl) {
                   // default value of allowIframeRelativeUrls is true
                   // unless allowedIframeHostnames or allowedIframeDomains specified
