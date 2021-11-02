@@ -1,6 +1,5 @@
 const htmlparser = require('htmlparser2');
 const escapeStringRegexp = require('escape-string-regexp');
-const { klona } = require('klona');
 const { isPlainObject } = require('is-plain-object');
 const deepmerge = require('deepmerge');
 const parseSrcset = require('parse-srcset');
@@ -650,18 +649,18 @@ function sanitizeHtml(html, options, _recursing) {
 
   /**
    * Filters user input css properties by allowlisted regex attributes.
+   * Modifies the abstractSyntaxTree object.
    *
    * @param {object} abstractSyntaxTree  - Object representation of CSS attributes.
    * @property {array[Declaration]} abstractSyntaxTree.nodes[0] - Each object cointains prop and value key, i.e { prop: 'color', value: 'red' }.
    * @param {object} allowedStyles       - Keys are properties (i.e color), value is list of permitted regex rules (i.e /green/i).
-   * @return {object}                    - Abstract Syntax Tree with filtered style attributes.
+   * @return {object}                    - The modified tree.
    */
   function filterCss(abstractSyntaxTree, allowedStyles) {
     if (!allowedStyles) {
       return abstractSyntaxTree;
     }
 
-    const filteredAST = klona(abstractSyntaxTree);
     const astRules = abstractSyntaxTree.nodes[0];
     let selectedRule;
 
@@ -676,10 +675,10 @@ function sanitizeHtml(html, options, _recursing) {
     }
 
     if (selectedRule) {
-      filteredAST.nodes[0].nodes = astRules.nodes.reduce(filterDeclarations(selectedRule), []);
+      abstractSyntaxTree.nodes[0].nodes = astRules.nodes.reduce(filterDeclarations(selectedRule), []);
     }
 
-    return filteredAST;
+    return abstractSyntaxTree;
   }
 
   /**
