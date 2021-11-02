@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.5.3 (2021-11-02):
+
+- Fixed bug introduced by klona 2.0.5, by removing klona entirely.
+
 ## 2.5.2 (2021-10-13):
 
 - Nullish HTML input now returns an empty string. Nullish value may be explicit `null`, `undefined` or implicit `undefined` when value is not provided. Thanks to Artem Kostiuk for the contribution.

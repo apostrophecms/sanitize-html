@@ -1,6 +1,6 @@
 {
   "name": "sanitize-html",
-  "version": "2.5.2",
+  "version": "2.5.3",
   "description": "Clean up user-submitted HTML, preserving allowlisted elements and allowlisted attributes on a per-element basis",
   "sideEffects": false,
   "main": "index.js",
@@ -27,15 +27,14 @@
     "escape-string-regexp": "^4.0.0",
     "htmlparser2": "^6.0.0",
     "is-plain-object": "^5.0.0",
-    "klona": "^2.0.3",
     "parse-srcset": "^1.0.2",
-    "postcss": "^8.0.2"
+    "postcss": "^8.3.11"
   },
   "devDependencies": {
     "eslint": "^7.3.1",
     "eslint-config-apostrophe": "^3.4.0",
     "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
