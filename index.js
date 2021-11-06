@@ -168,7 +168,13 @@ function sanitizeHtml(html, options, _recursing) {
     allowedClassesMap[tag] = [];
     const globRegex = [];
     classes.forEach(function(obj) {
-      if (typeof obj === 'string' && obj.indexOf('*') >= 0) {
+      if (
+        typeof obj === 'string' &&
+        obj.indexOf('^') === 0 &&
+        obj.indexOf('$') === obj.length - 1
+      ) {
+        globRegex.push(obj.slice(1, -1));
+      } else if (typeof obj === 'string' && obj.indexOf('*') >= 0) {
         globRegex.push(escapeStringRegexp(obj).replace(/\\\*/g, '.*'));
       } else {
         allowedClassesMap[tag].push(obj);

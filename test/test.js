@@ -425,6 +425,20 @@ describe('sanitizeHtml', function() {
       '<p class="nifty simple dippy">whee</p>'
     );
   });
+  it('should allow only classes that matches `allowedClasses` regex', function() {
+    assert.equal(
+      sanitizeHtml(
+        '<p class="nifty33 nifty2 dippy">whee</p>',
+        {
+          allowedTags: [ 'p' ],
+          allowedClasses: {
+            p: [ '^nifty\\d{2}$' ]
+          }
+        }
+      ),
+      '<p class="nifty33">whee</p>'
+    );
+  });
   it('should allow defining schemes on a per-tag basis', function() {
     assert.equal(
       sanitizeHtml(

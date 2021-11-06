@@ -246,6 +246,15 @@ allowedClasses: {
 }
 ```
 
+Furthermore, regex expressions are supported via strings that start with `^` and end with `$`:
+```js
+allowedClasses: {
+  p: [ '^regex\\d{2}$' ]
+}
+```
+
+The above example whitelist all classes that matches this regex: `RegExp('^regex\\d{2}$')`.
+
 ### Allowed CSS Styles
 
 If you wish to allow specific CSS _styles_ on a particular element, you can do that with the `allowedStyles` option. Simply declare your desired attributes as regular expression options within an array for the given attribute. Specific elements will inherit allowlisted attributes from the global (`*`) attribute. Any other CSS classes are discarded.
