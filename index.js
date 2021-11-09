@@ -170,10 +170,10 @@ function sanitizeHtml(html, options, _recursing) {
     allowedClassesRegexMap[tag] = [];
     const globRegex = [];
     classes.forEach(function(obj) {
-      if (obj instanceof RegExp) {
-        allowedClassesRegexMap[tag].push(obj);
-      } else if (typeof obj === 'string' && obj.indexOf('*') >= 0) {
+      if (typeof obj === 'string' && obj.indexOf('*') >= 0) {
         globRegex.push(escapeStringRegexp(obj).replace(/\\\*/g, '.*'));
+      } else if (obj instanceof RegExp) {
+        allowedClassesRegexMap[tag].push(obj);
       } else {
         allowedClassesMap[tag].push(obj);
       }
