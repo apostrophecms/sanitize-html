@@ -239,6 +239,7 @@ const clean = sanitizeHtml(dirty, {
 ```
 
 Similar to `allowedAttributes`, you can use `*` to allow classes with a certain prefix, or use `*` as a tag name to allow listed classes to be valid for any tag:
+
 ```js
 allowedClasses: {
   'code': [ 'language-*', 'lang-*' ],
@@ -246,14 +247,13 @@ allowedClasses: {
 }
 ```
 
-Furthermore, regex expressions are supported via strings that start with `^` and end with `$`:
+Furthermore, regular expressions are supported too and **they must begin with `^` and end with `$`** otherwise the regex has no effect:
+
 ```js
 allowedClasses: {
-  p: [ '^regex\\d{2}$' ]
+  p: [ /^regex\d{2}$/ ]
 }
 ```
-
-The above example whitelist all classes that matches this regex: `RegExp('^regex\\d{2}$')`.
 
 ### Allowed CSS Styles
 

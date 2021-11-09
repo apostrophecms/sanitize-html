@@ -156,6 +156,7 @@ function sanitizeHtml(html, options, _recursing) {
   }
   const allowedClassesMap = {};
   const allowedClassesGlobMap = {};
+  const allowedClassesRegexMap = {};
   each(options.allowedClasses, function(classes, tag) {
     // Implicitly allows the class attribute
     if (allowedAttributesMap) {
@@ -166,14 +167,11 @@ function sanitizeHtml(html, options, _recursing) {
     }
 
     allowedClassesMap[tag] = [];
+    allowedClassesRegexMap[tag] = [];
     const globRegex = [];
     classes.forEach(function(obj) {
-      if (
-        typeof obj === 'string' &&
-        obj.indexOf('^') === 0 &&
-        obj.indexOf('$') === obj.length - 1
-      ) {
-        globRegex.push(obj.slice(1, -1));
+      if (obj instanceof RegExp) {
+        allowedClassesRegexMap[tag].push(obj);
       } else if (typeof obj === 'string' && obj.indexOf('*') >= 0) {
         globRegex.push(escapeStringRegexp(obj).replace(/\\\*/g, '.*'));
       } else {
@@ -437,12 +435,16 @@ function sanitizeHtml(html, options, _recursing) {
               const allowedSpecificClasses = allowedClassesMap[name];
               const allowedWildcardClasses = allowedClassesMap['*'];
               const allowedSpecificClassesGlob = allowedClassesGlobMap[name];
+              const allowedSpecificClassesRegex = allowedClassesRegexMap[name];
               const allowedWildcardClassesGlob = allowedClassesGlobMap['*'];
-              const allowedClassesGlobs = [ allowedSpecificClassesGlob, allowedWildcardClassesGlob ].filter(
-                function(t) {
+              const allowedClassesGlobs = [
+                allowedSpecificClassesGlob,
+                allowedWildcardClassesGlob
+              ]
+                .concat(allowedSpecificClassesRegex)
+                .filter(function (t) {
                   return t;
-                }
-              );
+                });
               if (allowedSpecificClasses && allowedWildcardClasses) {
                 value = filterClasses(value, deepmerge(allowedSpecificClasses, allowedWildcardClasses), allowedClassesGlobs);
               } else {
