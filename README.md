@@ -247,13 +247,15 @@ allowedClasses: {
 }
 ```
 
-Furthermore, regular expressions are supported too and **they must begin with `^` and end with `$`** otherwise the regex has no effect:
+Furthermore, regular expressions are supported too:
 
 ```js
 allowedClasses: {
   p: [ /^regex\d{2}$/ ]
 }
 ```
+
+> Note: It is advised to construct your regular expressions by starting with `^` and ending with `$`, like in the example above. This way you allow **only** the classes you declare and not other potentially harmful matches.
 
 ### Allowed CSS Styles
 
