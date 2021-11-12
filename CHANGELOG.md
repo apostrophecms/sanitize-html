@@ -1,5 +1,9 @@
 # Changelog
 
+## UNRELEASED
+
+- Support for regular expressions in the `allowedClasses` option. Thanks to [Alex Rantos](https://github.com/alex-rantos).
+
 ## 2.5.3 (2021-11-02):
 
 - Fixed bug introduced by klona 2.0.5, by removing klona entirely.
