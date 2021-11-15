@@ -255,7 +255,7 @@ allowedClasses: {
 }
 ```
 
-> Note: It is advised to construct your regular expressions by starting with `^` and ending with `$`, like in the example above. This way you allow **only** the classes you declare and not other potentially harmful matches.
+> Note: It is advised that your regular expressions always begin with `^` so that you are requiring a known prefix. A regular expression with neither `^` nor `$` just requires that something appear in the middle.
 
 ### Allowed CSS Styles
 
