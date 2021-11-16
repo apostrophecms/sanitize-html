@@ -4,7 +4,6 @@ const { isPlainObject } = require('is-plain-object');
 const deepmerge = require('deepmerge');
 const parseSrcset = require('parse-srcset');
 const { parse: postcssParse } = require('postcss');
-
 // Tags that can conceivably represent stand-alone media.
 const mediaTags = [
   'img', 'audio', 'video', 'picture', 'svg',
@@ -364,11 +363,6 @@ function sanitizeHtml(html, options, _recursing) {
                 // start of a URL, so rewrite accordingly to prevent exploit.
                 // Also drop any whitespace at that point in the URL
                 value = value.replace(/^(\w+:)?\s*[\\/]\s*[\\/]/, '$1//');
-                // Some browsers cannot properly parse a URL if it doesn't begin
-                // with a special scheme (https://url.spec.whatwg.org/#special-scheme)
-                // which causes problems for scheme-relative URLS beginning with //,
-                // so prepend a special scheme to any scheme-relative URLS
-                value = value.replace(/^\/\//, 'https://');
                 if (value.startsWith('relative:')) {
                   // An attempt to exploit our workaround for base URLs being
                   // mandatory for relative URL validation in the WHATWG
