@@ -1,5 +1,9 @@
 # Changelog
 
+## UNRELEASED
+
+- Fixed trailing text bug on `transformTags` options that was reported on [issue #506](https://github.com/punkave/sanitize-html/issues/506). Thanks to [Alex Rantos](https://github.com/alex-rantos).
+
 ## 2.6.0 (2021-11-23)
 
 - Support for regular expressions in the `allowedClasses` option. Thanks to [Alex Rantos](https://github.com/alex-rantos).
