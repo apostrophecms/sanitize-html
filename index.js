@@ -582,6 +582,7 @@ function sanitizeHtml(html, options, _recursing) {
         result = tempResult + escapeHtml(result);
         tempResult = '';
       }
+      addedText = false;
     }
   }, options.parser);
   parser.write(html);

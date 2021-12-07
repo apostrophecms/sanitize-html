@@ -228,6 +228,19 @@ describe('sanitizeHtml', function() {
     }), '<a href="http://somelink">some good text</a>');
   });
 
+  it('should preserve trailing text when replacing the tagName and adding new text via transforming function', function () {
+    assert.equal(sanitizeHtml('<p>text before <br> text after</p>', {
+      transformTags: {
+        br: function (_tagName, _attribs) {
+          return {
+            tagName: 'span',
+            text: ' '
+          };
+        }
+      }
+    }), '<p>text before <span> </span> text after</p>');
+  });
+
   it('should add new text when not initially set and replace attributes when they are changed by transforming function', function () {
     assert.equal(sanitizeHtml('<a href="http://somelink"></a>', {
       transformTags: {
