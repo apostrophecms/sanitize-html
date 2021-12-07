@@ -912,6 +912,21 @@ describe('sanitizeHtml', function() {
       }), '<span style="color:blue"></span>'
     );
   });
+  it('Should support !important styles', function() {
+    assert.equal(
+      sanitizeHtml('<span style=\'color: blue !important\'></span>', {
+        allowedTags: false,
+        allowedAttributes: {
+          span: [ 'style' ]
+        },
+        allowedStyles: {
+          span: {
+            color: [ /blue/ ]
+          }
+        }
+      }), '<span style="color:blue !important"></span>'
+    );
+  });
   it('Should allow a specific style from global', function() {
     assert.equal(
       sanitizeHtml('<span style=\'color: yellow; text-align: center; font-family: helvetica\'></span>', {

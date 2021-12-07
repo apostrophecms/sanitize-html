@@ -691,17 +691,17 @@ function sanitizeHtml(html, options, _recursing) {
   }
 
   /**
-   * Extracts the style attribues from an AbstractSyntaxTree and formats those
+   * Extracts the style attributes from an AbstractSyntaxTree and formats those
    * values in the inline style attribute format.
    *
    * @param  {AbstractSyntaxTree} filteredAST
-   * @return {string}             - Example: "color:yellow;text-align:center;font-family:helvetica;"
+   * @return {string}             - Example: "color:yellow;text-align:center !important;font-family:helvetica;"
    */
   function stringifyStyleAttributes(filteredAST) {
     return filteredAST.nodes[0].nodes
-      .reduce(function(extractedAttributes, attributeObject) {
+      .reduce(function(extractedAttributes, attrObject) {
         extractedAttributes.push(
-          attributeObject.prop + ':' + attributeObject.value
+          `${attrObject.prop}:${attrObject.value}${attrObject.important ? ' !important' : ''}`
         );
         return extractedAttributes;
       }, [])
