@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Fixes style filtering to retain `!important` when used.
+
 ## 2.6.0 (2021-11-23)
 
 - Support for regular expressions in the `allowedClasses` option. Thanks to [Alex Rantos](https://github.com/alex-rantos).
