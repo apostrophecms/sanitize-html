@@ -722,9 +722,11 @@ function sanitizeHtml(html, options, _recursing) {
     */
   function filterDeclarations(selectedRule) {
     return function (allowedDeclarationsList, attributeObject) {
+      // We don't care about the case of the property (i.e. margin-left vs Margin-left)
+      const attributeProp = attributeObject.prop.toLowerCase();
       // If this property is allowlisted...
-      if (has(selectedRule, attributeObject.prop)) {
-        const matchesRegex = selectedRule[attributeObject.prop].some(function(regularExpression) {
+      if (has(selectedRule, attributeProp)) {
+        const matchesRegex = selectedRule[attributeProp].some(function(regularExpression) {
           return regularExpression.test(attributeObject.value);
         });
 
