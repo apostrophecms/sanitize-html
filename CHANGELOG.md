@@ -1,5 +1,7 @@
 # Changelog
 
+- Added support for not checking the case of CSS properties.
+
 ## 2.6.1 (2021-12-08)
 
 - Fixes style filtering to retain `!important` when used.
