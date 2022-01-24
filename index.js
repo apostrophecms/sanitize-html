@@ -780,10 +780,10 @@ sanitizeHtml.defaults = {
   disallowedTagsMode: 'discard',
   allowedAttributes: {
     a: [ 'href', 'name', 'target' ],
-    // We don't currently allow img itself by default, but this
+    // We don't currently allow img itself by default, but these
     // would make sense if we did. You could add srcset here,
     // and if you do the URL is checked for safety
-    img: [ 'src' ]
+    img: [ 'src', 'alt', 'title', 'width', 'height', 'loading' ]
   },
   // Lots of these won't come up by default because we don't allow them
   selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
