@@ -1,8 +1,8 @@
 # Changelog
 
-## 2.7.0 (2022-01-25)
+## UNRELEASED
 
-- Allows a more sensible set of default attributes on `<img />` tags.
+- Allows a more sensible set of default attributes on `<img />` tags. Thanks to [Zade Viggers](https://github.com/zadeviggers).
 
 ## 2.6.1 (2021-12-08)
 
