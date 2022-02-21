@@ -2,6 +2,10 @@
 
 - Added support for not checking the case of CSS properties.
 
+## 2.7.0 (2022-02-04)
+
+- Allows a more sensible set of default attributes on `<img />` tags. Thanks to [Zade Viggers](https://github.com/zadeviggers).
+
 ## 2.6.1 (2021-12-08)
 
 - Fixes style filtering to retain `!important` when used.
