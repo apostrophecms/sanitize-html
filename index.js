@@ -287,7 +287,6 @@ function sanitizeHtml(html, options, _recursing) {
             delete frame.attribs[a];
             return;
           }
-          let parsed;
           // check allowedAttributesMap for the element and attribute and modify the value
           // as necessary if there are specific values defined.
           let passedAllowedAttributesMapCheck = false;
@@ -335,14 +334,14 @@ function sanitizeHtml(html, options, _recursing) {
               let allowed = true;
 
               try {
-                const parsed = new URL(value);
+                const parsed = parseUrl(value);
 
                 if (options.allowedScriptHostnames || options.allowedScriptDomains) {
                   const allowedHostname = (options.allowedScriptHostnames || []).find(function (hostname) {
-                    return hostname === parsed.hostname;
+                    return hostname === parsed.url.hostname;
                   });
                   const allowedDomain = (options.allowedScriptDomains || []).find(function(domain) {
-                    return parsed.hostname === domain || parsed.hostname.endsWith(`.${domain}`);
+                    return parsed.url.hostname === domain || parsed.url.hostname.endsWith(`.${domain}`);
                   });
                   allowed = allowedHostname || allowedDomain;
                 }
@@ -359,29 +358,9 @@ function sanitizeHtml(html, options, _recursing) {
             if (name === 'iframe' && a === 'src') {
               let allowed = true;
               try {
-                // Chrome accepts \ as a substitute for / in the // at the
-                // start of a URL, so rewrite accordingly to prevent exploit.
-                // Also drop any whitespace at that point in the URL
-                value = value.replace(/^(\w+:)?\s*[\\/]\s*[\\/]/, '$1//');
-                if (value.startsWith('relative:')) {
-                  // An attempt to exploit our workaround for base URLs being
-                  // mandatory for relative URL validation in the WHATWG
-                  // URL parser, reject it
-                  throw new Error('relative: exploit attempt');
-                }
-                // naughtyHref is in charge of whether protocol relative URLs
-                // are cool. Here we are concerned just with allowed hostnames and
-                // whether to allow relative URLs.
-                //
-                // Build a placeholder "base URL" against which any reasonable
-                // relative URL may be parsed successfully
-                let base = 'relative://relative-site';
-                for (let i = 0; (i < 100); i++) {
-                  base += `/${i}`;
-                }
-                const parsed = new URL(value, base);
-                const isRelativeUrl = parsed && parsed.hostname === 'relative-site' && parsed.protocol === 'relative:';
-                if (isRelativeUrl) {
+                const parsed = parseUrl(value);
+
+                if (parsed.isRelativeUrl) {
                   // default value of allowIframeRelativeUrls is true
                   // unless allowedIframeHostnames or allowedIframeDomains specified
                   allowed = has(options, 'allowIframeRelativeUrls')
@@ -389,10 +368,10 @@ function sanitizeHtml(html, options, _recursing) {
                     : (!options.allowedIframeHostnames && !options.allowedIframeDomains);
                 } else if (options.allowedIframeHostnames || options.allowedIframeDomains) {
                   const allowedHostname = (options.allowedIframeHostnames || []).find(function (hostname) {
-                    return hostname === parsed.hostname;
+                    return hostname === parsed.url.hostname;
                   });
                   const allowedDomain = (options.allowedIframeDomains || []).find(function(domain) {
-                    return parsed.hostname === domain || parsed.hostname.endsWith(`.${domain}`);
+                    return parsed.url.hostname === domain || parsed.url.hostname.endsWith(`.${domain}`);
                   });
                   allowed = allowedHostname || allowedDomain;
                 }
@@ -407,7 +386,7 @@ function sanitizeHtml(html, options, _recursing) {
             }
             if (a === 'srcset') {
               try {
-                parsed = parseSrcset(value);
+                let parsed = parseSrcset(value);
                 parsed.forEach(function(value) {
                   if (naughtyHref('srcset', value.url)) {
                     value.evil = true;
@@ -656,6 +635,33 @@ function sanitizeHtml(html, options, _recursing) {
     return !options.allowedSchemes || options.allowedSchemes.indexOf(scheme) === -1;
   }
 
+  function parseUrl(value) {
+    value = value.replace(/^(\w+:)?\s*[\\/]\s*[\\/]/, '$1//');
+    if (value.startsWith('relative:')) {
+      // An attempt to exploit our workaround for base URLs being
+      // mandatory for relative URL validation in the WHATWG
+      // URL parser, reject it
+      throw new Error('relative: exploit attempt');
+    }
+    // naughtyHref is in charge of whether protocol relative URLs
+    // are cool. Here we are concerned just with allowed hostnames and
+    // whether to allow relative URLs.
+    //
+    // Build a placeholder "base URL" against which any reasonable
+    // relative URL may be parsed successfully
+    let base = 'relative://relative-site';
+    for (let i = 0; (i < 100); i++) {
+      base += `/${i}`;
+    }
+
+    const parsed = new URL(value, base);
+
+    const isRelativeUrl = parsed && parsed.hostname === 'relative-site' && parsed.protocol === 'relative:';
+    return {
+      isRelativeUrl,
+      url: parsed
+    };
+  }
   /**
    * Filters user input css properties by allowlisted regex attributes.
    * Modifies the abstractSyntaxTree object.

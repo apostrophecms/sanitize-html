@@ -1,5 +1,7 @@
 # Changelog
 
+- Protocol-relative URLs are properly supported for script tags
+
 ## 2.7.0 (2022-02-04)
 
 - Allows a more sensible set of default attributes on `<img />` tags. Thanks to [Zade Viggers](https://github.com/zadeviggers).

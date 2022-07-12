@@ -1476,5 +1476,15 @@ describe('sanitizeHtml', function() {
       }), '<iframe></iframe>'
     );
   });
+  it('Should allow protocol-relative URLs for script tag', function() {
+    assert.equal(
+      sanitizeHtml('<script src="//example.com/script.js"></script>', {
+        allowedTags: [ 'script' ],
+        allowedAttributes: {
+          script: [ 'src' ]
 
+        }
+      }), '<script src="//example.com/script.js"></script>'
+    );
+  });
 });
