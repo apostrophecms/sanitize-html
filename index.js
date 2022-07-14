@@ -612,7 +612,17 @@ function sanitizeHtml(html, options, _recursing) {
     // Clobber any comments in URLs, which the browser might
     // interpret inside an XML data island, allowing
     // a javascript: URL to be snuck through
-    href = href.replace(/<!--.*?-->/g, '');
+    while (true) {
+      const firstIndex = href.indexOf('<!--');
+      if (firstIndex === -1) {
+        break;
+      }
+      const lastIndex = href.indexOf('-->', firstIndex + 4);
+      if (lastIndex === -1) {
+        break;
+      }
+      href = href.substring(0, firstIndex) + href.substring(lastIndex + 3);
+    }
     // Case insensitive so we don't get faked out by JAVASCRIPT #1
     // Allow more characters after the first so we don't get faked
     // out by certain schemes browsers accept
