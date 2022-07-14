@@ -1,6 +1,8 @@
 # Changelog
 
-- Protocol-relative URLs are properly supported for script tags
+## UNRELEASED
+
+- Protocol-relative URLs are properly supported for script tags. Thanks to [paweljq](https://github.com/paweljq).
 
 ## 2.7.0 (2022-02-04)
 
