@@ -177,9 +177,9 @@ allowedAttributes: {}
 
 #### "What if I want disallowed tags to be escaped rather than discarded?"
 
-If you set `disallowedTagsMode` to `discard` (the default), disallowed tags are discarded. Any text content or subtags is still included, depending on whether the individual subtags are allowed.
+If you set `disallowedTagsMode` to `discard` (the default), disallowed tags are discarded. Any text content or subtags are still included, depending on whether the individual subtags are allowed.
 
-If you set `disallowedTagsMode` to `escape`, the disallowed tags are escaped rather than discarded. Any text or subtags is handled normally.
+If you set `disallowedTagsMode` to `escape`, the disallowed tags are escaped rather than discarded. Any text or subtags are handled normally.
 
 If you set `disallowedTagsMode` to `recursiveEscape`, the disallowed tags are escaped rather than discarded, and the same treatment is applied to all subtags, whether otherwise allowed or not.
 
@@ -289,7 +289,7 @@ const clean = sanitizeHtml(dirty, {
 
 ### Discarding text outside of ```<html></html>``` tags
 
-Some text editing applications generate HTML to allow copying over to a web application. These can sometimes include undesireable control characters after terminating `html` tag. By default sanitize-html will not discard these characters, instead returning them in sanitized string. This behaviour can be modified using `enforceHtmlBoundary` option.
+Some text editing applications generate HTML to allow copying over to a web application. These can sometimes include undesirable control characters after terminating `html` tag. By default sanitize-html will not discard these characters, instead returning them in sanitized string. This behaviour can be modified using `enforceHtmlBoundary` option.
 
 Setting this option to true will instruct sanitize-html to discard all characters outside of `html` tag boundaries -- before `<html>` and after `</html>` tags.
 
