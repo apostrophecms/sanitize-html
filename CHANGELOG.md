@@ -1,6 +1,9 @@
 # Changelog
 
-- Protocol-relative URLs are properly supported for script tags
+## 2.7.1 (2022-07-20)
+
+- Protocol-relative URLs are properly supported for script tags. Thanks to [paweljq](https://github.com/paweljq).
+- A denial-of-service vulnerability has been fixed by replacing global regular expression replacement logic for comment removal with a new implementation. Thanks to Nariyoshi Chida of NTT Security Japan for pointing out the issue.
 
 ## 2.7.0 (2022-02-04)
 
