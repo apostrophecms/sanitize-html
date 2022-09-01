@@ -1,5 +1,8 @@
 # Changelog
 
+## Issue #549 fix
+- Fixed allowance of disallowed tags with wrong markup of having closing tag without opening tag as reported on [issue #549](https://github.com/apostrophecms/sanitize-html/issues/549).
+
 ## 2.7.1 (2022-07-20)
 
 - Protocol-relative URLs are properly supported for script tags. Thanks to [paweljq](https://github.com/paweljq).
