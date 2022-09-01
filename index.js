@@ -210,10 +210,10 @@ function sanitizeHtml(html, options, _recursing) {
   initializeState();
 
   const parser = new htmlparser.Parser({
-    onopentag: function(name, attribs) {
+    onopentag: function(tagname, attributes) {
       // If `enforceHtmlBoundary` is `true` and this has found the opening
       // `html` tag, reset the state.
-      if (options.enforceHtmlBoundary && name === 'html') {
+      if (options.enforceHtmlBoundary && tagname === 'html') {
         initializeState();
       }
 
@@ -221,41 +221,41 @@ function sanitizeHtml(html, options, _recursing) {
         skipTextDepth++;
         return;
       }
-      const frame = new Frame(name, attribs);
+      const frame = new Frame(tagname, attributes);
       stack.push(frame);
 
       let skip = false;
       const hasText = !!frame.text;
       let transformedTag;
-      if (has(transformTagsMap, name)) {
-        transformedTag = transformTagsMap[name](name, attribs);
+      if (has(transformTagsMap, tagname)) {
+        transformedTag = transformTagsMap[tagname](tagname, attributes);
 
-        frame.attribs = attribs = transformedTag.attribs;
+        frame.attribs = attributes = transformedTag.attribs;
 
         if (transformedTag.text !== undefined) {
           frame.innerText = transformedTag.text;
         }
 
-        if (name !== transformedTag.tagName) {
-          frame.name = name = transformedTag.tagName;
+        if (tagname !== transformedTag.tagName) {
+          frame.name = tagname = transformedTag.tagName;
           transformMap[depth] = transformedTag.tagName;
         }
       }
       if (transformTagsAll) {
-        transformedTag = transformTagsAll(name, attribs);
+        transformedTag = transformTagsAll(tagname, attributes);
 
-        frame.attribs = attribs = transformedTag.attribs;
-        if (name !== transformedTag.tagName) {
-          frame.name = name = transformedTag.tagName;
+        frame.attribs = attributes = transformedTag.attribs;
+        if (tagname !== transformedTag.tagName) {
+          frame.name = tagname = transformedTag.tagName;
           transformMap[depth] = transformedTag.tagName;
         }
       }
 
-      if ((options.allowedTags && options.allowedTags.indexOf(name) === -1) || (options.disallowedTagsMode === 'recursiveEscape' && !isEmptyObject(skipMap)) || (options.nestingLimit != null && depth >= options.nestingLimit)) {
+      if ((options.allowedTags && options.allowedTags.indexOf(tagname) === -1) || (options.disallowedTagsMode === 'recursiveEscape' && !isEmptyObject(skipMap)) || (options.nestingLimit != null && depth >= options.nestingLimit)) {
         skip = true;
         skipMap[depth] = true;
         if (options.disallowedTagsMode === 'discard') {
-          if (nonTextTagsArray.indexOf(name) !== -1) {
+          if (nonTextTagsArray.indexOf(tagname) !== -1) {
             skipText = true;
             skipTextDepth = 1;
           }
@@ -271,16 +271,16 @@ function sanitizeHtml(html, options, _recursing) {
         tempResult = result;
         result = '';
       }
-      result += '<' + name;
+      result += '<' + tagname;
 
-      if (name === 'script') {
+      if (tagname === 'script') {
         if (options.allowedScriptHostnames || options.allowedScriptDomains) {
           frame.innerText = '';
         }
       }
 
-      if (!allowedAttributesMap || has(allowedAttributesMap, name) || allowedAttributesMap['*']) {
-        each(attribs, function(value, a) {
+      if (!allowedAttributesMap || has(allowedAttributesMap, tagname) || allowedAttributesMap['*']) {
+        each(attributes, function(value, a) {
           if (!VALID_HTML_ATTRIBUTE_NAME.test(a)) {
             // This prevents part of an attribute name in the output from being
             // interpreted as the end of an attribute, or end of a tag.
@@ -291,13 +291,13 @@ function sanitizeHtml(html, options, _recursing) {
           // as necessary if there are specific values defined.
           let passedAllowedAttributesMapCheck = false;
           if (!allowedAttributesMap ||
-            (has(allowedAttributesMap, name) && allowedAttributesMap[name].indexOf(a) !== -1) ||
+            (has(allowedAttributesMap, tagname) && allowedAttributesMap[tagname].indexOf(a) !== -1) ||
             (allowedAttributesMap['*'] && allowedAttributesMap['*'].indexOf(a) !== -1) ||
-            (has(allowedAttributesGlobMap, name) && allowedAttributesGlobMap[name].test(a)) ||
+            (has(allowedAttributesGlobMap, tagname) && allowedAttributesGlobMap[tagname].test(a)) ||
             (allowedAttributesGlobMap['*'] && allowedAttributesGlobMap['*'].test(a))) {
             passedAllowedAttributesMapCheck = true;
-          } else if (allowedAttributesMap && allowedAttributesMap[name]) {
-            for (const o of allowedAttributesMap[name]) {
+          } else if (allowedAttributesMap && allowedAttributesMap[tagname]) {
+            for (const o of allowedAttributesMap[tagname]) {
               if (isPlainObject(o) && o.name && (o.name === a)) {
                 passedAllowedAttributesMapCheck = true;
                 let newValue = '';
@@ -323,13 +323,13 @@ function sanitizeHtml(html, options, _recursing) {
           }
           if (passedAllowedAttributesMapCheck) {
             if (options.allowedSchemesAppliedToAttributes.indexOf(a) !== -1) {
-              if (naughtyHref(name, value)) {
+              if (naughtyHref(tagname, value)) {
                 delete frame.attribs[a];
                 return;
               }
             }
 
-            if (name === 'script' && a === 'src') {
+            if (tagname === 'script' && a === 'src') {
 
               let allowed = true;
 
@@ -355,7 +355,7 @@ function sanitizeHtml(html, options, _recursing) {
               }
             }
 
-            if (name === 'iframe' && a === 'src') {
+            if (tagname === 'iframe' && a === 'src') {
               let allowed = true;
               try {
                 const parsed = parseUrl(value);
@@ -411,10 +411,10 @@ function sanitizeHtml(html, options, _recursing) {
               }
             }
             if (a === 'class') {
-              const allowedSpecificClasses = allowedClassesMap[name];
+              const allowedSpecificClasses = allowedClassesMap[tagname];
               const allowedWildcardClasses = allowedClassesMap['*'];
-              const allowedSpecificClassesGlob = allowedClassesGlobMap[name];
-              const allowedSpecificClassesRegex = allowedClassesRegexMap[name];
+              const allowedSpecificClassesGlob = allowedClassesGlobMap[tagname];
+              const allowedSpecificClassesRegex = allowedClassesRegexMap[tagname];
               const allowedWildcardClassesGlob = allowedClassesGlobMap['*'];
               const allowedClassesGlobs = [
                 allowedSpecificClassesGlob,
@@ -436,7 +436,7 @@ function sanitizeHtml(html, options, _recursing) {
             }
             if (a === 'style') {
               try {
-                const abstractSyntaxTree = postcssParse(name + ' {' + value + '}');
+                const abstractSyntaxTree = postcssParse(tagname + ' {' + value + '}');
                 const filteredAST = filterCss(abstractSyntaxTree, options.allowedStyles);
 
                 value = stringifyStyleAttributes(filteredAST);
@@ -459,7 +459,7 @@ function sanitizeHtml(html, options, _recursing) {
           }
         });
       }
-      if (options.selfClosing.indexOf(name) !== -1) {
+      if (options.selfClosing.indexOf(tagname) !== -1) {
         result += ' />';
       } else {
         result += '>';
@@ -505,8 +505,7 @@ function sanitizeHtml(html, options, _recursing) {
         frame.text += text;
       }
     },
-    onclosetag: function(name) {
-
+    onclosetag: function(tagname) {
       if (skipText) {
         skipTextDepth--;
         if (!skipTextDepth) {
@@ -521,7 +520,7 @@ function sanitizeHtml(html, options, _recursing) {
         // Do not crash on bad markup
         return;
       }
-      skipText = options.enforceHtmlBoundary ? name === 'html' : false;
+      skipText = options.enforceHtmlBoundary ? tagname === 'html' : false;
       depth--;
       const skip = skipMap[depth];
       if (skip) {
@@ -535,7 +534,7 @@ function sanitizeHtml(html, options, _recursing) {
       }
 
       if (transformMap[depth]) {
-        name = transformMap[depth];
+        tagname = transformMap[depth];
         delete transformMap[depth];
       }
 
@@ -547,7 +546,7 @@ function sanitizeHtml(html, options, _recursing) {
       frame.updateParentNodeMediaChildren();
       frame.updateParentNodeText();
 
-      if (options.selfClosing.indexOf(name) !== -1) {
+      if (options.selfClosing.indexOf(tagname) !== -1) {
         // Already output />
         if (skip) {
           result = tempResult;
@@ -556,7 +555,7 @@ function sanitizeHtml(html, options, _recursing) {
         return;
       }
 
-      result += '</' + name + '>';
+      result += '</' + tagname + '>';
       if (skip) {
         result = tempResult + escapeHtml(result);
         tempResult = '';
