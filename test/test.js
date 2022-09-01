@@ -116,6 +116,15 @@ describe('sanitizeHtml', function() {
   it('should preserve entities as such', function() {
     assert.equal(sanitizeHtml('<a name="&lt;silly&gt;">&lt;Kapow!&gt;</a>'), '<a name="&lt;silly&gt;">&lt;Kapow!&gt;</a>');
   });
+  it('should dump closing tags which do not have any opening tags.', function() {
+    assert.equal(sanitizeHtml('<b><div/', {
+      allowedTags: [ 'b' ]
+    }), '<b></b>');
+
+    assert.equal(sanitizeHtml('<b><b<<div/', {
+      allowedTags: [ 'b' ]
+    }), '<b></b>');
+  });
   it('should dump comments', function() {
     assert.equal(sanitizeHtml('<p><!-- Blah blah -->Whee</p>'), '<p>Whee</p>');
   });
