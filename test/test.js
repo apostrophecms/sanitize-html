@@ -125,6 +125,14 @@ describe('sanitizeHtml', function() {
       allowedTags: [ 'b' ]
     }), '<b></b>');
   });
+  it('should tolerate not closed p tags', function() {
+    assert.equal(sanitizeHtml('<div><p>inner text 1<p>inner text 2<p>inner text 3</div>'), '<div><p>inner text 1</p><p>inner text 2</p><p>inner text 3</p></div>');
+  });
+  it('should escape not closed p tags, if not in allowedTags array', function() {
+    assert.equal(sanitizeHtml('<div><p>inner text 1<p>inner text 2<p>inner text 3</div>', {
+      allowedTags: [ 'div' ]
+    }), '<div>inner text 1inner text 2inner text 3</div>');
+  });
   it('should dump comments', function() {
     assert.equal(sanitizeHtml('<p><!-- Blah blah -->Whee</p>'), '<p>Whee</p>');
   });
