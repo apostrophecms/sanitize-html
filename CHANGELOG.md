@@ -1,7 +1,9 @@
 # Changelog
 
-## Issue #549 fix
-- Fixed allowance of disallowed tags with wrong markup of having closing tag without opening tag as reported on [issue #549](https://github.com/apostrophecms/sanitize-html/issues/549).
+## UNRELEASED
+
+- Closing tags must agree with opening tags. This fixes [issue #549](https://github.com/apostrophecms/sanitize-html/issues/549), in which closing tags not associated with any permitted opening tag could be passed through. No known exploit exists, but it's better not to permit this. Thanks to 
+[Kedar Chandrayan](https://github.com/kedarchandrayan) for the report and the fix.
 
 ## 2.7.1 (2022-07-20)
 
