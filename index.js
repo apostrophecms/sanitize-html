@@ -521,6 +521,14 @@ function sanitizeHtml(html, options, _recursing) {
         // Do not crash on bad markup
         return;
       }
+
+      if (frame.tag !== name) {
+        // Another case of bad markup.
+        // Push to stack, so that it will be used in future closing tags.
+        stack.push(frame);
+        return;
+      }
+
       skipText = options.enforceHtmlBoundary ? name === 'html' : false;
       depth--;
       const skip = skipMap[depth];

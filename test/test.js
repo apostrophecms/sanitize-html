@@ -116,6 +116,23 @@ describe('sanitizeHtml', function() {
   it('should preserve entities as such', function() {
     assert.equal(sanitizeHtml('<a name="&lt;silly&gt;">&lt;Kapow!&gt;</a>'), '<a name="&lt;silly&gt;">&lt;Kapow!&gt;</a>');
   });
+  it('should dump closing tags which do not have any opening tags.', function() {
+    assert.equal(sanitizeHtml('<b><div/', {
+      allowedTags: [ 'b' ]
+    }), '<b></b>');
+
+    assert.equal(sanitizeHtml('<b><b<<div/', {
+      allowedTags: [ 'b' ]
+    }), '<b></b>');
+  });
+  it('should tolerate not closed p tags', function() {
+    assert.equal(sanitizeHtml('<div><p>inner text 1<p>inner text 2<p>inner text 3</div>'), '<div><p>inner text 1</p><p>inner text 2</p><p>inner text 3</p></div>');
+  });
+  it('should escape not closed p tags, if not in allowedTags array', function() {
+    assert.equal(sanitizeHtml('<div><p>inner text 1<p>inner text 2<p>inner text 3</div>', {
+      allowedTags: [ 'div' ]
+    }), '<div>inner text 1inner text 2inner text 3</div>');
+  });
   it('should dump comments', function() {
     assert.equal(sanitizeHtml('<p><!-- Blah blah -->Whee</p>'), '<p>Whee</p>');
   });
