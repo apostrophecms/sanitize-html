@@ -1,5 +1,9 @@
 # Changelog
 
+## Issue #565
+
+- Upgrades `htmlparser2` to new major version `^8.0.0`.
+
 ## 2.7.2 (2022-09-15)
 
 - Closing tags must agree with opening tags. This fixes [issue #549](https://github.com/apostrophecms/sanitize-html/issues/549), in which closing tags not associated with any permitted opening tag could be passed through. No known exploit exists, but it's better not to permit this. Thanks to 

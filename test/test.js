@@ -119,11 +119,11 @@ describe('sanitizeHtml', function() {
   it('should dump closing tags which do not have any opening tags.', function() {
     assert.equal(sanitizeHtml('<b><div/', {
       allowedTags: [ 'b' ]
-    }), '<b></b>');
+    }), '<b>/</b>');
 
     assert.equal(sanitizeHtml('<b><b<<div/', {
       allowedTags: [ 'b' ]
-    }), '<b></b>');
+    }), '<b>/</b>');
   });
   it('should tolerate not closed p tags', function() {
     assert.equal(sanitizeHtml('<div><p>inner text 1<p>inner text 2<p>inner text 3</div>'), '<div><p>inner text 1</p><p>inner text 2</p><p>inner text 3</p></div>');
@@ -152,11 +152,11 @@ describe('sanitizeHtml', function() {
     assert.equal(sanitizeHtml('<a href="java\0&#14;\t\r\n script:alert(\'foo\')">Hax</a>'), '<a>Hax</a>');
   });
   it('should dump character codes 1-32 even when escaped with padding rather than trailing ;', function() {
-    assert.equal(sanitizeHtml('<a href="java&#0000001script:alert(\'foo\')">Hax</a>'), '<a>Hax</a>');
+    assert.equal(sanitizeHtml('<a href="java&#0000001script:alert(\'foo\')">Hax</a>'), '<a href="java&amp;#0000001script:alert(\'foo\')">Hax</a>');
     // This one is weird, but the browser does not interpret it
     // as a scheme, so we're OK. That character is 65535, not null. I
     // think it's a limitation of the entities module
-    assert.equal(sanitizeHtml('<a href="java&#0000000script:alert(\'foo\')">Hax</a>'), '<a href="java�script:alert(\'foo\')">Hax</a>');
+    assert.equal(sanitizeHtml('<a href="java&#0000000script:alert(\'foo\')">Hax</a>'), '<a href="java&amp;#0000000script:alert(\'foo\')">Hax</a>');
   });
   it('should still like nice schemes', function() {
     assert.equal(sanitizeHtml('<a href="http://google.com/">Hi</a>'), '<a href="http://google.com/">Hi</a>');
