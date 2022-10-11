@@ -40,22 +40,22 @@ describe('sanitizeHtml', function() {
       allowedAttributes: false
     }), '<div><wiggly worms="ewww">hello</wiggly></div>');
   });
-  it('should not pass through any markup if allowedTags is set to undefined (falsey but not exactly false)', function() {
+  it('should not pass through any markup if allowedTags is set to undefined (falsy but not exactly false)', function() {
     assert.equal(sanitizeHtml('<div><wiggly worms="ewww">hello</wiggly></div>', {
       allowedTags: undefined
     }), 'hello');
   });
-  it('should not pass through any markup if allowedTags is set to 0 (falsey but not exactly false)', function() {
+  it('should not pass through any markup if allowedTags is set to 0 (falsy but not exactly false)', function() {
     assert.equal(sanitizeHtml('<div><wiggly worms="ewww">hello</wiggly></div>', {
       allowedTags: 0
     }), 'hello');
   });
-  it('should not pass through any markup if allowedTags is set to null (falsey but not exactly false)', function() {
+  it('should not pass through any markup if allowedTags is set to null (falsy but not exactly false)', function() {
     assert.equal(sanitizeHtml('<div><wiggly worms="ewww">hello</wiggly></div>', {
       allowedTags: null
     }), 'hello');
   });
-  it('should not pass through any markup if allowedTags is set to empty string (falsey but not exactly false)', function() {
+  it('should not pass through any markup if allowedTags is set to empty string (falsy but not exactly false)', function() {
     assert.equal(sanitizeHtml('<div><wiggly worms="ewww">hello</wiggly></div>', {
       allowedTags: ''
     }), 'hello');
