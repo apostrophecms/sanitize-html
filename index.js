@@ -117,7 +117,7 @@ function sanitizeHtml(html, options, _recursing) {
   // vulnerableTags
   vulnerableTags.forEach(function (tag) {
     if (
-      options.allowedTags && options.allowedTags.indexOf(tag) > -1 &&
+      options.allowedTags !== false && (options.allowedTags || []).indexOf(tag) > -1 &&
       !options.allowVulnerableTags
     ) {
       console.warn(`\n\n⚠️ Your \`allowedTags\` option includes, \`${tag}\`, which is inherently\nvulnerable to XSS attacks. Please remove it from \`allowedTags\`.\nOr, to disable this warning, add the \`allowVulnerableTags\` option\nand ensure you are accounting for this risk.\n\n`);
@@ -251,7 +251,7 @@ function sanitizeHtml(html, options, _recursing) {
         }
       }
 
-      if ((options.allowedTags && options.allowedTags.indexOf(name) === -1) || (options.disallowedTagsMode === 'recursiveEscape' && !isEmptyObject(skipMap)) || (options.nestingLimit != null && depth >= options.nestingLimit)) {
+      if ((options.allowedTags !== false && (options.allowedTags || []).indexOf(name) === -1) || (options.disallowedTagsMode === 'recursiveEscape' && !isEmptyObject(skipMap)) || (options.nestingLimit != null && depth >= options.nestingLimit)) {
         skip = true;
         skipMap[depth] = true;
         if (options.disallowedTagsMode === 'discard') {

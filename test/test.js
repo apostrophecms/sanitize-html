@@ -40,6 +40,26 @@ describe('sanitizeHtml', function() {
       allowedAttributes: false
     }), '<div><wiggly worms="ewww">hello</wiggly></div>');
   });
+  it('should not pass through any markup if allowedTags is set to undefined (falsey but not exactly false)', function() {
+    assert.equal(sanitizeHtml('<div><wiggly worms="ewww">hello</wiggly></div>', {
+      allowedTags: undefined
+    }), 'hello');
+  });
+  it('should not pass through any markup if allowedTags is set to 0 (falsey but not exactly false)', function() {
+    assert.equal(sanitizeHtml('<div><wiggly worms="ewww">hello</wiggly></div>', {
+      allowedTags: 0
+    }), 'hello');
+  });
+  it('should not pass through any markup if allowedTags is set to null (falsey but not exactly false)', function() {
+    assert.equal(sanitizeHtml('<div><wiggly worms="ewww">hello</wiggly></div>', {
+      allowedTags: null
+    }), 'hello');
+  });
+  it('should not pass through any markup if allowedTags is set to empty string (falsey but not exactly false)', function() {
+    assert.equal(sanitizeHtml('<div><wiggly worms="ewww">hello</wiggly></div>', {
+      allowedTags: ''
+    }), 'hello');
+  });
   it('should respect text nodes at top level', function() {
     assert.equal(sanitizeHtml('Blah blah blah<p>Whee!</p>'), 'Blah blah blah<p>Whee!</p>');
   });
