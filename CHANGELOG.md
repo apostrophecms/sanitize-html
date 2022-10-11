@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- If allowedTags is falsey but not exactly `false`, then do not assume that all tags are allowed. Rather, allow no tags in this case, to be on a safer side. This fixes [issue #176](https://github.com/apostrophecms/sanitize-html/issues/176).
+- If allowedTags is falsy but not exactly `false`, then do not assume that all tags are allowed. Rather, allow no tags in this case, to be on a safer side. This fixes [issue #176](https://github.com/apostrophecms/sanitize-html/issues/176).
 
 ## 2.7.2 (2022-09-15)
 
