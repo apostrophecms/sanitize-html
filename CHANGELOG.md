@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased - Fix for Issue #565
+## UNRELEASED
 
-- Upgrades `htmlparser2` to new major version `^8.0.0`.
+- Upgrades `htmlparser2` to new major version `^8.0.0`. Thanks to [Kedar Chandrayan](https://github.com/kedarchandrayan) for this contribution.
 
 ## 2.7.3 (2022-10-24)
 
