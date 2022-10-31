@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - Fix for Issue #565
+
+- Upgrades `htmlparser2` to new major version `^8.0.0`.
+
 ## 2.7.3 (2022-10-24)
 
 - If allowedTags is falsy but not exactly `false`, then do not assume that all tags are allowed. Rather, allow no tags in this case, to be on the safe side. This matches the existing documentation and fixes [issue #176](https://github.com/apostrophecms/sanitize-html/issues/176). Thanks to [Kedar Chandrayan](https://github.com/kedarchandrayan) for the fix.
