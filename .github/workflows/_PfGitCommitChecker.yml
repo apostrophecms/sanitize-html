@@ -1,0 +1,33 @@
+name: PF Git Commit Checker
+
+# Run on push to any branch 
+on: [pull_request]
+
+jobs:
+  PF_Git_Commit_Checker:
+    runs-on: [self-hosted, Linux, Ue1TiEcrRunners]
+    
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        ref: '${{ github.event.pull_request.base.ref }}'
+
+    - name: Prep
+      run: |
+        # Checkout branch
+        git checkout -q ${{ github.event.pull_request.head.ref }}
+        
+        # Set variables
+        BASE_BRANCH=${{ github.event.pull_request.base.ref }}
+
+        # Write BASE_BRANCH to GITHUB_ENV so commit checker can use
+        echo "BASE_BRANCH=$BASE_BRANCH" | tee -a $GITHUB_ENV
+
+    - name: Jira Commit Checker
+      id: jira_commit_checker
+      uses: practicefusion/ActionJiraCommitValidate@v1
+      with:
+        jira-username: ${{ secrets.JIRA_COMMIT_CHECKER_USERNAME }}
+        jira-api-token: ${{ secrets.JIRA_COMMIT_CHECKER_API_TOKEN }}
+        BASE_BRANCH: ${{ env.BASE_BRANCH }} 
