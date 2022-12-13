@@ -13,6 +13,13 @@ describe('sanitizeHtml', function() {
       allowedAttributes: false
     }), 'before &lt;img src="test.png" /&gt; after');
   });
+  it('should handle numbers as strings', () => {
+    assert.equal(sanitizeHtml(5, {
+      allowedTags: [ 'b', 'em', 'i', 's', 'small', 'strong', 'sub', 'sup', 'time', 'u' ],
+      allowedAttributes: {},
+      disallowedTagsMode: 'recursiveEscape'
+    }), '5');
+  });
   it('should pass through simple, well-formed markup', function() {
     assert.equal(sanitizeHtml('<div><p>Hello <b>there</b></p></div>'), '<div><p>Hello <b>there</b></p></div>');
   });

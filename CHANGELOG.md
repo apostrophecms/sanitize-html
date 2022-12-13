@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.8.1 (2022-12-*)
+
+- Fix sanitize of number values with `htmlparser2` `^8.0.0` version.
+
 ## 2.8.0 (2022-12-12)
 
 - Upgrades `htmlparser2` to new major version `^8.0.0`. Thanks to [Kedar Chandrayan](https://github.com/kedarchandrayan) for this contribution.

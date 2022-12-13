@@ -83,6 +83,9 @@ function sanitizeHtml(html, options, _recursing) {
   if (html == null) {
     return '';
   }
+  if (typeof html === 'number') {
+    html = html.toString();
+  }
 
   let result = '';
   // Used for hot swapping the result variable with an empty string in order to "capture" the text written to it.
