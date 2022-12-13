@@ -1,8 +1,8 @@
 # Changelog
 
-## 2.8.1 (2022-12-*)
+## UNRELEASED
 
-- Fix sanitize of number values with `htmlparser2` `^8.0.0` version.
+- If the argument is a number, convert it to a string, for backwards compatibility. Thanks to [Alexander Schranz](https://github.com/alexander-schranz).
 
 ## 2.8.0 (2022-12-12)
 
