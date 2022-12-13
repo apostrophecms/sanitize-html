@@ -13,7 +13,7 @@ describe('sanitizeHtml', function() {
       allowedAttributes: false
     }), 'before &lt;img src="test.png" /&gt; after');
   });
-  it('should escape self closing tags', () => {
+  it('should handle numbers as strings', () => {
     assert.equal(sanitizeHtml(5, {
       allowedTags: [ 'b', 'em', 'i', 's', 'small', 'strong', 'sub', 'sup', 'time', 'u' ],
       allowedAttributes: {},
