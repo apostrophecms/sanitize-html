@@ -956,6 +956,23 @@ describe('sanitizeHtml', function() {
       }), '<span style="color:blue"></span>'
     );
   });
+  it('Should ignore styles when options.parseStyleAttributes is false', function() {
+    assert.equal(
+      sanitizeHtml('<span style=\'color: blue; text-align: justify\'></span>', {
+        allowedTags: false,
+        allowedAttributes: {
+          span: [ 'style' ]
+        },
+        allowedStyles: {
+          span: {
+            color: [ /blue/ ],
+            'text-align': [ /left/ ]
+          }
+        },
+        parseStyleAttributes: false
+      }), '<span style="color: blue; text-align: justify"></span>'
+    );
+  });
   it('Should support !important styles', function() {
     assert.equal(
       sanitizeHtml('<span style=\'color: blue !important\'></span>', {

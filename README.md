@@ -139,7 +139,8 @@ allowedSchemes: [ 'http', 'https', 'ftp', 'mailto', 'tel' ],
 allowedSchemesByTag: {},
 allowedSchemesAppliedToAttributes: [ 'href', 'src', 'cite' ],
 allowProtocolRelative: true,
-enforceHtmlBoundary: false
+enforceHtmlBoundary: false,
+parseStyleAttributes: true
 ```
 
 ### Common use cases
@@ -623,6 +624,22 @@ disallowedTagsMode: 'escape'
 This will transform `<disallowed>content</disallowed>` to `&lt;disallowed&gt;content&lt;/disallowed&gt;`
 
 Valid values are: `'discard'` (default), `'escape'` (escape the tag) and `'recursiveEscape'` (to escape the tag and all its content).
+
+### Ignore style attribute contents
+
+Instead of discarding faulty style attributes, you can allow them by disabling the parsing of style attributes:
+
+```js
+parseStyleAttributes: false
+```
+
+This will transform `<div style="invalid-prop: non-existing-value">content</div>` to `<div style="invalid-prop: non-existing-value">content</div>` instead of stripping it: `<div>content</div>`
+
+By default the parseStyleAttributes option is true.
+
+Note that by default this library also strips style tags when you run this package in the browser. Because of a postcss dependency. https://github.com/apostrophecms/sanitize-html/issues/547
+
+So we recommend to use this package on the server in a node environment. And if you really need to run it on the client in the browser, to disable parseStyleAttributes.
 
 ### Restricting deep nesting
 
