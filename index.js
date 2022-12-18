@@ -84,8 +84,12 @@ function sanitizeHtml(html, options, _recursing) {
     return '';
   }
   
-  if(typeof html !== "string") {
+  if (typeof html !== 'string') {
     return html;
+  }
+  
+  if (typeof html === 'number') {
+    html = html.toString();
   }
 
   let result = '';

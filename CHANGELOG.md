@@ -2,6 +2,10 @@
 
 ## UNRELEASED
 
+- If the argument is a number, convert it to a string, for backwards compatibility. Thanks to [Alexander Schranz](https://github.com/alexander-schranz).
+
+## 2.8.0 (2022-12-12)
+
 - Upgrades `htmlparser2` to new major version `^8.0.0`. Thanks to [Kedar Chandrayan](https://github.com/kedarchandrayan) for this contribution.
 
 ## 2.7.3 (2022-10-24)
