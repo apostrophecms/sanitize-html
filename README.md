@@ -637,6 +637,8 @@ This will transform `<div style="invalid-prop: non-existing-value">content</div>
 
 By default the parseStyleAttributes option is true.
 
+When you disable the parsing of the style attribute, the `allowedStyles` option is automatically ignored, and all styles will be allowed.
+
 Note that by default this library also strips style tags when you run this package in the browser. Because of a postcss dependency. https://github.com/apostrophecms/sanitize-html/issues/547
 
 So we recommend to use this package on the server in a node environment. And if you really need to run it on the client in the browser, to disable parseStyleAttributes.
