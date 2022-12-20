@@ -437,21 +437,25 @@ function sanitizeHtml(html, options, _recursing) {
                 return;
               }
             }
-            if (a === 'style' && options.parseStyleAttributes) {
-              try {
-                const abstractSyntaxTree = postcssParse(name + ' {' + value + '}');
-                const filteredAST = filterCss(abstractSyntaxTree, options.allowedStyles);
+            if (a === 'style') {
+              if (options.parseStyleAttributes) {
+                try {
+                  const abstractSyntaxTree = postcssParse(name + ' {' + value + '}');
+                  const filteredAST = filterCss(abstractSyntaxTree, options.allowedStyles);
 
-                value = stringifyStyleAttributes(filteredAST);
+                  value = stringifyStyleAttributes(filteredAST);
 
-                if (value.length === 0) {
+                  if (value.length === 0) {
+                    delete frame.attribs[a];
+                    return;
+                  }
+                } catch (e) {
+                  console.warn('Failed to parse "' + name + ' {' + value + '}' + '", If you\'re running this in a browser, we recommend to disable style parsing: options.parseStyleAttributes: false, since this only works in a node environment due to a postcss dependency, More info: https://github.com/apostrophecms/sanitize-html/issues/547');
                   delete frame.attribs[a];
                   return;
                 }
-              } catch (e) {
-                console.warn('Failed to parse "' + name + ' {' + value + '}' + '", If you\'re running this in a browser, we recommend to disable style parsing: options.parseStyleAttributes: false, since this only works in a node environment due to a postcss dependency, More info: https://github.com/apostrophecms/sanitize-html/issues/547');
-                delete frame.attribs[a];
-                return;
+              } else if (options.allowedStyles) {
+                throw new Error('allowedStyles option cannot be used together with parseStyleAttributes: false.');
               }
             }
             result += ' ' + a;
