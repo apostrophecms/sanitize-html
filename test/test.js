@@ -981,6 +981,7 @@ describe('sanitizeHtml', function() {
         },
         parseStyleAttributes: false
       });
+      assert(false);
     } catch (err) {
       assert.equal(err.message, 'allowedStyles option cannot be used together with parseStyleAttributes: false.');
     }
