@@ -1,6 +1,6 @@
 # Changelog
 
-## UNRELEASED
+## 2.8.1 (2022-12-21)
 
 - If the argument is a number, convert it to a string, for backwards compatibility. Thanks to [Alexander Schranz](https://github.com/alexander-schranz).
 
