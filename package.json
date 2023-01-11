@@ -44,7 +44,7 @@
     "babel-preset-env": "^1.7.0",
     "babelify": "^10.0.0",
     "browserify": "^16.2.3",
-    "mocha": "^5.2.0",
+    "mocha": "9.2.2",
     "uglify-js": "^3.4.9"
   }
 }
