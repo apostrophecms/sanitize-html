@@ -637,11 +637,13 @@ This will transform `<div style="invalid-prop: non-existing-value">content</div>
 
 By default the parseStyleAttributes option is true.
 
-When you disable the parsing of the style attribute, the `allowedStyles` option is automatically ignored, and all styles will be allowed.
+When you disable parsing of the style attribute (`parseStyleAttributes: false`) and you pass in options for the allowedStyles property, an error will be thrown. This combination is not permitted.
 
 Note that by default this library also strips style tags when you run this package in the browser. Because of a postcss dependency. https://github.com/apostrophecms/sanitize-html/issues/547
 
-So we recommend to use this package on the server in a node environment. And if you really need to run it on the client in the browser, to disable parseStyleAttributes.
+we recommend sanitizing content server-side in a Node.js environment, as you cannot trust a browser to sanitize things anyway. Consider what a malicious user could do via the network panel, 
+the browser console, or just by writing scripts that submit content similar to what your JavaScript submits. But if you really need to run it on the client in the browser, 
+you may find you need to disable parseStyleAttributes. This is subject to change as it is [an upstream issue with postcss](https://github.com/postcss/postcss/issues/1727), not sanitize-html itself.
 
 ### Restricting deep nesting
 
