@@ -438,19 +438,24 @@ function sanitizeHtml(html, options, _recursing) {
               }
             }
             if (a === 'style') {
-              try {
-                const abstractSyntaxTree = postcssParse(name + ' {' + value + '}');
-                const filteredAST = filterCss(abstractSyntaxTree, options.allowedStyles);
+              if (options.parseStyleAttributes) {
+                try {
+                  const abstractSyntaxTree = postcssParse(name + ' {' + value + '}');
+                  const filteredAST = filterCss(abstractSyntaxTree, options.allowedStyles);
 
-                value = stringifyStyleAttributes(filteredAST);
+                  value = stringifyStyleAttributes(filteredAST);
 
-                if (value.length === 0) {
+                  if (value.length === 0) {
+                    delete frame.attribs[a];
+                    return;
+                  }
+                } catch (e) {
+                  console.warn('Failed to parse "' + name + ' {' + value + '}' + '", If you\'re running this in a browser, we recommend to disable style parsing: options.parseStyleAttributes: false, since this only works in a node environment due to a postcss dependency, More info: https://github.com/apostrophecms/sanitize-html/issues/547');
                   delete frame.attribs[a];
                   return;
                 }
-              } catch (e) {
-                delete frame.attribs[a];
-                return;
+              } else if (options.allowedStyles) {
+                throw new Error('allowedStyles option cannot be used together with parseStyleAttributes: false.');
               }
             }
             result += ' ' + a;
@@ -818,7 +823,8 @@ sanitizeHtml.defaults = {
   allowedSchemesByTag: {},
   allowedSchemesAppliedToAttributes: [ 'href', 'src', 'cite' ],
   allowProtocolRelative: true,
-  enforceHtmlBoundary: false
+  enforceHtmlBoundary: false,
+  parseStyleAttributes: true
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {

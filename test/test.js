@@ -956,6 +956,36 @@ describe('sanitizeHtml', function() {
       }), '<span style="color:blue"></span>'
     );
   });
+  it('Should ignore styles when options.parseStyleAttributes is false', function() {
+    assert.equal(
+      sanitizeHtml('<span style=\'color: blue; text-align: justify\'></span>', {
+        allowedTags: false,
+        allowedAttributes: {
+          span: [ 'style' ]
+        },
+        parseStyleAttributes: false
+      }), '<span style="color: blue; text-align: justify"></span>'
+    );
+  });
+  it('Should throw an error if both allowedStyles is set and  && parseStyleAttributes is set to false', function() {
+    try {
+      sanitizeHtml('<span style=\'color: blue; text-align: justify\'></span>', {
+        allowedTags: false,
+        allowedAttributes: {
+          span: ['style']
+        },
+        allowedStyles: {
+          p: {
+            'text-align': [/^justify$/]
+          }
+        },
+        parseStyleAttributes: false
+      });
+      assert(false);
+    } catch (err) {
+      assert.equal(err.message, 'allowedStyles option cannot be used together with parseStyleAttributes: false.');
+    }
+  });
   it('Should support !important styles', function() {
     assert.equal(
       sanitizeHtml('<span style=\'color: blue !important\'></span>', {
