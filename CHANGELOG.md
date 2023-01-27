@@ -1,9 +1,12 @@
 # Changelog
 
+## 2.9.0 (2023-01-27)
+
+- Add option parseStyleAttributes to skip style parsing. This fixes [issue #547](https://github.com/apostrophecms/sanitize-html/issues/547). Thanks to [Bert Verhelst](https://github.com/bertyhell).
+
 ## 2.8.1 (2022-12-21)
 
 - If the argument is a number, convert it to a string, for backwards compatibility. Thanks to [Alexander Schranz](https://github.com/alexander-schranz).
-- Add option parseStyleAttributes to skip style parsing. This fixes [issue #547](https://github.com/apostrophecms/sanitize-html/issues/547). Thanks to [Bert Verhelst](https://github.com/bertyhell).
 
 ## 2.8.0 (2022-12-12)
 
