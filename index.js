@@ -117,12 +117,15 @@ function sanitizeHtml(html, options, _recursing) {
   options = Object.assign({}, sanitizeHtml.defaults, options);
   options.parser = Object.assign({}, htmlParserDefaults, options.parser);
 
+  const tagAllowed = function (name) {
+  
+    return options.allowedTags === false || (options.allowedTags || []).indexOf(name) > -1;
+
+  };
+
   // vulnerableTags
   vulnerableTags.forEach(function (tag) {
-    if (
-      options.allowedTags !== false && (options.allowedTags || []).indexOf(tag) > -1 &&
-      !options.allowVulnerableTags
-    ) {
+    if (tagAllowed(tag) && !options.allowVulnerableTags) {
       console.warn(`\n\n⚠️ Your \`allowedTags\` option includes, \`${tag}\`, which is inherently\nvulnerable to XSS attacks. Please remove it from \`allowedTags\`.\nOr, to disable this warning, add the \`allowVulnerableTags\` option\nand ensure you are accounting for this risk.\n\n`);
     }
   });
@@ -254,7 +257,7 @@ function sanitizeHtml(html, options, _recursing) {
         }
       }
 
-      if ((options.allowedTags !== false && (options.allowedTags || []).indexOf(name) === -1) || (options.disallowedTagsMode === 'recursiveEscape' && !isEmptyObject(skipMap)) || (options.nestingLimit != null && depth >= options.nestingLimit)) {
+      if (!tagAllowed(name) || (options.disallowedTagsMode === 'recursiveEscape' && !isEmptyObject(skipMap)) || (options.nestingLimit != null && depth >= options.nestingLimit)) {
         skip = true;
         skipMap[depth] = true;
         if (options.disallowedTagsMode === 'discard') {
@@ -563,8 +566,12 @@ function sanitizeHtml(html, options, _recursing) {
       frame.updateParentNodeMediaChildren();
       frame.updateParentNodeText();
 
-      if (options.selfClosing.indexOf(name) !== -1) {
+      if (
         // Already output />
+        options.selfClosing.indexOf(name) !== -1 ||
+        // Escaped tag
+        (tagAllowed(name) || ['escape','recursiveEscape'].indexOf(options.disallowedTagsMode) === -1)
+      ) {
         if (skip) {
           result = tempResult;
           tempResult = '';
