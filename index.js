@@ -566,17 +566,11 @@ function sanitizeHtml(html, options, _recursing) {
       frame.updateParentNodeMediaChildren();
       frame.updateParentNodeText();
 
-      if( name === 'wacky' ) {
-
-        console.log( tagAllowed(name), ['escape','recursiveEscape'].indexOf(options.disallowedTagsMode) >= 0 );
-
-      }
-
       if (
         // Already output />
         options.selfClosing.indexOf(name) !== -1 ||
         // Escaped tag
-        (tagAllowed(name) || ['escape','recursiveEscape'].indexOf(options.disallowedTagsMode) >= 0)
+        (!tagAllowed(name) && ['escape','recursiveEscape'].indexOf(options.disallowedTagsMode) >= 0)
       ) {
         if (skip) {
           result = tempResult;
