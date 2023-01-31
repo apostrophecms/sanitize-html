@@ -118,9 +118,7 @@ function sanitizeHtml(html, options, _recursing) {
   options.parser = Object.assign({}, htmlParserDefaults, options.parser);
 
   const tagAllowed = function (name) {
-  
     return options.allowedTags === false || (options.allowedTags || []).indexOf(name) > -1;
-
   };
 
   // vulnerableTags
@@ -516,7 +514,7 @@ function sanitizeHtml(html, options, _recursing) {
         frame.text += text;
       }
     },
-    onclosetag: function(name) {
+    onclosetag: function(name, isImplied) {
 
       if (skipText) {
         skipTextDepth--;
@@ -569,8 +567,8 @@ function sanitizeHtml(html, options, _recursing) {
       if (
         // Already output />
         options.selfClosing.indexOf(name) !== -1 ||
-        // Escaped tag
-        (!tagAllowed(name) && ['escape','recursiveEscape'].indexOf(options.disallowedTagsMode) >= 0)
+        // Escaped tag, closing tag is implied
+        (isImplied && !tagAllowed(name) && ['escape','recursiveEscape'].indexOf(options.disallowedTagsMode) >= 0)
       ) {
         if (skip) {
           result = tempResult;
