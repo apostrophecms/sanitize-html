@@ -568,7 +568,7 @@ function sanitizeHtml(html, options, _recursing) {
         // Already output />
         options.selfClosing.indexOf(name) !== -1 ||
         // Escaped tag, closing tag is implied
-        (isImplied && !tagAllowed(name) && ['escape','recursiveEscape'].indexOf(options.disallowedTagsMode) >= 0)
+        (isImplied && !tagAllowed(name) && [ 'escape', 'recursiveEscape' ].indexOf(options.disallowedTagsMode) >= 0)
       ) {
         if (skip) {
           result = tempResult;
