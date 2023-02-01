@@ -1,5 +1,10 @@
 # Changelog
 
+## UNRELEASED (2023-01-31)
+
+- Fix auto-adding escaped closing tags. In other words, do not add implied closing tags to disallowed tags when `disallowedTagMode` is set to any variant of `escape` -- just escape the disallowed tags that are present. This fixes [issue #464](https://github.com/apostrophecms/sanitize-html/issues/464). Thanks to [Daniel Liebner](https://github.com/dliebner)
+- Add `tagAllowed()` helper function which takes a tag name and checks it against `options.allowedTags` and returns `true` if the tag is allowed and `false` if it is not.
+
 ## 2.9.0 (2023-01-27)
 
 - Add option parseStyleAttributes to skip style parsing. This fixes [issue #547](https://github.com/apostrophecms/sanitize-html/issues/547). Thanks to [Bert Verhelst](https://github.com/bertyhell).
