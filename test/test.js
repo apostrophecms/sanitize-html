@@ -1561,4 +1561,19 @@ describe('sanitizeHtml', function() {
       }), '<script src="//example.com/script.js"></script>'
     );
   });
+  it('should not automatically attach close tag for escaped tags in escape mode', function() {
+    assert.equal(sanitizeHtml('<test>Hello', {
+      disallowedTagsMode: 'escape'
+    }), '&lt;test&gt;Hello');
+  });
+  it('should not automatically attach close tag for escaped tags in recursiveEscape mode', function() {
+    assert.equal(sanitizeHtml('<test><test><test><test><test>Hello', {
+      disallowedTagsMode: 'recursiveEscape'
+    }), '&lt;test&gt;&lt;test&gt;&lt;test&gt;&lt;test&gt;&lt;test&gt;Hello');
+  });
+  it('should discard unclosed disallowed tags', function() {
+    assert.equal(sanitizeHtml('<test>Hello', {
+      disallowedTagsMode: 'discard'
+    }), 'Hello');
+  });
 });
