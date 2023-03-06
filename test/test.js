@@ -972,11 +972,11 @@ describe('sanitizeHtml', function() {
       sanitizeHtml('<span style=\'color: blue; text-align: justify\'></span>', {
         allowedTags: false,
         allowedAttributes: {
-          span: ['style']
+          span: [ 'style' ]
         },
         allowedStyles: {
           p: {
-            'text-align': [/^justify$/]
+            'text-align': [ /^justify$/ ]
           }
         },
         parseStyleAttributes: false
