@@ -5,6 +5,7 @@
 - Upgrade mocha version
 - Apply small linter fixes in tests
 - Add `.idea` temp files to `.gitignore`
+- Thanks to [Vitalii Shpital](https://github.com/VitaliiShpital) for the updates!
 
 ## 2.10.0 (2023-02-17)
 
