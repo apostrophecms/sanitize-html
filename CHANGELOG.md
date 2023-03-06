@@ -1,5 +1,11 @@
 # Changelog
 
+## UNRELEASED
+
+- Upgrade mocha version
+- Apply small linter fixes in tests
+- Add `.idea` temp files to `.gitignore`
+
 ## 2.10.0 (2023-02-17)
 
 - Fix auto-adding escaped closing tags. In other words, do not add implied closing tags to disallowed tags when `disallowedTagMode` is set to any variant of `escape` -- just escape the disallowed tags that are present. This fixes [issue #464](https://github.com/apostrophecms/sanitize-html/issues/464). Thanks to [Daniel Liebner](https://github.com/dliebner)
