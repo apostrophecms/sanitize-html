@@ -451,7 +451,9 @@ function sanitizeHtml(html, options, _recursing) {
                     return;
                   }
                 } catch (e) {
-                  console.warn('Failed to parse "' + name + ' {' + value + '}' + '", If you\'re running this in a browser, we recommend to disable style parsing: options.parseStyleAttributes: false, since this only works in a node environment due to a postcss dependency, More info: https://github.com/apostrophecms/sanitize-html/issues/547');
+                  if (typeof window !== 'undefined') {
+                    console.warn('Failed to parse "' + name + ' {' + value + '}' + '", If you\'re running this in a browser, we recommend to disable style parsing: options.parseStyleAttributes: false, since this only works in a node environment due to a postcss dependency, More info: https://github.com/apostrophecms/sanitize-html/issues/547');
+                  }
                   delete frame.attribs[a];
                   return;
                 }
