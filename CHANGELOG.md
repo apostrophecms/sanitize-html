@@ -6,7 +6,7 @@
 - Apply small linter fixes in tests
 - Add `.idea` temp files to `.gitignore`
 - Thanks to [Vitalii Shpital](https://github.com/VitaliiShpital) for the updates!
-- Show parseStyleAttributes warning in browser only
+- Show parseStyleAttributes warning in browser only. Thanks to [mog422](https://github.com/mog422) for this update!
 
 ## 2.10.0 (2023-02-17)
 
