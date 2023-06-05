@@ -8,7 +8,10 @@ sanitize-html provides a simple HTML sanitizer with a clear API.
 
 sanitize-html is tolerant. It is well suited for cleaning up HTML fragments such as those created by CKEditor and other rich text editors. It is especially handy for removing unwanted CSS when copying and pasting from Word.
 
-sanitize-html allows you to specify the tags you want to permit, and the permitted attributes for each of those tags.
+sanitize-html allows you to specify the tags you want to permit, and the permitted
+attributes for each of those tags. If an attribute is a known non-boolean value,
+and it is empty, it will be removed. For example `checked` can be empty, but `href`
+cannot.
 
 If a tag is not permitted, the contents of the tag are not discarded. There are
 some exceptions to this, discussed below in the "Discarding the entire contents
@@ -125,6 +128,48 @@ allowedTags: [
   "small", "span", "strong", "sub", "sup", "time", "u", "var", "wbr", "caption",
   "col", "colgroup", "table", "tbody", "td", "tfoot", "th", "thead", "tr"
 ],
+nonBooleanAttributes: [
+  'abbr', 'accept', 'accept-charset', 'accesskey', 'action',
+  'allow', 'alt', 'as', 'autocapitalize', 'autocomplete',
+  'blocking', 'charset', 'cite', 'class', 'color', 'cols',
+  'colspan', 'content', 'contenteditable', 'coords', 'crossorigin',
+  'data', 'datetime', 'decoding', 'dir', 'dirname', 'download',
+  'draggable', 'enctype', 'enterkeyhint', 'fetchpriority', 'for',
+  'form', 'formaction', 'formenctype', 'formmethod', 'formtarget',
+  'headers', 'height', 'hidden', 'high', 'href', 'hreflang',
+  'http-equiv', 'id', 'imagesizes', 'imagesrcset', 'inputmode',
+  'integrity', 'is', 'itemid', 'itemprop', 'itemref', 'itemtype',
+  'kind', 'label', 'lang', 'list', 'loading', 'low', 'max',
+  'maxlength', 'media', 'method', 'min', 'minlength', 'name',
+  'nonce', 'optimum', 'pattern', 'ping', 'placeholder', 'popover',
+  'popovertarget', 'popovertargetaction', 'poster', 'preload',
+  'referrerpolicy', 'rel', 'rows', 'rowspan', 'sandbox', 'scope',
+  'shape', 'size', 'sizes', 'slot', 'span', 'spellcheck', 'src',
+  'srcdoc', 'srclang', 'srcset', 'start', 'step', 'style',
+  'tabindex', 'target', 'title', 'translate', 'type', 'usemap',
+  'value', 'width', 'wrap',
+  // Event handlers
+  'onauxclick', 'onafterprint', 'onbeforematch', 'onbeforeprint',
+  'onbeforeunload', 'onbeforetoggle', 'onblur', 'oncancel',
+  'oncanplay', 'oncanplaythrough', 'onchange', 'onclick', 'onclose',
+  'oncontextlost', 'oncontextmenu', 'oncontextrestored', 'oncopy',
+  'oncuechange', 'oncut', 'ondblclick', 'ondrag', 'ondragend',
+  'ondragenter', 'ondragleave', 'ondragover', 'ondragstart',
+  'ondrop', 'ondurationchange', 'onemptied', 'onended',
+  'onerror', 'onfocus', 'onformdata', 'onhashchange', 'oninput',
+  'oninvalid', 'onkeydown', 'onkeypress', 'onkeyup',
+  'onlanguagechange', 'onload', 'onloadeddata', 'onloadedmetadata',
+  'onloadstart', 'onmessage', 'onmessageerror', 'onmousedown',
+  'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseout',
+  'onmouseover', 'onmouseup', 'onoffline', 'ononline', 'onpagehide',
+  'onpageshow', 'onpaste', 'onpause', 'onplay', 'onplaying',
+  'onpopstate', 'onprogress', 'onratechange', 'onreset', 'onresize',
+  'onrejectionhandled', 'onscroll', 'onscrollend',
+  'onsecuritypolicyviolation', 'onseeked', 'onseeking', 'onselect',
+  'onslotchange', 'onstalled', 'onstorage', 'onsubmit', 'onsuspend',
+  'ontimeupdate', 'ontoggle', 'onunhandledrejection', 'onunload',
+  'onvolumechange', 'onwaiting', 'onwheel'
+],
 disallowedTagsMode: 'discard',
 allowedAttributes: {
   a: [ 'href', 'name', 'target' ],
@@ -165,6 +210,14 @@ one or both to `false`:
 ```js
 allowedTags: false,
 allowedAttributes: false
+```
+
+#### "What if I want to allow empty attributes?"
+
+Very simple! Set `nonBooleanAttributes` to `[]`.
+
+```js
+nonBooleanAttributes: []
 ```
 
 #### "What if I don't want to allow *any* tags?"
