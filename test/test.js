@@ -1576,4 +1576,8 @@ describe('sanitizeHtml', function() {
       disallowedTagsMode: 'discard'
     }), 'Hello');
   });
+  it('should remove non-boolean attributes that are empty', function() {
+    assert.equal(sanitizeHtml('<a href target="_blank">hello</a>', {
+    }), '<a target="_blank">hello</a>');
+  });
 });
