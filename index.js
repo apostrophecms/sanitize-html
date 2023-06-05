@@ -293,7 +293,7 @@ function sanitizeHtml(html, options, _recursing) {
           }
           // If the value is empty, and this is a known non-boolean attribute, delete it
           // List taken from https://html.spec.whatwg.org/multipage/indices.html#attributes-3
-          if (value === '' && options.nonBooleanAttributes.includes(a)) {
+          if (value === '' && (options.nonBooleanAttributes.includes(a) || options.nonBooleanAttributes.includes('*'))) {
             delete frame.attribs[a];
             return;
           }

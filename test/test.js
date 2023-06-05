@@ -1593,4 +1593,13 @@ describe('sanitizeHtml', function() {
       }
     }), '<input checked type="checkbox" />');
   });
+  it('should remove boolean attributes that are empty when wildcard * passed in', function() {
+    assert.equal(sanitizeHtml('<input checked form type="checkbox" />', {
+      allowedTags: 'input',
+      allowedAttributes: {
+        input: [ 'checked', 'form', 'type' ]
+      },
+      nonBooleanAttributes: [ '*' ]
+    }), '<input type="checkbox" />');
+  });
 });

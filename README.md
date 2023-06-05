@@ -220,6 +220,14 @@ Very simple! Set `nonBooleanAttributes` to `[]`.
 nonBooleanAttributes: []
 ```
 
+#### "What if I want to delete all empty attributes?"
+
+Also very simple! Set `nonBooleanAttributes` to `['*']`.
+
+```js
+nonBooleanAttributes: ['*']
+```
+
 #### "What if I don't want to allow *any* tags?"
 
 Also simple!  Set `allowedTags` to `[]` and `allowedAttributes` to `{}`.
