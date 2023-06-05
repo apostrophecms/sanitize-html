@@ -1580,4 +1580,17 @@ describe('sanitizeHtml', function() {
     assert.equal(sanitizeHtml('<a href target="_blank">hello</a>', {
     }), '<a target="_blank">hello</a>');
   });
+  it('should not remove non-boolean attributes that are empty when disabled', function() {
+    assert.equal(sanitizeHtml('<a href target="_blank">hello</a>', {
+      nonBooleanAttributes: []
+    }), '<a href target="_blank">hello</a>');
+  });
+  it('should not remove boolean attributes that are empty', function() {
+    assert.equal(sanitizeHtml('<input checked form type="checkbox" />', {
+      allowedTags: 'input',
+      allowedAttributes: {
+        input: [ 'checked', 'form', 'type' ]
+      }
+    }), '<input checked type="checkbox" />');
+  });
 });
