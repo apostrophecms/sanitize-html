@@ -1576,4 +1576,30 @@ describe('sanitizeHtml', function() {
       disallowedTagsMode: 'discard'
     }), 'Hello');
   });
+  it('should remove non-boolean attributes that are empty', function() {
+    assert.equal(sanitizeHtml('<a href target="_blank">hello</a>', {
+    }), '<a target="_blank">hello</a>');
+  });
+  it('should not remove non-boolean attributes that are empty when disabled', function() {
+    assert.equal(sanitizeHtml('<a href target="_blank">hello</a>', {
+      nonBooleanAttributes: []
+    }), '<a href target="_blank">hello</a>');
+  });
+  it('should not remove boolean attributes that are empty', function() {
+    assert.equal(sanitizeHtml('<input checked form type="checkbox" />', {
+      allowedTags: 'input',
+      allowedAttributes: {
+        input: [ 'checked', 'form', 'type' ]
+      }
+    }), '<input checked type="checkbox" />');
+  });
+  it('should remove boolean attributes that are empty when wildcard * passed in', function() {
+    assert.equal(sanitizeHtml('<input checked form type="checkbox" />', {
+      allowedTags: 'input',
+      allowedAttributes: {
+        input: [ 'checked', 'form', 'type' ]
+      },
+      nonBooleanAttributes: [ '*' ]
+    }), '<input type="checkbox" />');
+  });
 });

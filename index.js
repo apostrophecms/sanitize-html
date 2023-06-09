@@ -291,6 +291,12 @@ function sanitizeHtml(html, options, _recursing) {
             delete frame.attribs[a];
             return;
           }
+          // If the value is empty, and this is a known non-boolean attribute, delete it
+          // List taken from https://html.spec.whatwg.org/multipage/indices.html#attributes-3
+          if (value === '' && (options.nonBooleanAttributes.includes(a) || options.nonBooleanAttributes.includes('*'))) {
+            delete frame.attribs[a];
+            return;
+          }
           // check allowedAttributesMap for the element and attribute and modify the value
           // as necessary if there are specific values defined.
           let passedAllowedAttributesMapCheck = false;
@@ -815,6 +821,49 @@ sanitizeHtml.defaults = {
     // Table content
     'caption', 'col', 'colgroup', 'table', 'tbody', 'td', 'tfoot', 'th',
     'thead', 'tr'
+  ],
+  // Tags that cannot be boolean
+  nonBooleanAttributes: [
+    'abbr', 'accept', 'accept-charset', 'accesskey', 'action',
+    'allow', 'alt', 'as', 'autocapitalize', 'autocomplete',
+    'blocking', 'charset', 'cite', 'class', 'color', 'cols',
+    'colspan', 'content', 'contenteditable', 'coords', 'crossorigin',
+    'data', 'datetime', 'decoding', 'dir', 'dirname', 'download',
+    'draggable', 'enctype', 'enterkeyhint', 'fetchpriority', 'for',
+    'form', 'formaction', 'formenctype', 'formmethod', 'formtarget',
+    'headers', 'height', 'hidden', 'high', 'href', 'hreflang',
+    'http-equiv', 'id', 'imagesizes', 'imagesrcset', 'inputmode',
+    'integrity', 'is', 'itemid', 'itemprop', 'itemref', 'itemtype',
+    'kind', 'label', 'lang', 'list', 'loading', 'low', 'max',
+    'maxlength', 'media', 'method', 'min', 'minlength', 'name',
+    'nonce', 'optimum', 'pattern', 'ping', 'placeholder', 'popover',
+    'popovertarget', 'popovertargetaction', 'poster', 'preload',
+    'referrerpolicy', 'rel', 'rows', 'rowspan', 'sandbox', 'scope',
+    'shape', 'size', 'sizes', 'slot', 'span', 'spellcheck', 'src',
+    'srcdoc', 'srclang', 'srcset', 'start', 'step', 'style',
+    'tabindex', 'target', 'title', 'translate', 'type', 'usemap',
+    'value', 'width', 'wrap',
+    // Event handlers
+    'onauxclick', 'onafterprint', 'onbeforematch', 'onbeforeprint',
+    'onbeforeunload', 'onbeforetoggle', 'onblur', 'oncancel',
+    'oncanplay', 'oncanplaythrough', 'onchange', 'onclick', 'onclose',
+    'oncontextlost', 'oncontextmenu', 'oncontextrestored', 'oncopy',
+    'oncuechange', 'oncut', 'ondblclick', 'ondrag', 'ondragend',
+    'ondragenter', 'ondragleave', 'ondragover', 'ondragstart',
+    'ondrop', 'ondurationchange', 'onemptied', 'onended',
+    'onerror', 'onfocus', 'onformdata', 'onhashchange', 'oninput',
+    'oninvalid', 'onkeydown', 'onkeypress', 'onkeyup',
+    'onlanguagechange', 'onload', 'onloadeddata', 'onloadedmetadata',
+    'onloadstart', 'onmessage', 'onmessageerror', 'onmousedown',
+    'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseout',
+    'onmouseover', 'onmouseup', 'onoffline', 'ononline', 'onpagehide',
+    'onpageshow', 'onpaste', 'onpause', 'onplay', 'onplaying',
+    'onpopstate', 'onprogress', 'onratechange', 'onreset', 'onresize',
+    'onrejectionhandled', 'onscroll', 'onscrollend',
+    'onsecuritypolicyviolation', 'onseeked', 'onseeking', 'onselect',
+    'onslotchange', 'onstalled', 'onstorage', 'onsubmit', 'onsuspend',
+    'ontimeupdate', 'ontoggle', 'onunhandledrejection', 'onunload',
+    'onvolumechange', 'onwaiting', 'onwheel'
   ],
   disallowedTagsMode: 'discard',
   allowedAttributes: {
