@@ -212,7 +212,7 @@ allowedTags: false,
 allowedAttributes: false
 ```
 
-#### "What if I want to allow empty attributes?"
+#### "What if I want to allow empty attributes, even for cases like href that normally don't make sense?"
 
 Very simple! Set `nonBooleanAttributes` to `[]`.
 
@@ -220,9 +220,13 @@ Very simple! Set `nonBooleanAttributes` to `[]`.
 nonBooleanAttributes: []
 ```
 
-#### "What if I want to delete all empty attributes?"
+#### "What if I want to remove all empty attributes, including valid ones?"
 
 Also very simple! Set `nonBooleanAttributes` to `['*']`.
+
+**Note**: This will break common valid cases like `checked` and `selected`, so this is
+unlikely to be what you want. For most ordinary HTML use, it is best to avoid making
+this change.
 
 ```js
 nonBooleanAttributes: ['*']
