@@ -7,7 +7,7 @@
 - Add `.idea` temp files to `.gitignore`
 - Thanks to [Vitalii Shpital](https://github.com/VitaliiShpital) for the updates!
 - Show parseStyleAttributes warning in browser only. Thanks to [mog422](https://github.com/mog422) for this update!
-- Remove empty non-boolean attributes via exhaustive list of known attributes.
+- Remove empty non-boolean attributes via an exhaustive, configurable list of known non-boolean attributes. [Thanks to Dylan Armstrong](https://github.com/dylanarmstrong) for this update!
 
 ## 2.10.0 (2023-02-17)
 
