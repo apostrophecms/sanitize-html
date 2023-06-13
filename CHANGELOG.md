@@ -2,7 +2,7 @@
 
 ## UNRELEASED
 
-- Fix to allow `false` in `allowedClasses` attributes
+- Fix to allow `false` in `allowedClasses` attributes. Thanks to [Kevin Jiang](https://github.com/KevinSJ) for this fix!
 - Upgrade mocha version
 - Apply small linter fixes in tests
 - Add `.idea` temp files to `.gitignore`
