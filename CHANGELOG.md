@@ -2,6 +2,7 @@
 
 ## UNRELEASED
 
+- Fix to allow `false` in `allowedClasses` attributes
 - Upgrade mocha version
 - Apply small linter fixes in tests
 - Add `.idea` temp files to `.gitignore`

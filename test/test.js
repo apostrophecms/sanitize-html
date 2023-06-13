@@ -482,6 +482,20 @@ describe('sanitizeHtml', function() {
       '<p class="nifty simple dippy">whee</p>'
     );
   });
+  it('should allow all classes for a single tag if `allowedClasses` for the tag is false', function() {
+    assert.equal(
+      sanitizeHtml(
+        '<p class="nifty simple dippy">whee</p>',
+        {
+          allowedTags: [ 'p' ],
+          allowedClasses: {
+            p: false
+          }
+        }
+      ),
+      '<p class="nifty simple dippy">whee</p>'
+    );
+  });
   it('should allow only classes that matches `allowedClasses` regex', function() {
     assert.equal(
       sanitizeHtml(

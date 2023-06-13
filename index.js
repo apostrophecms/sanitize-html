@@ -170,20 +170,24 @@ function sanitizeHtml(html, options, _recursing) {
       allowedAttributesMap[tag].push('class');
     }
 
-    allowedClassesMap[tag] = [];
-    allowedClassesRegexMap[tag] = [];
-    const globRegex = [];
-    classes.forEach(function(obj) {
-      if (typeof obj === 'string' && obj.indexOf('*') >= 0) {
-        globRegex.push(escapeStringRegexp(obj).replace(/\\\*/g, '.*'));
-      } else if (obj instanceof RegExp) {
-        allowedClassesRegexMap[tag].push(obj);
-      } else {
-        allowedClassesMap[tag].push(obj);
+    allowedClassesMap[tag] = classes;
+
+    if (Array.isArray(classes)) {
+      const globRegex = [];
+      allowedClassesMap[tag] = [];
+      allowedClassesRegexMap[tag] = [];
+      classes.forEach(function(obj) {
+        if (typeof obj === 'string' && obj.indexOf('*') >= 0) {
+          globRegex.push(escapeStringRegexp(obj).replace(/\\\*/g, '.*'));
+        } else if (obj instanceof RegExp) {
+          allowedClassesRegexMap[tag].push(obj);
+        } else {
+          allowedClassesMap[tag].push(obj);
+        }
+      });
+      if (globRegex.length) {
+        allowedClassesGlobMap[tag] = new RegExp('^(' + globRegex.join('|') + ')$');
       }
-    });
-    if (globRegex.length) {
-      allowedClassesGlobMap[tag] = new RegExp('^(' + globRegex.join('|') + ')$');
     }
   });
 

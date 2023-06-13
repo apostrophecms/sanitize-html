@@ -320,6 +320,8 @@ allowedClasses: {
 }
 ```
 
+If `allowedClasses` for a certain tag is `false`, all the classes for this tag will be allowed.
+
 > Note: It is advised that your regular expressions always begin with `^` so that you are requiring a known prefix. A regular expression with neither `^` nor `$` just requires that something appear in the middle.
 
 ### Allowed CSS Styles
