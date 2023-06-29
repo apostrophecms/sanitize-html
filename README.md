@@ -1,7 +1,5 @@
 # sanitize-html
 
-[comment out circleci until removed completely]: [![CircleCI](https://circleci.com/gh/apostrophecms/sanitize-html/tree/main.svg?style=svg)](https://circleci.com/gh/apostrophecms/sanitize-html/tree/main)
-
 <a href="https://apostrophecms.com/"><img src="https://raw.githubusercontent.com/apostrophecms/sanitize-html/main/logos/logo-box-madefor.png" align="right" /></a>
 
 sanitize-html provides a simple HTML sanitizer with a clear API.
