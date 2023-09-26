@@ -1,5 +1,8 @@
 # Changelog
 
+## UNRELEASED
+- Added `allowedEmptyAttributes` option and kept empty `alt` value by default.
+
 ## 2.11.0 (2023-06-21)
 
 - Fix to allow `false` in `allowedClasses` attributes. Thanks to [Kevin Jiang](https://github.com/KevinSJ) for this fix!

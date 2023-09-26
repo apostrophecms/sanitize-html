@@ -1616,4 +1616,27 @@ describe('sanitizeHtml', function() {
       nonBooleanAttributes: [ '*' ]
     }), '<input type="checkbox" />');
   });
+  it('should not remove empty alt attribute value by default', function() {
+    assert.equal(sanitizeHtml('<img alt="" src="https://example.com/" />', {
+      allowedAttributes: { img: [ 'alt', 'src' ] },
+      allowedTags: [ 'img' ]
+    }), '<img alt="" src="https://example.com/" />');
+  });
+  it('should not remove empty alt attribute value by default when disabled', function() {
+    assert.equal(sanitizeHtml('<img alt="" src="https://example.com/" />', {
+      allowedAttributes: { img: [ 'alt', 'src' ] },
+      allowedTags: [ 'img' ],
+      nonBooleanAttributes: []
+    }), '<img alt="" src="https://example.com/" />');
+  });
+  it('should set empty value to attribute specified in allowedEmptyAttributes option', function() {
+    assert.equal(sanitizeHtml('<a href target="_blank">hello</a>', {
+      allowedEmptyAttributes: [ 'href' ]
+    }), '<a href="" target="_blank">hello</a>');
+  });
+  it('should not remove empty attribute specified in allowedEmptyAttributes option', function() {
+    assert.equal(sanitizeHtml('<a href="" target="_blank">hello</a>', {
+      allowedEmptyAttributes: [ 'href' ]
+    }), '<a href="" target="_blank">hello</a>');
+  });
 });

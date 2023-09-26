@@ -295,9 +295,11 @@ function sanitizeHtml(html, options, _recursing) {
             delete frame.attribs[a];
             return;
           }
-          // If the value is empty, and this is a known non-boolean attribute, delete it
+          // If the value is empty, check if the attribute is in the allowedEmptyAttributes array.
+          // If it is not in the allowedEmptyAttributes array, and it is a known non-boolean attribute, delete it
           // List taken from https://html.spec.whatwg.org/multipage/indices.html#attributes-3
-          if (value === '' && (options.nonBooleanAttributes.includes(a) || options.nonBooleanAttributes.includes('*'))) {
+          if (value === '' && (!options.allowedEmptyAttributes.includes(a)) && (options.nonBooleanAttributes.includes(a) ||
+            options.nonBooleanAttributes.includes('*'))) {
             delete frame.attribs[a];
             return;
           }
@@ -474,6 +476,8 @@ function sanitizeHtml(html, options, _recursing) {
             result += ' ' + a;
             if (value && value.length) {
               result += '="' + escapeHtml(value, true) + '"';
+            } else if (options.allowedEmptyAttributes.includes(a)) {
+              result += '=""';
             }
           } else {
             delete frame.attribs[a];
@@ -876,6 +880,9 @@ sanitizeHtml.defaults = {
     // these attributes would make sense if we did.
     img: [ 'src', 'srcset', 'alt', 'title', 'width', 'height', 'loading' ]
   },
+  allowedEmptyAttributes: [
+    'alt'
+  ],
   // Lots of these won't come up by default because we don't allow them
   selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
   // URL schemes we permit
