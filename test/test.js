@@ -1622,21 +1622,31 @@ describe('sanitizeHtml', function() {
       allowedTags: [ 'img' ]
     }), '<img alt="" src="https://example.com/" />');
   });
-  it('should not remove empty alt attribute value by default when disabled', function() {
+  it('should convert the implicit empty alt attribute value to be an empty string by default', function() {
+    assert.equal(sanitizeHtml('<img alt src="https://example.com/" />', {
+      allowedAttributes: { img: [ 'alt', 'src' ] },
+      allowedTags: [ 'img' ]
+    }), '<img alt="" src="https://example.com/" />');
+  });
+  it('should not remove empty alt attribute value by default when an empty nonBooleanAttributes option passed in', function() {
     assert.equal(sanitizeHtml('<img alt="" src="https://example.com/" />', {
       allowedAttributes: { img: [ 'alt', 'src' ] },
       allowedTags: [ 'img' ],
       nonBooleanAttributes: []
     }), '<img alt="" src="https://example.com/" />');
   });
-  it('should set empty value to attribute specified in allowedEmptyAttributes option', function() {
-    assert.equal(sanitizeHtml('<a href target="_blank">hello</a>', {
-      allowedEmptyAttributes: [ 'href' ]
-    }), '<a href="" target="_blank">hello</a>');
+  it('should not remove the empty attributes specified in allowedEmptyAttributes option', function() {
+    assert.equal(sanitizeHtml('<img alt="" src="" />', {
+      allowedAttributes: { img: [ 'alt', 'src' ] },
+      allowedTags: [ 'img' ],
+      allowedEmptyAttributes: [ 'alt', 'src' ]
+    }), '<img alt="" src="" />');
   });
-  it('should not remove empty attribute specified in allowedEmptyAttributes option', function() {
-    assert.equal(sanitizeHtml('<a href="" target="_blank">hello</a>', {
-      allowedEmptyAttributes: [ 'href' ]
-    }), '<a href="" target="_blank">hello</a>');
+  it('should remove all the empty attributes when an empty allowedEmptyAttributes option passed in', function() {
+    assert.equal(sanitizeHtml('<img alt="" src="https://example.com/" target="" />', {
+      allowedAttributes: { img: [ 'alt', 'src' ] },
+      allowedTags: [ 'img' ],
+      allowedEmptyAttributes: []
+    }), '<img src="https://example.com/" />');
   });
 });

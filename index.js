@@ -298,8 +298,8 @@ function sanitizeHtml(html, options, _recursing) {
           // If the value is empty, check if the attribute is in the allowedEmptyAttributes array.
           // If it is not in the allowedEmptyAttributes array, and it is a known non-boolean attribute, delete it
           // List taken from https://html.spec.whatwg.org/multipage/indices.html#attributes-3
-          if (value === '' && (!options.allowedEmptyAttributes.includes(a)) && (options.nonBooleanAttributes.includes(a) ||
-            options.nonBooleanAttributes.includes('*'))) {
+          if (value === '' && (!options.allowedEmptyAttributes.includes(a)) &&
+            (options.nonBooleanAttributes.includes(a) || options.nonBooleanAttributes.includes('*'))) {
             delete frame.attribs[a];
             return;
           }
