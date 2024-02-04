@@ -265,6 +265,19 @@ allowedAttributes: {
 
 With `multiple: true`, several allowed values may appear in the same attribute, separated by spaces. Otherwise the attribute must exactly match one and only one of the allowed values.
 
+#### "What if I want to prevent attributes and tags from being truly lowercase?"
+
+if you got any tag like `linearGradient` and you want to prevent that tag from being lowercased so you have to pass `lowerCaseTags: false` in `parser` option and same for if you want to prevent any attribute like `viewBox` in svg tag from being lowercased so you have to pass `lowerCaseAttributeNames: false` in parser option.
+
+```js
+allowedTags: [ 'svg', 'g', 'defs', 'linearGradient', 'stop', 'circle' ],
+allowedAttributes: false,
+parser: {
+  lowerCaseTags: false,
+  lowerCaseAttributeNames: false
+}
+```
+
 ### Wildcards for attributes
 
 You can use the `*` wildcard to allow all attributes with a certain prefix:
