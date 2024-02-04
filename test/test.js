@@ -1649,4 +1649,15 @@ describe('sanitizeHtml', function() {
       allowedEmptyAttributes: []
     }), '<img src="https://example.com/" />');
   });
+  it('should support SVG tags', () => {
+    assert.equal(sanitizeHtml('<svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><linearGradient id="myGradient" gradientTransform="rotate(90)"><stop offset="5%" stop-color="gold"></stop><stop offset="95%" stop-color="red"></stop></linearGradient></defs><circle cx="5" cy="5" r="4" fill="url(\'#myGradient\')"></circle></svg>', {
+      allowedTags: [ 'svg', 'g', 'defs', 'linearGradient', 'stop', 'circle' ],
+      allowedAttributes: false,
+      parser: {
+        lowerCaseTags: false,
+        lowerCaseAttributeNames: false
+      }
+    }), '<svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><linearGradient id="myGradient" gradientTransform="rotate(90)"><stop offset="5%" stop-color="gold"></stop><stop offset="95%" stop-color="red"></stop></linearGradient></defs><circle cx="5" cy="5" r="4" fill="url(\'#myGradient\')"></circle></svg>');
+  });
+
 });
