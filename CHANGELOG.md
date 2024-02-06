@@ -4,7 +4,9 @@
 
 - Introduced the `allowedEmptyAttributes` option, enabling explicit specification of empty string values for select attributes, with the default attribute set to `alt`.
 
-- Clarified the use of SVGs with a new test and changes to documentation. 
+- Clarified the use of SVGs with a new test and changes to documentation.
+
+- Added completelyDiscard option to remove the content also in html
 
 ## 2.11.0 (2023-06-21)
 
