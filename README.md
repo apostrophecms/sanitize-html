@@ -265,6 +265,21 @@ allowedAttributes: {
 
 With `multiple: true`, several allowed values may appear in the same attribute, separated by spaces. Otherwise the attribute must exactly match one and only one of the allowed values.
 
+#### "What if I want to maintain the original case for SVG elements and attributes?"
+
+If you're incorporating SVG elements like `linearGradient` into your content and notice that they're not rendering as expected due to case sensitivity issues, it's essential to prevent `sanitize-html` from converting element and attribute names to lowercase. This situation often arises when SVGs fail to display correctly because their case-sensitive tags, such as `linearGradient` and attributes like `viewBox`, are inadvertently lowercased.
+
+To address this, ensure you set `lowerCaseTags: false` and `lowerCaseAttributeNames: false` in the parser options of your sanitize-html configuration. This adjustment stops the library from altering the case of your tags and attributes, preserving the integrity of your SVG content.
+
+```js
+allowedTags: [ 'svg', 'g', 'defs', 'linearGradient', 'stop', 'circle' ],
+allowedAttributes: false,
+parser: {
+  lowerCaseTags: false,
+  lowerCaseAttributeNames: false
+}
+```
+
 ### Wildcards for attributes
 
 You can use the `*` wildcard to allow all attributes with a certain prefix:
