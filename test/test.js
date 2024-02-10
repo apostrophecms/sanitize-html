@@ -1669,5 +1669,24 @@ describe('sanitizeHtml', function() {
       completelyDiscard: true
     }), '<meta name="description" content="A post about a thing" />');
   });
-
+  it('should completely remove disallowed tags with nested content', () => {
+    const inputHtml = '<div>Some Text<p>Allowed content</p><script>var x = "Disallowed script";</script><span>More allowed content</span> Another Text</div>';
+    const expectedOutput = '<p>Allowed content</p><span>More allowed content</span>';
+    const sanitizedHtml = sanitizeHtml(inputHtml, {
+      allowedTags: [ 'p', 'span' ],
+      disallowedTagsMode: 'discard',
+      completelyDiscard: true
+    });
+    assert.equal(sanitizedHtml, expectedOutput);
+  });
+  it('should remove disallowed tag but keep its tag\'s inner text ', () => {
+    const inputHtml = '<div>Some Text<p>Allowed content</p><img src="img.png" /><script>var x = "Disallowed script";</script><span>More allowed content</span> Another Text</div>';
+    const expectedOutput = 'Some Text<p>Allowed content</p><img src="img.png" /><span>More allowed content</span> Another Text';
+    const sanitizedHtml = sanitizeHtml(inputHtml, {
+      allowedTags: [ 'p', 'span', 'img' ],
+      disallowedTagsMode: 'discard',
+      completelyDiscard: false // we can omit it also to keep inner text as well
+    });
+    assert.equal(sanitizedHtml, expectedOutput);
+  });
 });

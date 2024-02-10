@@ -272,12 +272,6 @@ function sanitizeHtml(html, options, _recursing) {
       }
       depth++;
       if (skip) {
-        if (options.disallowedTagsMode === 'discard' && options.completelyDiscard === true) {
-          skipText = true;
-          skipTextDepth++;
-          return;
-        }
-
         if (options.disallowedTagsMode === 'discard') {
           // We want the contents but not this tag
           return;
@@ -515,6 +509,9 @@ function sanitizeHtml(html, options, _recursing) {
         tag = lastFrame.tag;
         // If inner text was set by transform function then let's use it
         text = lastFrame.innerText !== undefined ? lastFrame.innerText : text;
+        if (options.disallowedTagsMode === 'discard' && options.completelyDiscard === true && Object.values(options.allowedTags).length && !options.allowedTags.includes(tag)) {
+          text = '';
+        }
       }
 
       if (options.disallowedTagsMode === 'discard' && ((tag === 'script') || (tag === 'style'))) {
