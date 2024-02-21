@@ -1,6 +1,6 @@
 # Changelog
 
-## UNRELEASED
+## 2.12.0 (2024-02-21)
 
 - Introduced the `allowedEmptyAttributes` option, enabling explicit specification of empty string values for select attributes, with the default attribute set to `alt`.
 
