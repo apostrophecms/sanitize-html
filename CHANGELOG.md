@@ -2,9 +2,9 @@
 
 ## 2.12.0 (2024-02-21)
 
-- Introduced the `allowedEmptyAttributes` option, enabling explicit specification of empty string values for select attributes, with the default attribute set to `alt`.
+- Introduced the `allowedEmptyAttributes` option, enabling explicit specification of empty string values for select attributes, with the default attribute set to `alt`. Thanks to [Na](https://github.com/zhna123) for the contribution.
 
-- Clarified the use of SVGs with a new test and changes to documentation. 
+- Clarified the use of SVGs with a new test and changes to documentation. Thanks to [Gauav Kumar](https://github.com/gkumar9891) for the contribution.
 
 ## 2.11.0 (2023-06-21)
 
