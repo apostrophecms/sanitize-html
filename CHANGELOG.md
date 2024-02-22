@@ -6,6 +6,8 @@
 
 - Clarified the use of SVGs with a new test and changes to documentation. Thanks to [Gauav Kumar](https://github.com/gkumar9891) for the contribution.
 
+- Do not process source maps when processing style tags with PostCSS.
+
 ## 2.11.0 (2023-06-21)
 
 - Fix to allow `false` in `allowedClasses` attributes. Thanks to [Kevin Jiang](https://github.com/KevinSJ) for this fix!

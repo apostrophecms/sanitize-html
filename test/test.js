@@ -1659,5 +1659,13 @@ describe('sanitizeHtml', function() {
       }
     }), '<svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><linearGradient id="myGradient" gradientTransform="rotate(90)"><stop offset="5%" stop-color="gold"></stop><stop offset="95%" stop-color="red"></stop></linearGradient></defs><circle cx="5" cy="5" r="4" fill="url(\'#myGradient\')"></circle></svg>');
   });
+  it('should not process style sourceMappingURL with postCSS', () => {
+    assert.equal(sanitizeHtml('<a style=\'background-image: url("/*# sourceMappingURL=../index.js */");\'></a>', {
+      allowedAttributes: {
+        ...sanitizeHtml.defaults.allowedAttributes,
+        a: [ 'style' ]
+      }
+    }), '<a style="background-image:url(&quot;/*# sourceMappingURL=../index.js */&quot;)"></a>');
+  });
 
 });
