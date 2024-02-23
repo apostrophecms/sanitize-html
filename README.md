@@ -40,6 +40,8 @@ If `esModuleInterop=true` is not set in your `tsconfig.json` file, you have to i
 import * as sanitizeHtml from 'sanitize-html';
 ```
 
+When using TypeScript, there is a minimum supported version of >=4.5 because of a dependency on the `htmlparser2` types.
+
 Any questions or problems while using `@types/sanitize-html` should be directed to its maintainers as directed by that project's contribution guidelines.
 
 ## How to use
