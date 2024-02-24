@@ -1667,5 +1667,13 @@ describe('sanitizeHtml', function() {
       }
     }), '<a style="background-image:url(&quot;/*# sourceMappingURL=../index.js */&quot;)"></a>');
   });
-
+  it('should completely remove disallowed tags with nested content', () => {
+    const inputHtml = '<div>Some Text<p>Allowed content</p><script>var x = "Disallowed script";</script><span>More allowed content</span> Another Text</div>';
+    const expectedOutput = '<p>Allowed content</p><span>More allowed content</span>';
+    const sanitizedHtml = sanitizeHtml(inputHtml, {
+      allowedTags: [ 'p', 'span' ],
+      disallowedTagsMode: 'completelyDiscard'
+    });
+    assert.equal(sanitizedHtml, expectedOutput);
+  });
 });
