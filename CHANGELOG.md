@@ -4,6 +4,8 @@
 
 - Documentation update regarding minimum supported TypeScript version.
 
+- Added disallowedTagsMode: 'completelyDiscard' option to remove the content also in html
+
 ## 2.12.1 (2024-02-22)
 
 - Do not parse sourcemaps in `post-css`. This fixes a vulnerability in which information about the existence or non-existence of files on a server could be disclosed via properly crafted HTML input when the `style` attribute is allowed by the configuration. Thanks to the [Snyk Security team](https://snyk.io/) for the disclosure and to [Dylan Armstrong](https://dylan.is/) for the fix.
