@@ -249,6 +249,16 @@ If you set `disallowedTagsMode` to `escape`, the disallowed tags are escaped rat
 
 If you set `disallowedTagsMode` to `recursiveEscape`, the disallowed tags are escaped rather than discarded, and the same treatment is applied to all subtags, whether otherwise allowed or not.
 
+
+#### "What if I wan disallowed tags and any content they contain should discarded"
+
+If you set `disallowedTagsMode` to `completelyDiscard`, disallowed tags and any content they contain are discarded. Any subtags are still included, as long as those individual subtags are allowed.
+
+```js
+allowedTags: [ 'p' ],
+disallowedTagsMode: 'completelyDiscard'
+```
+
 #### "What if I want to allow only specific values on some attributes?"
 
 When configuring the attribute in `allowedAttributes` simply use an object with attribute `name` and an allowed `values` array. In the following example `sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-scripts"` would become `sandbox="allow-popups allow-scripts"`:
@@ -694,6 +704,8 @@ The content still gets escaped properly, with the exception of the `script` and
 attacks. Don't do that* unless you have good reason to trust their origin.
 sanitize-html will log a warning if these tags are allowed, which can be
 disabled with the `allowVulnerableTags: true` option.
+
+### Discarding the entire contents of a disallowed tag
 
 ### Choose what to do with disallowed tags
 

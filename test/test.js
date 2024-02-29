@@ -1676,4 +1676,23 @@ describe('sanitizeHtml', function() {
     });
     assert.equal(sanitizedHtml, expectedOutput);
   });
+  it('should remove top level tag\'s content', () => {
+    const inputHtml = 'Some Text<p>paragraph content</p> content';
+    const expectedOutput = '<p>paragraph content</p>';
+    const sanitizedHtml = sanitizeHtml(inputHtml, {
+      allowedTags: [ 'p' ],
+      disallowedTagsMode: 'completelyDiscard'
+    });
+    assert.equal(sanitizedHtml, expectedOutput);
+  });
+  it('should completely remove disallowd tag with unclosed tag', () => {
+    const inputHtml = '<div>Some Text<p>paragraph content</p>some text';
+    const expectedOutput = '<p>paragraph content</p>';
+    const sanitizedHtml = sanitizeHtml(inputHtml, {
+      allowedTags: [ 'p' ],
+      disallowedTagsMode: 'completelyDiscard'
+    });
+
+    assert.equal(sanitizedHtml, expectedOutput);
+  });
 });
