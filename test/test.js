@@ -1685,7 +1685,7 @@ describe('sanitizeHtml', function() {
     });
     assert.equal(sanitizedHtml, expectedOutput);
   });
-  it('should completely remove disallowd tag with unclosed tag', () => {
+  it('should completely remove disallowed tag with unclosed tag', () => {
     const inputHtml = '<div>Some Text<p>paragraph content</p>some text';
     const expectedOutput = '<p>paragraph content</p>';
     const sanitizedHtml = sanitizeHtml(inputHtml, {

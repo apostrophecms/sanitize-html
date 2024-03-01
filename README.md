@@ -249,16 +249,6 @@ If you set `disallowedTagsMode` to `escape`, the disallowed tags are escaped rat
 
 If you set `disallowedTagsMode` to `recursiveEscape`, the disallowed tags are escaped rather than discarded, and the same treatment is applied to all subtags, whether otherwise allowed or not.
 
-
-#### "What if I wan disallowed tags and any content they contain should discarded"
-
-If you set `disallowedTagsMode` to `completelyDiscard`, disallowed tags and any content they contain are discarded. Any subtags are still included, as long as those individual subtags are allowed.
-
-```js
-allowedTags: [ 'p' ],
-disallowedTagsMode: 'completelyDiscard'
-```
-
 #### "What if I want to allow only specific values on some attributes?"
 
 When configuring the attribute in `allowedAttributes` simply use an object with attribute `name` and an allowed `values` array. In the following example `sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-scripts"` would become `sandbox="allow-popups allow-scripts"`:
@@ -705,8 +695,6 @@ attacks. Don't do that* unless you have good reason to trust their origin.
 sanitize-html will log a warning if these tags are allowed, which can be
 disabled with the `allowVulnerableTags: true` option.
 
-### Discarding the entire contents of a disallowed tag
-
 ### Choose what to do with disallowed tags
 
 Instead of discarding, or keeping text only, you may enable escaping of the entire content:
@@ -717,7 +705,36 @@ disallowedTagsMode: 'escape'
 
 This will transform `<disallowed>content</disallowed>` to `&lt;disallowed&gt;content&lt;/disallowed&gt;`
 
-Valid values are: `'discard'` (default), `'escape'` (escape the tag) and `'recursiveEscape'` (to escape the tag and all its content).
+Valid values are: `'discard'` (default), `'completelyDiscard'` (remove disallowed tag's content), `'escape'` (escape the tag) and `'recursiveEscape'` (to escape the tag and all its content).
+
+#### Discard disallowed tag but keep its inner content
+
+If you set `disallowedTagsMode` to `discard`, disallowed tags are discarded but don't remove inner content of disallowed tags.
+
+```js
+disallowedTagsMode: 'discard'
+```
+This will tranform `<disallowed>content</disallowed>` to `content`
+
+#### Discard entire content of a disallowed tag
+
+If you set `disallowedTagsMode` to `completelyDiscard`, disallowed tags and any content they contain are discarded. Any subtags are still included, as long as those individual subtags are allowed.
+
+```js
+disallowedTagsMode: 'completelyDiscard'
+```
+
+this will transform `<disallowed>content <allowed>content</allowed> </disallowed>` to `<allowed>content</allowed>`
+
+#### Escape the disallowed tag and all its children even for allowed tags.
+
+if you set `disallowedTagsMode` to `recursiveEscape`, disallowed tag and its children will be escaped even for allowed tags
+
+```js
+disallowedTagsMode: `recursiveEscape`
+```
+
+this will transform `<disallowed>hello<p>world</p></disallowed>` to `&lt;disallowed&gt;hello&lt;p&gt;world&lt;/p&gt;&lt;/disallowed&gt;`
 
 ### Ignore style attribute contents
 
