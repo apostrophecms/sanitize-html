@@ -245,6 +245,8 @@ allowedAttributes: {}
 
 If you set `disallowedTagsMode` to `discard` (the default), disallowed tags are discarded. Any text content or subtags are still included, depending on whether the individual subtags are allowed.
 
+If you set `disallowedTagsMode` to `completelyDiscard`, disallowed tags and any content they contain are discarded. Any subtags are still included, as long as those individual subtags are allowed.
+
 If you set `disallowedTagsMode` to `escape`, the disallowed tags are escaped rather than discarded. Any text or subtags are handled normally.
 
 If you set `disallowedTagsMode` to `recursiveEscape`, the disallowed tags are escaped rather than discarded, and the same treatment is applied to all subtags, whether otherwise allowed or not.
