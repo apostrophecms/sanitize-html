@@ -726,7 +726,7 @@ If you set `disallowedTagsMode` to `completelyDiscard`, disallowed tags and any 
 disallowedTagsMode: 'completelyDiscard'
 ```
 
-this will transform `<disallowed>content <allowed>content</allowed> </disallowed>` to `<allowed>content</allowed>`
+This will transform `<disallowed>content <allowed>content</allowed> </disallowed>` to `<allowed>content</allowed>`
 
 #### Escape the disallowed tag and all its children even for allowed tags.
 
@@ -736,7 +736,7 @@ if you set `disallowedTagsMode` to `recursiveEscape`, disallowed tag and its chi
 disallowedTagsMode: `recursiveEscape`
 ```
 
-this will transform `<disallowed>hello<p>world</p></disallowed>` to `&lt;disallowed&gt;hello&lt;p&gt;world&lt;/p&gt;&lt;/disallowed&gt;`
+This will transform `<disallowed>hello<p>world</p></disallowed>` to `&lt;disallowed&gt;hello&lt;p&gt;world&lt;/p&gt;&lt;/disallowed&gt;`
 
 ### Ignore style attribute contents
 
