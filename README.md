@@ -709,14 +709,14 @@ This will transform `<disallowed>content</disallowed>` to `&lt;disallowed&gt;con
 
 Valid values are: `'discard'` (default), `'completelyDiscard'` (remove disallowed tag's content), `'escape'` (escape the tag) and `'recursiveEscape'` (to escape the tag and all its content).
 
-#### Discard disallowed tag but keep its inner content
+#### Discard disallowed but but the inner content of disallowed tags is kept.
 
 If you set `disallowedTagsMode` to `discard`, disallowed tags are discarded but don't remove inner content of disallowed tags.
 
 ```js
 disallowedTagsMode: 'discard'
 ```
-This will tranform `<disallowed>content</disallowed>` to `content`
+This will transform `<disallowed>content</disallowed>` to `content`
 
 #### Discard entire content of a disallowed tag
 
