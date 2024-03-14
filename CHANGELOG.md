@@ -4,7 +4,7 @@
 
 - Documentation update regarding minimum supported TypeScript version.
 
-- Added disallowedTagsMode: 'completelyDiscard' option to remove the content also in html
+- Added disallowedTagsMode: `completelyDiscard` option to remove the content also in HTML. Thanks to [Gauav Kumar](https://github.com/gkumar9891) for this addition.
 
 ## 2.12.1 (2024-02-22)
 
