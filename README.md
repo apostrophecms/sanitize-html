@@ -245,6 +245,8 @@ allowedAttributes: {}
 
 If you set `disallowedTagsMode` to `discard` (the default), disallowed tags are discarded. Any text content or subtags are still included, depending on whether the individual subtags are allowed.
 
+If you set `disallowedTagsMode` to `completelyDiscard`, disallowed tags and any content they contain are discarded. Any subtags are still included, as long as those individual subtags are allowed.
+
 If you set `disallowedTagsMode` to `escape`, the disallowed tags are escaped rather than discarded. Any text or subtags are handled normally.
 
 If you set `disallowedTagsMode` to `recursiveEscape`, the disallowed tags are escaped rather than discarded, and the same treatment is applied to all subtags, whether otherwise allowed or not.
@@ -705,7 +707,36 @@ disallowedTagsMode: 'escape'
 
 This will transform `<disallowed>content</disallowed>` to `&lt;disallowed&gt;content&lt;/disallowed&gt;`
 
-Valid values are: `'discard'` (default), `'escape'` (escape the tag) and `'recursiveEscape'` (to escape the tag and all its content).
+Valid values are: `'discard'` (default), `'completelyDiscard'` (remove disallowed tag's content), `'escape'` (escape the tag) and `'recursiveEscape'` (to escape the tag and all its content).
+
+#### Discard disallowed but but the inner content of disallowed tags is kept.
+
+If you set `disallowedTagsMode` to `discard`, disallowed tags are discarded but don't remove inner content of disallowed tags.
+
+```js
+disallowedTagsMode: 'discard'
+```
+This will transform `<disallowed>content</disallowed>` to `content`
+
+#### Discard entire content of a disallowed tag
+
+If you set `disallowedTagsMode` to `completelyDiscard`, disallowed tags and any content they contain are discarded. Any subtags are still included, as long as those individual subtags are allowed.
+
+```js
+disallowedTagsMode: 'completelyDiscard'
+```
+
+This will transform `<disallowed>content <allowed>content</allowed> </disallowed>` to `<allowed>content</allowed>`
+
+#### Escape the disallowed tag and all its children even for allowed tags.
+
+if you set `disallowedTagsMode` to `recursiveEscape`, disallowed tag and its children will be escaped even for allowed tags
+
+```js
+disallowedTagsMode: `recursiveEscape`
+```
+
+This will transform `<disallowed>hello<p>world</p></disallowed>` to `&lt;disallowed&gt;hello&lt;p&gt;world&lt;/p&gt;&lt;/disallowed&gt;`
 
 ### Ignore style attribute contents
 

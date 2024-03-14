@@ -262,7 +262,7 @@ function sanitizeHtml(html, options, _recursing) {
       if (!tagAllowed(name) || (options.disallowedTagsMode === 'recursiveEscape' && !isEmptyObject(skipMap)) || (options.nestingLimit != null && depth >= options.nestingLimit)) {
         skip = true;
         skipMap[depth] = true;
-        if (options.disallowedTagsMode === 'discard') {
+        if (options.disallowedTagsMode === 'discard' || options.disallowedTagsMode === 'completelyDiscard') {
           if (nonTextTagsArray.indexOf(name) !== -1) {
             skipText = true;
             skipTextDepth = 1;
@@ -272,7 +272,7 @@ function sanitizeHtml(html, options, _recursing) {
       }
       depth++;
       if (skip) {
-        if (options.disallowedTagsMode === 'discard') {
+        if (options.disallowedTagsMode === 'discard' || options.disallowedTagsMode === 'completelyDiscard') {
           // We want the contents but not this tag
           return;
         }
@@ -511,7 +511,9 @@ function sanitizeHtml(html, options, _recursing) {
         text = lastFrame.innerText !== undefined ? lastFrame.innerText : text;
       }
 
-      if (options.disallowedTagsMode === 'discard' && ((tag === 'script') || (tag === 'style'))) {
+      if (options.disallowedTagsMode === 'completelyDiscard' && !tagAllowed(tag)) {
+        text = '';
+      } else if ((options.disallowedTagsMode === 'discard' || options.disallowedTagsMode === 'completelyDiscard') && ((tag === 'script') || (tag === 'style'))) {
         // htmlparser2 gives us these as-is. Escaping them ruins the content. Allowing
         // script tags is, by definition, game over for XSS protection, so if that's
         // your concern, don't allow them. The same is essentially true for style tags
@@ -559,7 +561,7 @@ function sanitizeHtml(html, options, _recursing) {
       const skip = skipMap[depth];
       if (skip) {
         delete skipMap[depth];
-        if (options.disallowedTagsMode === 'discard') {
+        if (options.disallowedTagsMode === 'discard' || options.disallowedTagsMode === 'completelyDiscard') {
           frame.updateParentNodeText();
           return;
         }
