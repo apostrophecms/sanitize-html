@@ -711,7 +711,7 @@ Valid values are: `'discard'` (default), `'completelyDiscard'` (remove disallowe
 
 #### Discard disallowed but but the inner content of disallowed tags is kept.
 
-If you set `disallowedTagsMode` to `discard`, disallowed tags are discarded but don't remove inner content of disallowed tags.
+If you set `disallowedTagsMode` to `discard`, disallowed tags are discarded but but the inner content of disallowed tags is kept.
 
 ```js
 disallowedTagsMode: 'discard'
