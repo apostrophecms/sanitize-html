@@ -1,6 +1,6 @@
 # Changelog
 
-## UNRELEASED
+## 2.13.0 (2024-03-20)
 
 - Documentation update regarding minimum supported TypeScript version.
 
