@@ -1811,4 +1811,26 @@ describe('sanitizeHtml', function() {
     );
     assert.equal(sanitizedHtml, expectedOutput);
   });
+  it('should not preserve attributes on escaped disallowed tags when `preserveEscapedAttributes` is false', () => {
+    const inputHtml = '<div class="foo">Some Text</div>';
+    const expectedOutput = '&lt;div&gt;Some Text&lt;/div&gt;';
+    const sanitizedHtml = sanitizeHtml(inputHtml, {
+      allowedTags: [],
+      disallowedTagsMode: 'escape',
+      preserveEscapedAttributes: false
+    });
+
+    assert.equal(sanitizedHtml, expectedOutput);
+  });
+  it('should preserve attributes on escaped disallowed tags when `preserveEscapedAttributes` is true', () => {
+    const inputHtml = '<div class="foo">Some Text</div>';
+    const expectedOutput = '&lt;div class="foo"&gt;Some Text&lt;/div&gt;';
+    const sanitizedHtml = sanitizeHtml(inputHtml, {
+      allowedTags: [],
+      disallowedTagsMode: 'escape',
+      preserveEscapedAttributes: true
+    });
+
+    assert.equal(sanitizedHtml, expectedOutput);
+  });
 });
