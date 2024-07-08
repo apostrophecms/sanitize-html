@@ -753,6 +753,15 @@ disallowedTagsMode: `recursiveEscape`
 
 This will transform `<disallowed>hello<p>world</p></disallowed>` to `&lt;disallowed&gt;hello&lt;p&gt;world&lt;/p&gt;&lt;/disallowed&gt;`
 
+#### Escape the disallowed tag, including all its attributes.
+
+By default, disallowed attributes are stripped from escaped tags. You can set `preserveEscapedAttributes` to `true` to 
+keep them as-is.
+
+```js
+preserveEscapedAttributes: true
+```
+
 ### Ignore style attribute contents
 
 Instead of discarding faulty style attributes, you can allow them by disabling the parsing of style attributes:
