@@ -1833,4 +1833,19 @@ describe('sanitizeHtml', function() {
 
     assert.equal(sanitizedHtml, expectedOutput);
   });
+  it('should ignore the `preserveEscapedAttributes` option when discarding diallowed tags (rather than escaping)', () => {
+    const inputHtml = '<div class="foo">Some Text</div>';
+    const sanitizedHtmlPreservedAttrsTrue = sanitizeHtml(inputHtml, {
+      allowedTags: [],
+      disallowedTagsMode: 'discard',
+      preserveEscapedAttributes: true
+    });
+    const sanitizedHtmlPreservedAttrsFalse = sanitizeHtml(inputHtml, {
+      allowedTags: [],
+      disallowedTagsMode: 'discard',
+      preserveEscapedAttributes: false
+    });
+
+    assert.equal(sanitizedHtmlPreservedAttrsTrue, sanitizedHtmlPreservedAttrsFalse);
+  });
 });
