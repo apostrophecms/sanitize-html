@@ -117,7 +117,15 @@ function sanitizeHtml(html, options, _recursing) {
   options = Object.assign({}, sanitizeHtml.defaults, options);
   options.parser = Object.assign({}, htmlParserDefaults, options.parser);
 
-  const tagAllowed = function (name) {
+  const { selfClosing } = options;
+  if (Array.isArray(selfClosing)) {
+    options.selfClosing = selfClosing.reduce((before, tagName) => ({
+      ...before,
+      [tagName]: true
+    }), {});
+  }
+
+  const tagAllowed = function(name) {
     return options.allowedTags === false || (options.allowedTags || []).indexOf(name) > -1;
   };
 
@@ -484,8 +492,11 @@ function sanitizeHtml(html, options, _recursing) {
           }
         });
       }
-      if (options.selfClosing.indexOf(name) !== -1) {
-        result += ' />';
+
+      if (options.selfClosing[name]) {
+        result += options.selfClosing[name]?.voidTag === true
+          ? '>'
+          : ' />';
       } else {
         result += '>';
         if (frame.innerText && !hasText && !options.textFilter) {
@@ -493,6 +504,7 @@ function sanitizeHtml(html, options, _recursing) {
           addedText = true;
         }
       }
+
       if (skip) {
         result = tempResult + escapeHtml(result);
         tempResult = '';
@@ -584,7 +596,7 @@ function sanitizeHtml(html, options, _recursing) {
 
       if (
         // Already output />
-        options.selfClosing.indexOf(name) !== -1 ||
+        options.selfClosing[name] ||
         // Escaped tag, closing tag is implied
         (isImplied && !tagAllowed(name) && [ 'escape', 'recursiveEscape' ].indexOf(options.disallowedTagsMode) >= 0)
       ) {
