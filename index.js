@@ -494,7 +494,7 @@ function sanitizeHtml(html, options, _recursing) {
       }
 
       if (options.selfClosing[name]) {
-        result += options.selfClosing[name]?.voidTag === true
+        result += options.selfClosing[name]?.voidElement === true
           ? '>'
           : ' />';
       } else {
