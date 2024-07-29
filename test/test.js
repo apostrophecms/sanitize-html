@@ -1695,4 +1695,33 @@ describe('sanitizeHtml', function() {
 
     assert.equal(sanitizedHtml, expectedOutput);
   });
+  it('should keep specific selfClosing elements (provided as string[])', () => {
+    assert.equal(sanitizeHtml('<div>ga<br />bu<input />zo<img>me</div>', {
+      allowedTags: [ 'div', 'input', 'img', 'br' ],
+      selfClosing: [ 'br', 'input' ]
+    }), '<div>ga<br />bu<input />zo<img></img>me</div>');
+  });
+  it('should keep specific selfClosing elements (provided as Record<string, boolean>)', () => {
+    assert.equal(sanitizeHtml('<div>ga<br />bu<input />zo<img>me</div>', {
+      allowedTags: [ 'div', 'input', 'img', 'br' ],
+      selfClosing: {
+        br: true,
+        input: false,
+        img: true
+      }
+    }), '<div>ga<br />bu<input></input>zo<img />me</div>');
+  });
+  it('should keep specific selfClosing void elements (provided as Record<string, { voidElement: boolean }>)', () => {
+    assert.equal(sanitizeHtml('<div>ga<br />bu<input />zo<img>me</div>', {
+      allowedTags: [ 'div', 'input', 'img', 'br' ],
+      selfClosing: {
+        br: {
+          voidElement: true
+        },
+        img: {
+          voidElement: false
+        }
+      }
+    }), '<div>ga<br>bu<input></input>zo<img />me</div>');
+  });
 });
