@@ -431,12 +431,13 @@ function sanitizeHtml(html, options, _recursing) {
               const allowedWildcardClasses = allowedClassesMap['*'];
               const allowedSpecificClassesGlob = allowedClassesGlobMap[name];
               const allowedSpecificClassesRegex = allowedClassesRegexMap[name];
+              const allowedWildcardClassesRegex = allowedClassesRegexMap['*'];
               const allowedWildcardClassesGlob = allowedClassesGlobMap['*'];
               const allowedClassesGlobs = [
                 allowedSpecificClassesGlob,
                 allowedWildcardClassesGlob
               ]
-                .concat(allowedSpecificClassesRegex)
+                .concat(allowedSpecificClassesRegex, allowedWildcardClassesRegex)
                 .filter(function (t) {
                   return t;
                 });
