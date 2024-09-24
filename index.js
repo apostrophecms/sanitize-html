@@ -120,8 +120,8 @@ function sanitizeHtml(html, options, _recursing) {
   const { selfClosing } = options;
   if (Array.isArray(selfClosing)) {
     options.selfClosing = {};
-    for (let i = 0; i < selfClosing.length; i++) {
-      options.selfClosing[selfClosing[i]] = true;
+    for (const tag of selfClosing) {
+      options.selfClosing[tag] = true;
     }
   }
 
