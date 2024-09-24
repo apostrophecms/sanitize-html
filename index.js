@@ -119,10 +119,10 @@ function sanitizeHtml(html, options, _recursing) {
 
   const { selfClosing } = options;
   if (Array.isArray(selfClosing)) {
-    options.selfClosing = selfClosing.reduce((before, tagName) => ({
-      ...before,
-      [tagName]: true
-    }), {});
+    options.selfClosing = {};
+    for (let i = 0; i < selfClosing.length; i++) {
+      options.selfClosing[selfClosing[i]] = true;
+    }
   }
 
   const tagAllowed = function(name) {
@@ -493,7 +493,7 @@ function sanitizeHtml(html, options, _recursing) {
         });
       }
 
-      if (options.selfClosing[name]) {
+      if (Object.hasOwn(options.selfClosing, name)) {
         result += options.selfClosing[name]?.voidElement === true
           ? '>'
           : ' />';
