@@ -1708,4 +1708,53 @@ describe('sanitizeHtml', function() {
 
     assert.equal(sanitizedHtml, expectedOutput);
   });
+  it('should handle valid base64 encoded image urls', function () {
+    const base64ImageUrl =
+      'data:image/png;base64,iVBORw0KGgoAAA';
+    const input = `<img src="${base64ImageUrl}" />`;
+    const output = sanitizeHtml(input, {
+      allowedTags: [ 'img' ],
+      allowedAttributes: { img: [ 'src' ] }
+    });
+    assert.equal(output, input);
+  });
+  it('should handle valid base64 encoded image urls (with allowedSchemas)', function () {
+    const base64ImageUrl =
+      'data:image/png;base64,iVBORw0KGgoAAA';
+    const input = `<img src="${base64ImageUrl}" />`;
+    const output = sanitizeHtml(input, {
+      allowedTags: [ 'img' ],
+      allowedAttributes: { img: [ 'src' ] },
+      allowedSchemes: [ 'data' ]
+    });
+    assert.equal(output, input);
+  });
+  it('should handle invalid base64 encoded image urls (with missing colon)', function () {
+    const base64ImageUrl =
+      'dataimage/png;base64,iVBORw0KGgoAAA';
+    const input = `<img src="${base64ImageUrl}" />`;
+    const output = sanitizeHtml(input, {
+      allowedTags: [ 'img' ],
+      allowedAttributes: { img: [ 'src' ] }
+    });
+    assert.equal(output, input);
+  });
+  it('should handle normal image urls', function () {
+    const normalUrl = 'https://example.com/image.jpg';
+    const input = `<img src="${normalUrl}" />`;
+    const output = sanitizeHtml(input, {
+      allowedTags: [ 'img' ],
+      allowedAttributes: { img: [ 'src' ] }
+    });
+    assert.equal(output, input);
+  });
+  it('should handle any image urls', function () {
+    const anyUrl = 'this is not a url';
+    const input = `<img src="${anyUrl}" />`;
+    const output = sanitizeHtml(input, {
+      allowedTags: [ 'img' ],
+      allowedAttributes: { img: [ 'src' ] }
+    });
+    assert.equal(output, input);
+  });
 });
