@@ -1,6 +1,6 @@
 # Changelog
 
-## UNRELEASED
+## 2.13.1 (2024-10-03)
 
 - Fix to allow regex in `allowedClasses` wildcard whitelist. Thanks to `anak-dev`.
 
