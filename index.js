@@ -287,7 +287,14 @@ function sanitizeHtml(html, options, _recursing) {
         }
       }
 
-      if (!allowedAttributesMap || has(allowedAttributesMap, name) || allowedAttributesMap['*']) {
+      const isBeingEscaped = skip && (options.disallowedTagsMode === 'escape' || options.disallowedTagsMode === 'recursiveEscape');
+      const shouldPreserveEscapedAttributes = isBeingEscaped && options.preserveEscapedAttributes;
+
+      if (shouldPreserveEscapedAttributes) {
+        each(attribs, function(value, a) {
+          result += ' ' + a + '="' + escapeHtml((value || ''), true) + '"';
+        });
+      } else if (!allowedAttributesMap || has(allowedAttributesMap, name) || allowedAttributesMap['*']) {
         each(attribs, function(value, a) {
           if (!VALID_HTML_ATTRIBUTE_NAME.test(a)) {
             // This prevents part of an attribute name in the output from being
@@ -894,7 +901,8 @@ sanitizeHtml.defaults = {
   allowedSchemesAppliedToAttributes: [ 'href', 'src', 'cite' ],
   allowProtocolRelative: true,
   enforceHtmlBoundary: false,
-  parseStyleAttributes: true
+  parseStyleAttributes: true,
+  preserveEscapedAttributes: false
 };
 
 sanitizeHtml.simpleTransform = function(newTagName, newAttribs, merge) {
