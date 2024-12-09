@@ -1,5 +1,9 @@
 # Changelog
 
+## UNRELEASED
+
+- Fix adding text with `transformTags` in cases where it originally had no text child elements. Thanks to [f0x](https://cthu.lu).
+
 ## 2.13.1 (2024-10-03)
 
 - Fix to allow regex in `allowedClasses` wildcard whitelist. Thanks to `anak-dev`.
