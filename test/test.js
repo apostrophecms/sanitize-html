@@ -1708,4 +1708,16 @@ describe('sanitizeHtml', function() {
 
     assert.equal(sanitizedHtml, expectedOutput);
   });
+  it('should transform text content of tags even if they originally had none', () => {
+    const inputHtml = '<div></div>';
+    const expectedOutput = 'new content';
+    const sanitizedHtml = sanitizeHtml(inputHtml, {
+      allowedTags: [],
+      transformTags: {
+        "div": () => ({text: "new content"})
+      }
+    });
+
+    assert.equal(sanitizedHtml, expectedOutput);
+  });
 });

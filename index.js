@@ -274,6 +274,15 @@ function sanitizeHtml(html, options, _recursing) {
       if (skip) {
         if (options.disallowedTagsMode === 'discard' || options.disallowedTagsMode === 'completelyDiscard') {
           // We want the contents but not this tag
+          if (frame.innerText && !hasText) {
+            const escaped = escapeHtml(frame.innerText);
+            if (options.textFilter) {
+              result += options.textFilter(escaped, name);
+            } else {
+              result += escapeHtml(frame.innerText);
+            }
+            addedText = true;
+          }
           return;
         }
         tempResult = result;
