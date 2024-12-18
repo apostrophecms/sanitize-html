@@ -1714,7 +1714,7 @@ describe('sanitizeHtml', function() {
     const sanitizedHtml = sanitizeHtml(inputHtml, {
       allowedTags: [],
       transformTags: {
-        "div": () => ({text: "new content"})
+        div: () => ({ text: 'new content' })
       }
     });
 
