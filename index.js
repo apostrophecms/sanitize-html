@@ -832,7 +832,7 @@ sanitizeHtml.defaults = {
     'main', 'nav', 'section',
     // Text content
     'blockquote', 'dd', 'div', 'dl', 'dt', 'figcaption', 'figure',
-    'hr', 'li', 'main', 'ol', 'p', 'pre', 'ul',
+    'hr', 'li', 'menu', 'ol', 'p', 'pre', 'ul',
     // Inline text semantics
     'a', 'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'dfn',
     'em', 'i', 'kbd', 'mark', 'q',
