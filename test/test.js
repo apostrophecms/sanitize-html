@@ -1720,4 +1720,19 @@ describe('sanitizeHtml', function() {
 
     assert.equal(sanitizedHtml, expectedOutput);
   });
+  it('should call onOpenTag, onText, and onCloseTag callbacks', () => {
+    const onOpenTag = sinon.spy();
+    const onText = sinon.spy();
+    const onCloseTag = sinon.spy();
+    const inputHtml = '<div>Some Text<p>paragraph content</p>some text</div>';
+    sanitizeHtml(inputHtml, {
+      allowedTags: [ 'p' ],
+      onOpenTag,
+      onText,
+      onCloseTag
+    });
+    assert.equal(onOpenTag.callCount, 2);
+    assert.equal(onText.callCount, 3);
+    assert.equal(onCloseTag.callCount, 2);
+  });
 });
