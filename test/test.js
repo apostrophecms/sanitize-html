@@ -1428,7 +1428,7 @@ describe('sanitizeHtml', function() {
       '<div>&lt;wiggly&gt;Hello<p>World</p>&lt;/wiggly&gt;</div>'
     );
   });
-  it('should escape markup even when deocdeEntities is false', function() {
+  it('should escape markup even when decodeEntities is false', function() {
     assert.equal(
       sanitizeHtml('<wiggly>Hello</wiggly>', {
         disallowedTagsMode: 'escape',

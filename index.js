@@ -268,7 +268,6 @@ function sanitizeHtml(html, options, _recursing) {
             skipTextDepth = 1;
           }
         }
-        skipMap[depth] = true;
       }
       depth++;
       if (skip) {
@@ -279,7 +278,7 @@ function sanitizeHtml(html, options, _recursing) {
             if (options.textFilter) {
               result += options.textFilter(escaped, name);
             } else {
-              result += escapeHtml(frame.innerText);
+              result += escaped;
             }
             addedText = true;
           }
@@ -529,11 +528,11 @@ function sanitizeHtml(html, options, _recursing) {
         // your concern, don't allow them. The same is essentially true for style tags
         // which have their own collection of XSS vectors.
         result += text;
-      } else {
+      } else if (!addedText) {
         const escaped = escapeHtml(text, false);
-        if (options.textFilter && !addedText) {
+        if (options.textFilter) {
           result += options.textFilter(escaped, tag);
-        } else if (!addedText) {
+        } else {
           result += escaped;
         }
       }
