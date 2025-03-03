@@ -384,6 +384,41 @@ describe('sanitizeHtml', function() {
       'I love <a href="www.linux.org" target="_hplink">Linux</a> OS'
     );
   });
+
+  it('should keep inner text when exclusiveFilter returns "tag"', function() {
+    assert.strictEqual(
+      sanitizeHtml('<p>These links <a href="javascript:alert(123)">hack</a> <a href="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">more hack</a> have disallowed href protocols</p>', {
+        exclusiveFilter: function (frame) {
+          return frame.tag === 'a' && !frame.attribs.src ? 'tag' : false;
+        }
+      }),
+      '<p>These links hack more hack have disallowed href protocols</p>'
+    );
+  });
+
+  it('should keep inner tags when exclusiveFilter returns "tag"', function() {
+    assert.strictEqual(
+      sanitizeHtml('This div is bad <div class="bad">but its <strong>content</strong><p>should be kept <em>as-is</em></p></div>.', {
+        exclusiveFilter: function (frame) {
+          return frame.tag === 'div' && frame.attribs.class && /\bbad\b/.test(frame.attribs.class) ? 'tag' : false;
+        }
+      }),
+      'This div is bad but its <strong>content</strong><p>should be kept <em>as-is</em></p>.'
+    );
+  });
+
+  it('should work with escaped tags when exclusiveFilter returns "tag"', function () {
+    assert.strictEqual(
+      sanitizeHtml('<strong>hello</strong> <wiggly>there. <em>General Kenobi</em></wiggly>!', {
+        disallowedTagsMode: 'escape',
+        exclusiveFilter: function (frame) {
+          return frame.tag === 'wiggly' ? 'tag' : false;
+        }
+      }),
+      '<strong>hello</strong> there. <em>General Kenobi</em>!'
+    );
+  });
+
   it('should disallow data URLs with default allowedSchemes', function() {
     assert.equal(
       sanitizeHtml(
