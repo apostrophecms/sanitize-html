@@ -385,6 +385,18 @@ describe('sanitizeHtml', function() {
     );
   });
 
+  it('Exclusive filter should not run for discarded tags', function () {
+    assert.strictEqual(
+      sanitizeHtml('this tag is <wiggly>discarded</wiggly>',
+        {
+          exclusiveFilter: function () {
+            throw Error('this should not run');
+          }
+        }),
+      'this tag is discarded'
+    );
+  });
+
   it('should keep inner text when exclusiveFilter returns "tag"', function() {
     assert.strictEqual(
       sanitizeHtml('<p>These links <a href="javascript:alert(123)">hack</a> <a href="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">more hack</a> have disallowed href protocols</p>', {
