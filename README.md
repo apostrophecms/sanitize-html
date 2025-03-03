@@ -494,7 +494,7 @@ sanitizeHtml(
 );
 ```
 
-The filter function can also return the string `"tag"` to only remove the tag, while leaving its content. For example, you can remove tags for anchors with invalid links:
+The filter function can also return the string `"excludeTag"` to only remove the tag, while keeping its content. For example, you can remove tags for anchors with invalid links:
 
 ```js
 sanitizeHtml(
