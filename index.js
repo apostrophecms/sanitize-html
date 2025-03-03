@@ -587,7 +587,7 @@ function sanitizeHtml(html, options, _recursing) {
 
       if (options.exclusiveFilter) {
         const filterResult = options.exclusiveFilter(frame);
-        if (filterResult === 'tag') {
+        if (filterResult === 'excludeTag') {
           if (skip) {
             // no longer escaping the tag since it's not added at all
             result = tempResult;

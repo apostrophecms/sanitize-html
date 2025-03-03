@@ -502,7 +502,7 @@ sanitizeHtml(
   {
     exclusiveFilter: function(frame) {
       // the href attribute is removed by the URL protocol check
-      return frame.tag === 'a' && !frame.attribs.href ? 'tag' : false;
+      return frame.tag === 'a' && !frame.attribs.href ? 'excludeTag' : false;
     }
   }
 );
