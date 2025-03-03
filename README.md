@@ -494,6 +494,21 @@ sanitizeHtml(
 );
 ```
 
+The filter function can also return the string `"tag"` to only remove the tag, while leaving its content. For example, you can remove tags for anchors with invalid links:
+
+```js
+sanitizeHtml(
+  'This is a <a href="javascript:alert(123)">bad link</a> and a <a href="https://www.linux.org">good link</a>',
+  {
+    exclusiveFilter: function(frame) {
+      // the href attribute is removed by the URL protocol check
+      return frame.tag === 'a' && !frame.attribs.href ? 'tag' : false;
+    }
+  }
+);
+// Output: 'This is a bad link and a <a href="https://www.linux.org">good link</a>'
+```
+
 The `frame` object supplied to the callback provides the following attributes:
 
 - `tag`: The tag name, i.e. `'img'`.
