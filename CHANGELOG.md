@@ -2,7 +2,7 @@
 
 ## UNRELEASED
 
-- Allow keeping tag content when discarding with exclusive filter by returning `"tag"`. Thanks to [rChaoz](https://github.com/rChaoz).
+- Allow keeping tag content when discarding with exclusive filter by returning `"excludeTag"`. Thanks to [rChaoz](https://github.com/rChaoz).
 
 ## 2.14.0 (2024-12-18)
 
