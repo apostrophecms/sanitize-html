@@ -1735,4 +1735,29 @@ describe('sanitizeHtml', function() {
     assert.equal(onText.callCount, 3);
     assert.equal(onCloseTag.callCount, 2);
   });
+  it('should insert spaces between removed tags whose content we keep', () => {
+    const inputHtml = 'It&#39;s me<div>I&#39;m here</div><div>I&#39;m there</div>and also here';
+    const expectedOutput = 'It\'s me I\'m here I\'m there and also here';
+    let addSpace = false;
+    const sanitizedHtml = sanitizeHtml(
+      inputHtml,
+      {
+        allowedTags: [],
+        onOpenTag: (tag) => {
+          addSpace = true;
+        },
+        onCloseTag: (tag) => {
+          addSpace = true;
+        },
+        textFilter: (text) => {
+          if (addSpace) {
+            addSpace = false;
+            return ' ' + text;
+          }
+          return text;
+        }
+      }
+    );
+    assert.equal(sanitizedHtml, expectedOutput);
+  });
 });
