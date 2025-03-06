@@ -494,6 +494,21 @@ sanitizeHtml(
 );
 ```
 
+The filter function can also return the string `"excludeTag"` to only remove the tag, while keeping its content. For example, you can remove tags for anchors with invalid links:
+
+```js
+sanitizeHtml(
+  'This is a <a href="javascript:alert(123)">bad link</a> and a <a href="https://www.linux.org">good link</a>',
+  {
+    exclusiveFilter: function(frame) {
+      // the href attribute is removed by the URL protocol check
+      return frame.tag === 'a' && !frame.attribs.href ? 'excludeTag' : false;
+    }
+  }
+);
+// Output: 'This is a bad link and a <a href="https://www.linux.org">good link</a>'
+```
+
 The `frame` object supplied to the callback provides the following attributes:
 
 - `tag`: The tag name, i.e. `'img'`.
@@ -709,9 +724,9 @@ This will transform `<disallowed>content</disallowed>` to `&lt;disallowed&gt;con
 
 Valid values are: `'discard'` (default), `'completelyDiscard'` (remove disallowed tag's content), `'escape'` (escape the tag) and `'recursiveEscape'` (to escape the tag and all its content).
 
-#### Discard disallowed but but the inner content of disallowed tags is kept.
+#### Discard disallowed but the inner content of disallowed tags is kept.
 
-If you set `disallowedTagsMode` to `discard`, disallowed tags are discarded but but the inner content of disallowed tags is kept.
+If you set `disallowedTagsMode` to `discard`, disallowed tags are discarded but the inner content of disallowed tags is kept.
 
 ```js
 disallowedTagsMode: 'discard'
@@ -720,7 +735,7 @@ This will transform `<disallowed>content</disallowed>` to `content`
 
 #### Discard entire content of a disallowed tag
 
-If you set `disallowedTagsMode` to `completelyDiscard`, disallowed tags and any content they contain are discarded. Any subtags are still included, as long as those individual subtags are allowed.
+If you set `disallowedTagsMode` to `completelyDiscard`, disallowed tags and any text they contain are discarded. This also discards top-level text. Any subtags are still included, as long as those individual subtags are allowed.
 
 ```js
 disallowedTagsMode: 'completelyDiscard'
