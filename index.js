@@ -220,6 +220,10 @@ function sanitizeHtml(html, options, _recursing) {
 
   const parser = new htmlparser.Parser({
     onopentag: function(name, attribs) {
+      if (options.onOpenTag) {
+        options.onOpenTag(name, attribs);
+      }
+
       // If `enforceHtmlBoundary` is `true` and this has found the opening
       // `html` tag, reset the state.
       if (options.enforceHtmlBoundary && name === 'html') {
@@ -510,6 +514,10 @@ function sanitizeHtml(html, options, _recursing) {
       frame.openingTagLength = result.length - frame.tagPosition;
     },
     ontext: function(text) {
+      if (options.onText) {
+        options.onText(text);
+      }
+
       if (skipText) {
         return;
       }
@@ -544,6 +552,9 @@ function sanitizeHtml(html, options, _recursing) {
       }
     },
     onclosetag: function(name, isImplied) {
+      if (options.onCloseTag) {
+        options.onCloseTag(name, isImplied);
+      }
 
       if (skipText) {
         skipTextDepth--;
