@@ -1,6 +1,6 @@
 # Changelog
 
-## UNRELEASED
+## 2.15.0 (2025-03-19)
 
 - Allow keeping tag content when discarding with exclusive filter by returning `"excludeTag"`. Thanks to [rChaoz](https://github.com/rChaoz).
 
