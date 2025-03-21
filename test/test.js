@@ -1767,4 +1767,52 @@ describe('sanitizeHtml', function() {
 
     assert.equal(sanitizedHtml, expectedOutput);
   });
+  it('should call onOpenTag, onText, and onCloseTag callbacks', () => {
+    const onOpenTag = sinon.spy();
+    const onText = sinon.spy();
+    const onCloseTag = sinon.spy();
+    const inputHtml = '<div id="one">Some Text<p id="two">paragraph content</p>some text</div>';
+    sanitizeHtml(inputHtml, {
+      allowedTags: [ 'p' ],
+      onOpenTag,
+      onText,
+      onCloseTag
+    });
+    assert.equal(onOpenTag.callCount, 2);
+    assert.equal(onOpenTag.getCall(0).calledWith('div', { id: 'one' }), true);
+    assert.equal(onOpenTag.getCall(1).calledWith('p', { id: 'two' }), true);
+    assert.equal(onText.callCount, 3);
+    assert.equal(onText.getCall(0).calledWith('Some Text'), true);
+    assert.equal(onText.getCall(1).calledWith('paragraph content'), true);
+    assert.equal(onText.getCall(2).calledWith('some text'), true);
+    assert.equal(onCloseTag.callCount, 2);
+    assert.equal(onCloseTag.getCall(0).calledWith('p', false), true);
+    assert.equal(onCloseTag.getCall(1).calledWith('div', false), true);
+  });
+  it('should insert spaces between removed tags whose content we keep', () => {
+    const inputHtml = 'Text&#39;s here<div>it&#39;s here</div><div><p>it&#39;s there</p></div>and <b>also</b> here';
+    const expectedOutput = 'Text\'s here it\'s here it\'s there and <b>also</b> here';
+    const allowedTags = [ 'b' ];
+    let addSpace = false;
+    const sanitizedHtml = sanitizeHtml(
+      inputHtml,
+      {
+        allowedTags,
+        onOpenTag: (tag) => {
+          addSpace = !allowedTags.includes(tag);
+        },
+        onCloseTag: (tag) => {
+          addSpace = !allowedTags.includes(tag);
+        },
+        textFilter: (text) => {
+          if (addSpace) {
+            addSpace = false;
+            return ' ' + text;
+          }
+          return text;
+        }
+      }
+    );
+    assert.equal(sanitizedHtml, expectedOutput);
+  });
 });
