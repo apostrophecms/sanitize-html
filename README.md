@@ -778,7 +778,7 @@ For example, you may want to add spaces around a removed tag, like this:
 const allowedTags = [ 'b' ];
 let addSpace = false;
 const sanitizedHtml = sanitizeHtml(
-  'Text&#39;s here<div>it&#39;s here</div><div><p>it&#39;s there</p></div>and <b>also</b> here.',
+  'There should be<div><p>spaces</p></div>between <b>these</b> words.',
   {
     allowedTags,
     onOpenTag: (tag) => {
@@ -800,7 +800,7 @@ const sanitizedHtml = sanitizeHtml(
 
 In this example, we are setting a flag when a tag that will be removed has been opened or closed. Then we use the `textFilter` to modify the text to include spaces. The example should produce:
 ```
-Text's here it's here it's there and <b>also</b> here.
+There should be spaces between these words.
 ```
 
 ## About ApostropheCMS
