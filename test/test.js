@@ -1767,4 +1767,13 @@ describe('sanitizeHtml', function() {
 
     assert.equal(sanitizedHtml, expectedOutput);
   });
+  it('should allow linear-gradient in background css property', () => {
+    const inputHtml = '<div style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(any_url) no-repeat center center;"></div>';
+    const expectedOutput = '<div style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(any_url) no-repeat center center;"></div>';
+    const sanitizedHtml = sanitizeHtml(inputHtml, {
+      allowedTags: ['div'],
+    });
+
+    assert.equal(sanitizedHtml, expectedOutput);
+  });
 });
