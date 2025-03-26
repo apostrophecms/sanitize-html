@@ -798,7 +798,7 @@ const sanitizedHtml = sanitizeHtml(
 );
 ```
 
-In this example we are tracking when a removed tag has opened or closed and modify text that follows it. The example should produce:
+In this example, we are setting a flag when a tag that will be removed has been opened or closed. Then we use the `textFilter` to modify the text to include spaces. The example should produce:
 ```
 Text's here it's here it's there and <b>also</b> here.
 ```
