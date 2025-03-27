@@ -772,11 +772,11 @@ For more advanced filtering you can hook directly into the parsing process using
 
 The `onOpenTag` event is triggered when an opening tag is encountered. It has two arguments:
 - `tagName`: The name of the tag.
-- `attribs`: An object containing the tag's attributes, i.e. { src: "/path/to/tux.png" }.
+- `attribs`: An object containing the tag's attributes, e.g. `{ src: "/path/to/tux.png" }`.
 
 The `onCloseTag` event is triggered when a closing tag is encountered. It has the following arguments:
 - `tagName`: The name of the tag.
-- `isImplied`: A boolean indicating whether the closing tag is implied (i.e. `<p>foo<p>bar`) or explicit (i.e. `<p>foo</p><p>bar</p>`).
+- `isImplied`: A boolean indicating whether the closing tag is implied (e.g. `<p>foo<p>bar`) or explicit (e.g. `<p>foo</p><p>bar</p>`).
 
 For example, you may want to add spaces around a removed tag, like this:
 ```js
