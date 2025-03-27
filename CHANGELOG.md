@@ -1,5 +1,9 @@
 # Changelog
 
+## UNRELEASED
+
+- Add `onOpenTag` and `onCloseTag` events to enable advanced filtering to hook into the parser.
+
 ## 2.15.0 (2025-03-19)
 
 - Allow keeping tag content when discarding with exclusive filter by returning `"excludeTag"`. Thanks to [rChaoz](https://github.com/rChaoz).
