@@ -786,11 +786,11 @@ const sanitizedHtml = sanitizeHtml(
   'There should be<div><p>spaces</p></div>between <b>these</b> words.',
   {
     allowedTags,
-    onOpenTag: (tag) => {
-      addSpace = !allowedTags.includes(tag);
+    onOpenTag: (tagName, attribs) => {
+      addSpace = !allowedTags.includes(tagName);
     },
-    onCloseTag: (tag) => {
-      addSpace = !allowedTags.includes(tag);
+    onCloseTag: (tagName, isImplied) => {
+      addSpace = !allowedTags.includes(tagName);
     },
     textFilter: (text) => {
       if (addSpace) {

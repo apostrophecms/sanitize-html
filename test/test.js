@@ -1723,18 +1723,20 @@ describe('sanitizeHtml', function() {
   it('should call onOpenTag and onCloseTag callbacks', () => {
     const onOpenTag = sinon.spy();
     const onCloseTag = sinon.spy();
-    const inputHtml = '<div id="one">Some Text<p id="two">paragraph content</p>some text</div>';
+    const inputHtml = '<div id="one">Some Text<p id="two">paragraph content</p><p id="three">some text</div>';
     sanitizeHtml(inputHtml, {
       allowedTags: [ 'p' ],
       onOpenTag,
       onCloseTag
     });
-    assert.equal(onOpenTag.callCount, 2);
+    assert.equal(onOpenTag.callCount, 3);
     assert.equal(onOpenTag.getCall(0).calledWith('div', { id: 'one' }), true);
     assert.equal(onOpenTag.getCall(1).calledWith('p', { id: 'two' }), true);
-    assert.equal(onCloseTag.callCount, 2);
+    assert.equal(onOpenTag.getCall(2).calledWith('p', { id: 'three' }), true);
+    assert.equal(onCloseTag.callCount, 3);
     assert.equal(onCloseTag.getCall(0).calledWith('p', false), true);
-    assert.equal(onCloseTag.getCall(1).calledWith('div', false), true);
+    assert.equal(onCloseTag.getCall(1).calledWith('p', true), true);
+    assert.equal(onCloseTag.getCall(2).calledWith('div', false), true);
   });
   it('should insert spaces between removed tags whose content we keep', () => {
     const inputHtml = 'Text&#39;s here<div>it&#39;s here</div><div><p>it&#39;s there</p></div>and <b>also</b> here';
