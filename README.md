@@ -805,7 +805,7 @@ const sanitizedHtml = sanitizeHtml(
 
 In this example, we are setting a flag when a tag that will be removed has been opened or closed. Then we use the `textFilter` to modify the text to include spaces. The example should produce:
 ```
-There should be spaces between these words.
+There should be spaces between <b>these</b> words.
 ```
 
 ## About ApostropheCMS
