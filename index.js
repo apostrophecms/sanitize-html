@@ -97,6 +97,7 @@ function sanitizeHtml(html, options, _recursing) {
     this.attribs = attribs || {};
     this.tagPosition = result.length;
     this.text = ''; // Node inner text
+    this.openingTagLength = 0;
     this.mediaChildren = [];
 
     this.updateParentNodeText = function() {
@@ -272,7 +273,6 @@ function sanitizeHtml(html, options, _recursing) {
             skipTextDepth = 1;
           }
         }
-        skipMap[depth] = true;
       }
       depth++;
       if (skip) {
@@ -283,7 +283,7 @@ function sanitizeHtml(html, options, _recursing) {
             if (options.textFilter) {
               result += options.textFilter(escaped, name);
             } else {
-              result += escapeHtml(frame.innerText);
+              result += escaped;
             }
             addedText = true;
           }
@@ -511,6 +511,7 @@ function sanitizeHtml(html, options, _recursing) {
         result = tempResult + escapeHtml(result);
         tempResult = '';
       }
+      frame.openingTagLength = result.length - frame.tagPosition;
     },
     ontext: function(text) {
       if (skipText) {
@@ -533,11 +534,11 @@ function sanitizeHtml(html, options, _recursing) {
         // your concern, don't allow them. The same is essentially true for style tags
         // which have their own collection of XSS vectors.
         result += text;
-      } else {
+      } else if (!addedText) {
         const escaped = escapeHtml(text, false);
-        if (options.textFilter && !addedText) {
+        if (options.textFilter) {
           result += options.textFilter(escaped, tag);
-        } else if (!addedText) {
+        } else {
           result += escaped;
         }
       }
@@ -591,9 +592,21 @@ function sanitizeHtml(html, options, _recursing) {
         delete transformMap[depth];
       }
 
-      if (options.exclusiveFilter && options.exclusiveFilter(frame)) {
-        result = result.substr(0, frame.tagPosition);
-        return;
+      if (options.exclusiveFilter) {
+        const filterResult = options.exclusiveFilter(frame);
+        if (filterResult === 'excludeTag') {
+          if (skip) {
+            // no longer escaping the tag since it's not added at all
+            result = tempResult;
+            tempResult = '';
+          }
+          // remove the opening tag from the result
+          result = result.substring(0, frame.tagPosition) + result.substring(frame.tagPosition + frame.openingTagLength);
+          return;
+        } else if (filterResult) {
+          result = result.substring(0, frame.tagPosition);
+          return;
+        }
       }
 
       frame.updateParentNodeMediaChildren();

@@ -384,6 +384,53 @@ describe('sanitizeHtml', function() {
       'I love <a href="www.linux.org" target="_hplink">Linux</a> OS'
     );
   });
+
+  it('Exclusive filter should not run for discarded tags', function () {
+    assert.strictEqual(
+      sanitizeHtml('this tag is <wiggly>discarded</wiggly>',
+        {
+          exclusiveFilter: function () {
+            throw Error('this should not run');
+          }
+        }),
+      'this tag is discarded'
+    );
+  });
+
+  it('should keep inner text when exclusiveFilter returns "excludeTag"', function() {
+    assert.strictEqual(
+      sanitizeHtml('<p>These links <a href="javascript:alert(123)">hack</a> <a href="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">more hack</a> have disallowed href protocols</p>', {
+        exclusiveFilter: function (frame) {
+          return frame.tag === 'a' && !frame.attribs.src ? 'excludeTag' : false;
+        }
+      }),
+      '<p>These links hack more hack have disallowed href protocols</p>'
+    );
+  });
+
+  it('should keep inner tags when exclusiveFilter returns "excludeTag"', function() {
+    assert.strictEqual(
+      sanitizeHtml('This div is bad <div class="bad">but its <strong>content</strong><p>should be kept <em>as-is</em></p></div>.', {
+        exclusiveFilter: function (frame) {
+          return frame.tag === 'div' && frame.attribs.class && /\bbad\b/.test(frame.attribs.class) ? 'excludeTag' : false;
+        }
+      }),
+      'This div is bad but its <strong>content</strong><p>should be kept <em>as-is</em></p>.'
+    );
+  });
+
+  it('should work with escaped tags when exclusiveFilter returns "excludeTag"', function () {
+    assert.strictEqual(
+      sanitizeHtml('<strong>hello</strong> <wiggly>there. <em>General Kenobi</em></wiggly>!', {
+        disallowedTagsMode: 'escape',
+        exclusiveFilter: function (frame) {
+          return frame.tag === 'wiggly' ? 'excludeTag' : false;
+        }
+      }),
+      '<strong>hello</strong> there. <em>General Kenobi</em>!'
+    );
+  });
+
   it('should disallow data URLs with default allowedSchemes', function() {
     assert.equal(
       sanitizeHtml(
@@ -1428,7 +1475,7 @@ describe('sanitizeHtml', function() {
       '<div>&lt;wiggly&gt;Hello<p>World</p>&lt;/wiggly&gt;</div>'
     );
   });
-  it('should escape markup even when deocdeEntities is false', function() {
+  it('should escape markup even when decodeEntities is false', function() {
     assert.equal(
       sanitizeHtml('<wiggly>Hello</wiggly>', {
         disallowedTagsMode: 'escape',
