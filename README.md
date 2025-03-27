@@ -768,10 +768,15 @@ This will prevent the user from nesting tags more than 6 levels deep. Tags deepe
 
 ### Advanced filtering
 
-For more advanced filtering you can hook directly into the parsing process using three events:
-- `onOpenTag(name, attribs)`: Triggered when an opening tag is encountered.
-- `onText(text)`: Triggered when a text node is encountered.
-- `onCloseTag(name, isImplied)`: Triggered when a closing tag is encountered.
+For more advanced filtering you can hook directly into the parsing process using tag open and tag close events.
+
+The `onOpenTag` event is triggered when an opening tag is encountered. It has two arguments:
+- `tagName`: The name of the tag.
+- `attribs`: An object containing the tag's attributes, i.e. { src: "/path/to/tux.png" }.
+
+The `onCloseTag` event is triggered when a closing tag is encountered. It has the following arguments:
+- `tagName`: The name of the tag.
+- `isImplied`: A boolean indicating whether the closing tag is implied (i.e. `<p>foo<p>bar`) or explicit (i.e. `<p>foo</p><p>bar</p>`).
 
 For example, you may want to add spaces around a removed tag, like this:
 ```js

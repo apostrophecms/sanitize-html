@@ -513,10 +513,6 @@ function sanitizeHtml(html, options, _recursing) {
       }
     },
     ontext: function(text) {
-      if (options.onText) {
-        options.onText(text);
-      }
-
       if (skipText) {
         return;
       }

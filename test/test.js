@@ -1720,24 +1720,18 @@ describe('sanitizeHtml', function() {
 
     assert.equal(sanitizedHtml, expectedOutput);
   });
-  it('should call onOpenTag, onText, and onCloseTag callbacks', () => {
+  it('should call onOpenTag and onCloseTag callbacks', () => {
     const onOpenTag = sinon.spy();
-    const onText = sinon.spy();
     const onCloseTag = sinon.spy();
     const inputHtml = '<div id="one">Some Text<p id="two">paragraph content</p>some text</div>';
     sanitizeHtml(inputHtml, {
       allowedTags: [ 'p' ],
       onOpenTag,
-      onText,
       onCloseTag
     });
     assert.equal(onOpenTag.callCount, 2);
     assert.equal(onOpenTag.getCall(0).calledWith('div', { id: 'one' }), true);
     assert.equal(onOpenTag.getCall(1).calledWith('p', { id: 'two' }), true);
-    assert.equal(onText.callCount, 3);
-    assert.equal(onText.getCall(0).calledWith('Some Text'), true);
-    assert.equal(onText.getCall(1).calledWith('paragraph content'), true);
-    assert.equal(onText.getCall(2).calledWith('some text'), true);
     assert.equal(onCloseTag.callCount, 2);
     assert.equal(onCloseTag.getCall(0).calledWith('p', false), true);
     assert.equal(onCloseTag.getCall(1).calledWith('div', false), true);
