@@ -1,5 +1,9 @@
 # Changelog
 
+## UNRELEASED
+
+- Add `onOpenTag` and `onCloseTag` events to enable advanced filtering to hook into the parser.
+
 ## 2.14.0 (2024-12-18)
 
 - Fix adding text with `transformTags` in cases where it originally had no text child elements. Thanks to [f0x](https://cthu.lu).
