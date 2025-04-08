@@ -823,6 +823,8 @@ In this example, we are setting a flag when a tag that will be removed has been 
 There should be spaces between <b>these</b> words.
 ```
 
+This is a simplified example that is not meant to be production-ready. For your specific case, you may want to keep track of currently open tags, using the open and close events to push and pop items on the stack, or only insert spaces next to a subset of disallowed tags.
+
 ## About ApostropheCMS
 
 sanitize-html was created at [P'unk Avenue](https://punkave.com) for use in [ApostropheCMS](https://apostrophecms.com), an open-source content management system built on Node.js. If you like sanitize-html you should definitely check out ApostropheCMS.
