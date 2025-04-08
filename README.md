@@ -781,6 +781,50 @@ nestingLimit: 6
 
 This will prevent the user from nesting tags more than 6 levels deep. Tags deeper than that are stripped out exactly as if they were disallowed. Note that this means text is preserved in the usual ways where appropriate.
 
+### Advanced filtering
+
+For more advanced filtering you can hook directly into the parsing process using tag open and tag close events.
+
+The `onOpenTag` event is triggered when an opening tag is encountered. It has two arguments:
+- `tagName`: The name of the tag.
+- `attribs`: An object containing the tag's attributes, e.g. `{ src: "/path/to/tux.png" }`.
+
+The `onCloseTag` event is triggered when a closing tag is encountered. It has the following arguments:
+- `tagName`: The name of the tag.
+- `isImplied`: A boolean indicating whether the closing tag is implied (e.g. `<p>foo<p>bar`) or explicit (e.g. `<p>foo</p><p>bar</p>`).
+
+For example, you may want to add spaces around a removed tag, like this:
+```js
+const allowedTags = [ 'b' ];
+let addSpace = false;
+const sanitizedHtml = sanitizeHtml(
+  'There should be<div><p>spaces</p></div>between <b>these</b> words.',
+  {
+    allowedTags,
+    onOpenTag: (tagName, attribs) => {
+      addSpace = !allowedTags.includes(tagName);
+    },
+    onCloseTag: (tagName, isImplied) => {
+      addSpace = !allowedTags.includes(tagName);
+    },
+    textFilter: (text) => {
+      if (addSpace) {
+        addSpace = false;
+        return ' ' + text;
+      }
+      return text;
+    }
+  }
+);
+```
+
+In this example, we are setting a flag when a tag that will be removed has been opened or closed. Then we use the `textFilter` to modify the text to include spaces. The example should produce:
+```
+There should be spaces between <b>these</b> words.
+```
+
+This is a simplified example that is not meant to be production-ready. For your specific case, you may want to keep track of currently open tags, using the open and close events to push and pop items on the stack, or only insert spaces next to a subset of disallowed tags.
+
 ## About ApostropheCMS
 
 sanitize-html was created at [P'unk Avenue](https://punkave.com) for use in [ApostropheCMS](https://apostrophecms.com), an open-source content management system built on Node.js. If you like sanitize-html you should definitely check out ApostropheCMS.
