@@ -2,7 +2,7 @@
 
 ## UNRELEASED
 
-- Add `onOpenTag` and `onCloseTag` events to enable advanced filtering to hook into the parser.
+- Add `onOpenTag` and `onCloseTag` events to enable advanced filtering to hook into the parser. Thhanks to [Rimvydas Naktinis](https://github.com/naktinis).
 
 ## 2.15.0 (2025-03-19)
 
