@@ -1,6 +1,6 @@
 # Changelog
 
-## UNRELEASED
+## 2.16.0 (2025-04-16)
 
 - Add `onOpenTag` and `onCloseTag` events to enable advanced filtering to hook into the parser. Thhanks to [Rimvydas Naktinis](https://github.com/naktinis).
 
