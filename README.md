@@ -756,7 +756,7 @@ This will transform `<disallowed>hello<p>world</p></disallowed>` to `&lt;disallo
 #### Escape the disallowed tag, including all its attributes.
 
 By default, disallowed attributes are stripped from escaped tags. You can set `preserveEscapedAttributes` to `true` to 
-keep them as-is.
+keep them as-is. Note that is intended mainly for development or trusted workflows, and may preserve dangerous attributes as escaped text.
 
 ```js
 preserveEscapedAttributes: true
