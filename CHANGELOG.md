@@ -1,8 +1,12 @@
 # Changelog
 
+## UNRELEASED
+
+- Add `preserveEscapedAttributes`, allowing attributes on escaped disallowed tags to be retained. Thanks to [Ben Elliot](https://github.com/benelliott) for this new option.
+
 ## 2.16.0 (2025-04-16)
 
-- Add `onOpenTag` and `onCloseTag` events to enable advanced filtering to hook into the parser. Thhanks to [Rimvydas Naktinis](https://github.com/naktinis).
+- Add `onOpenTag` and `onCloseTag` events to enable advanced filtering to hook into the parser. Thanks to [Rimvydas Naktinis](https://github.com/naktinis).
 
 ## 2.15.0 (2025-03-19)
 
