@@ -745,7 +745,7 @@ This will transform `<disallowed>content <allowed>content</allowed> </disallowed
 
 #### Escape the disallowed tag and all its children even for allowed tags.
 
-if you set `disallowedTagsMode` to `recursiveEscape`, disallowed tag and its children will be escaped even for allowed tags
+if you set `disallowedTagsMode` to `recursiveEscape`, disallowed tags and their children will be escaped even for allowed tags:
 
 ```js
 disallowedTagsMode: `recursiveEscape`
@@ -755,8 +755,8 @@ This will transform `<disallowed>hello<p>world</p></disallowed>` to `&lt;disallo
 
 #### Escape the disallowed tag, including all its attributes.
 
-By default, disallowed attributes are stripped from escaped tags. You can set `preserveEscapedAttributes` to `true` to 
-keep them as-is. Note that is intended mainly for development or trusted workflows, and may preserve dangerous attributes as escaped text.
+By default, attributes are not preserved when tags are escaped. You can set `preserveEscapedAttributes` to `true` to 
+keep the attributes, which will also be escaped and therefore have no effect on the browser.
 
 ```js
 preserveEscapedAttributes: true
