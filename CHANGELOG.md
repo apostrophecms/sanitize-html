@@ -1,6 +1,6 @@
 # Changelog
 
-## UNRELEASED
+## 2.17.0 (2025-05-14)
 
 - Add `preserveEscapedAttributes`, allowing attributes on escaped disallowed tags to be retained. Thanks to [Ben Elliot](https://github.com/benelliott) for this new option.
 
