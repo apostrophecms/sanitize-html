@@ -241,10 +241,23 @@ describe('sanitizeHtml', function() {
       }
     }), '<a href="http://somelink"></a>');
   });
-  it('should replace text and attributes when they are changed by transforming function and textFilter is set', function () {
+  it('should replace text and attributes when they are changed by transforming function', function () {
     assert.equal(sanitizeHtml('<a href="http://somelink">some text</a>', {
       transformTags: {
         a: function (tagName, attribs) {
+          return {
+            tagName: tagName,
+            attribs: attribs,
+            text: ''
+          };
+        }
+      }
+    }), '<a href="http://somelink"></a>');
+  });
+  it('should replace text and attributes for wildcard tag when they are changed by transforming function and textFilter is set', function () {
+    assert.equal(sanitizeHtml('<a href="http://somelink">some text</a>', {
+      transformTags: {
+        '*': function (tagName, attribs) {
           return {
             tagName: tagName,
             attribs: attribs,
