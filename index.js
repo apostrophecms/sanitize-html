@@ -258,6 +258,11 @@ function sanitizeHtml(html, options, _recursing) {
         transformedTag = transformTagsAll(name, attribs);
 
         frame.attribs = attribs = transformedTag.attribs;
+
+        if (transformedTag.text !== undefined) {
+          frame.innerText = transformedTag.text;
+        }
+        
         if (name !== transformedTag.tagName) {
           frame.name = name = transformedTag.tagName;
           transformMap[depth] = transformedTag.tagName;
