@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.17.1 (2025-09-02)
+
+- Fix text option not being considered for transformTags when tag is *
+
 ## 2.17.0 (2025-05-14)
 
 - Add `preserveEscapedAttributes`, allowing attributes on escaped disallowed tags to be retained. Thanks to [Ben Elliot](https://github.com/benelliott) for this new option.
