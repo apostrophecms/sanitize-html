@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.17.1 (2025-09-10)
+
+- Fix to vulnerabilities found in postcss's dependency "nanoid" by upgrading postcss to 8.5.6
+
 ## 2.17.0 (2025-05-14)
 
 - Add `preserveEscapedAttributes`, allowing attributes on escaped disallowed tags to be retained. Thanks to [Ben Elliot](https://github.com/benelliott) for this new option.
