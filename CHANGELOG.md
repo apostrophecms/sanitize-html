@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.18.0 (2025-10-09)
+
+- Update `escape-string-regexp` version to ^5.0.0.
+- 
 ## 2.17.0 (2025-05-14)
 
 - Add `preserveEscapedAttributes`, allowing attributes on escaped disallowed tags to be retained. Thanks to [Ben Elliot](https://github.com/benelliott) for this new option.
