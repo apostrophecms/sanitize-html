@@ -1848,4 +1848,20 @@ describe('sanitizeHtml', function() {
 
     assert.equal(sanitizedHtmlPreservedAttrsTrue, sanitizedHtmlPreservedAttrsFalse);
   });
+  it('should ignore an apostrophe html entity', () => {
+    const inputHtml = '<code>&apos;</code>';
+    const message = sanitizeHtml(inputHtml, {
+      allowedTags: [ 'b', 'i', 'em', 'strong', 'code', 'wbr' ]
+    });
+    const outputHTML = '<code>&apos;</code>';
+    assert.equal(message, outputHTML);
+  });
+  it('should ignore an quote html entity', () => {
+    const inputHtml = '<code>&quot;</code>';
+    const message = sanitizeHtml(inputHtml, {
+      allowedTags: [ 'b', 'i', 'em', 'strong', 'code', 'wbr' ]
+    });
+    const outputHTML = '<code>&quot;</code>';
+    assert.equal(message, outputHTML);
+  });
 });
